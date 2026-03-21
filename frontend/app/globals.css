@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Jura:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
 
 /* ================================================================
-   AGENTPAY — CINEMATIC PROTOCOL INTERFACE
-   Inspired by: marketplace.delorean.com + qfnetwork.xyz
-   Deep dark. Film grain. Atmospheric glow. Heavy type. Precision.
+   AGENTPAY — DELOREAN INDUSTRIAL AESTHETIC
+   Exact red/charcoal palette, massive heavy type, film grain,
+   slanted containers, mechanical ui elements
    ================================================================ */
 
 *, *::before, *::after {
@@ -13,489 +13,348 @@
 }
 
 :root {
-  /* ── Core Palette ── */
-  --void:          #06060A;
-  --surface:       #0B0B11;
-  --panel:         #0F0F17;
-  --elevated:      #14141E;
-  --overlay:       rgba(15,15,23,0.95);
+  /* ── Core Palette (Exact DeLorean) ── */
+  --bg-deep:       #15161A;
+  --bg-surface:    #1F2128;
+  --bg-panel:      #2A2C34;
+  --black-pure:    #000000;
 
   /* ── Borders ── */
-  --border:        rgba(255,255,255,0.08);
-  --border-hi:     rgba(255,255,255,0.16);
-  --border-lo:     rgba(255,255,255,0.04);
+  --border-light:  rgba(255,255,255,0.15);
+  --border-dim:    rgba(255,255,255,0.05);
+  --border-red:    rgba(227, 38, 38, 0.4);
 
-  /* ── Single Brand Accent — Electric Teal ── */
-  --accent:        #00E5C3;
-  --accent-dark:   #00B89E;
-  --accent-glow:   rgba(0,229,195,0.15);
-  --accent-haze:   rgba(0,229,195,0.07);
-  --accent-line:   rgba(0,229,195,0.35);
+  /* ── Primary Accent — DeLorean Neon Red ── */
+  --red-neon:      #FF2A1E;
+  --red-dark:      #9E150F;
+  --red-glow:      rgba(255, 42, 30, 0.35);
 
-  /* ── Status ── */
-  --green:         #18E47A;
-  --green-glow:    rgba(24,228,122,0.18);
-  --amber:         #F0B429;
-  --amber-glow:    rgba(240,180,41,0.15);
-  --red:           #FF4747;
-  --blue:          #5B9EFF;
+  /* ── Secondary ── */
+  --white:         #FFFFFF;
+  --white-70:      rgba(255,255,255,0.7);
+  --white-40:      rgba(255,255,255,0.4);
+  --white-20:      rgba(255,255,255,0.2);
 
-  /* ── Text ── */
-  --t1:            #FFFFFF;
-  --t2:            rgba(255,255,255,0.65);
-  --t3:            rgba(255,255,255,0.35);
-  --t4:            rgba(255,255,255,0.16);
-  --t5:            rgba(255,255,255,0.07);
+  /* ── Typography (Industrial/Mechanical) ── */
+  --font-logo:     'Syncopate', sans-serif;
+  --font-body:     'Jura', sans-serif;
+  --font-mono:     'Share Tech Mono', monospace;
 
-  /* ── Typography ── */
-  --font-d:   'Syne', sans-serif;
-  --font-b:   'Inter', sans-serif;
-  --font-m:   'JetBrains Mono', monospace;
-
-  /* ── Motion ── */
-  --ease:     cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-in:  cubic-bezier(0.55, 0, 1, 0.45);
-  --t-s:      150ms;
-  --t-m:      250ms;
-  --t-l:      450ms;
+  --ease-mech:     cubic-bezier(0.86, 0, 0.07, 1); /* Snappy mechanical */
 }
 
-/* ================================================================
-   BASE
-   ================================================================ */
-
 html, body {
-  background: var(--void);
-  color: var(--t1);
-  font-family: var(--font-b);
-  font-size: 13px;
-  line-height: 1.55;
+  background-color: var(--bg-deep);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
   height: 100%;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Film Grain (DeLorean signature) ── */
+/* ── Heavy Film Grain & Vignette ── */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.048;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 220px 220px;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-/* ── Atmospheric Stage Lighting (DeLorean's signature glow) ── */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.85) 100%);
+}
+
+/* Large ambient neon diagonal light streaks behind main UI */
+.ambient-light {
+  position: fixed;
+  top: 50%; left: 50%;
+  width: 150vw; height: 100vh;
+  transform: translate(-50%, -50%) rotate(-15deg);
   background:
-    radial-gradient(ellipse 900px 600px at 50% 100%, rgba(0,229,195,0.045) 0%, transparent 70%),
-    radial-gradient(ellipse 600px 400px at 10% 60%, rgba(0,90,255,0.025) 0%, transparent 65%),
-    radial-gradient(ellipse 500px 400px at 90% 20%, rgba(120,0,255,0.02) 0%, transparent 65%);
+    linear-gradient(90deg, transparent 40%, rgba(255,42,30,0.03) 45%, rgba(255,255,255,0.02) 50%, rgba(255,42,30,0.03) 55%, transparent 60%),
+    linear-gradient(90deg, transparent 20%, rgba(255,42,30,0.015) 25%, transparent 30%);
+  z-index: 0;
+  pointer-events: none;
 }
 
-/* ── Fine Grid ── */
-body {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
-  background-size: 64px 64px;
-  background-attachment: fixed;
-}
-
-#__next { position: relative; z-index: 2; height: 100%; }
+#__next { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; }
 
 /* ================================================================
    TYPOGRAPHY
    ================================================================ */
 
 h1, h2, h3, h4, h5 {
-  font-family: var(--font-d);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: var(--t1);
+  font-family: var(--font-logo);
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  font-weight: 700;
 }
 
-.mono { font-family: var(--font-m); }
+.mono { font-family: var(--font-mono); text-transform: uppercase; }
 
-.label {
-  font-family: var(--font-m);
-  font-size: 0.6rem;
-  font-weight: 400;
-  letter-spacing: 0.14em;
+/* Micro-labels like chassis marks */
+.mech-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--t3);
+  color: var(--white-40);
+}
+
+/* ================================================================
+   GLITCH ANIMATION (Delorean ALPHA 05 style)
+   ================================================================ */
+
+.glitch-text {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-body);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--white);
+  cursor: pointer;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: var(--bg-deep); /* Block out text behind it when offsetting */
+  opacity: 0;
+}
+
+.glitch-text:hover { color: transparent; } /* Hide original, show pseudo-elements */
+
+.glitch-text:hover::before {
+  opacity: 1;
+  color: var(--red-neon);
+  z-index: -1;
+  animation: glitch-anim-1 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+}
+
+.glitch-text:hover::after {
+  opacity: 1;
+  color: var(--white);
+  z-index: -2;
+  animation: glitch-anim-2 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+}
+
+@keyframes glitch-anim-1 {
+  0%   { clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%); transform: translate(-3px, 1px); }
+  20%  { clip-path: polygon(0 33%, 100% 33%, 100% 66%, 0 66%); transform: translate(3px, -1px); }
+  40%  { clip-path: polygon(0 66%, 100% 66%, 100% 100%, 0 100%); transform: translate(1px, 2px); filter: hue-rotate(-20deg); }
+  60%  { clip-path: polygon(0 15%, 100% 15%, 100% 45%, 0 45%); transform: translate(-2px, -2px); }
+  80%  { clip-path: polygon(0 50%, 100% 50%, 100% 80%, 0 80%); transform: translate(2px, 1px); }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: translate(0, 0); }
+}
+
+@keyframes glitch-anim-2 {
+  0%   { clip-path: polygon(0 10%, 100% 10%, 100% 40%, 0 40%); transform: translate(2px, -1px); }
+  20%  { clip-path: polygon(0 40%, 100% 40%, 100% 70%, 0 70%); transform: translate(-1px, 2px); }
+  40%  { clip-path: polygon(0 70%, 100% 70%, 100% 100%, 0 100%); transform: translate(-3px, -1px); }
+  60%  { clip-path: polygon(0 5%, 100% 5%, 100% 30%, 0 30%); transform: translate(2px, 2px); filter: brightness(1.5); }
+  80%  { clip-path: polygon(0 60%, 100% 60%, 100% 90%, 0 90%); transform: translate(-2px, -1px); }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: translate(0, 0); }
+}
+
+/* ================================================================
+   PANELS / CHASSIS
+   ================================================================ */
+
+/* Slanted corners like DeLorean UI */
+.mech-panel {
+  background: var(--bg-surface);
+  position: relative;
+  border-top: 2px solid var(--white-40);
+  padding: 24px;
+}
+
+.mech-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 15px; height: 15px;
+  border-top: 2px solid var(--red-neon);
+  border-right: 2px solid var(--red-neon);
+}
+
+.mech-panel::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 15px; height: 15px;
+  border-bottom: 2px solid var(--white-40);
+  border-left: 2px solid var(--white-40);
+}
+
+/* ================================================================
+   BUTTONS
+   ================================================================ */
+
+.mech-btn {
+  background: transparent;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 12px 24px;
+  border: 1px solid var(--white-40);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--ease-mech) 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mech-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: var(--white);
+  transition: transform var(--ease-mech) 0.4s;
+  z-index: 1;
+}
+
+.mech-btn span { position: relative; z-index: 2; transition: color var(--ease-mech) 0.3s; }
+
+.mech-btn:hover { border-color: var(--white); }
+.mech-btn:hover::before { transform: translateX(100%); }
+.mech-btn:hover span { color: var(--bg-deep); }
+
+.mech-btn-red {
+  background: var(--red-neon);
+  border-color: var(--red-neon);
+  color: var(--black-pure);
+}
+
+.mech-btn-red::before { background: var(--white); }
+.mech-btn-red:hover span { color: var(--black-pure); }
+.mech-btn-red:active { transform: scale(0.98); }
+
+/* ================================================================
+   INPUTS
+   ================================================================ */
+
+input, textarea {
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border-light);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 14px 18px;
+  outline: none;
+  transition: all 0.2s;
+  resize: none;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--red-neon);
+  box-shadow: inset 0 0 10px var(--red-glow);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--white-40);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ================================================================
+   SLOT CARDS (Like DeLorean "Build Slots")
+   ================================================================ */
+
+.slot-card {
+  border: 1px solid var(--border-dim);
+  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+  position: relative;
+  padding: 24px;
+  transition: border-color 0.3s var(--ease-mech), box-shadow 0.3s var(--ease-mech);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.slot-card:hover {
+  border-color: var(--red-neon);
+  box-shadow: 0 0 30px var(--red-glow), inset 0 0 20px rgba(255,42,30,0.1);
+}
+
+/* Slot Card Header (e.g. "ALPHA DELOREAN") */
+.slot-brand {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.slot-brand svg {
+  height: 12px;
+  fill: var(--white-70);
+}
+
+/* Massive Number within slot card */
+.slot-num {
+  font-family: var(--font-body);
+  font-size: 4rem;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--white-70);
+  transition: color 0.3s, transform 0.4s var(--ease-mech);
+}
+
+.slot-card:hover .slot-num {
+  color: var(--white);
+  transform: scale(1.05) translateX(5px);
+}
+
+/* Bottom status bar in slot card */
+.slot-status {
+  margin-top: auto;
+  padding-top: 30px;
+}
+
+.slot-status-label {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 2px 0;
+  border-bottom: 2px solid var(--white-40);
+  color: var(--white-70);
+  margin-bottom: 6px;
+  transition: border-color 0.3s, color 0.3s;
+}
+
+.slot-card:hover .slot-status-label {
+  border-bottom-color: var(--red-neon);
+  color: var(--red-neon);
 }
 
 /* ================================================================
    SCROLLBAR
    ================================================================ */
 
-::-webkit-scrollbar { width: 2px; height: 2px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-hi); }
-::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
-/* ================================================================
-   BUTTONS
-   ================================================================ */
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  font-family: var(--font-m);
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--t2);
-  padding: 9px 18px;
-  cursor: pointer;
-  transition: all var(--t-m) var(--ease);
-  white-space: nowrap;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--t5);
-  opacity: 0;
-  transition: opacity var(--t-s) var(--ease);
-}
-
-.btn:hover::before { opacity: 1; }
-.btn:hover { border-color: var(--border-hi); color: var(--t1); }
-.btn:active { transform: scale(0.975); }
-
-/* Primary execute button — DeLorean's signature CTA feel */
-.btn-execute {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #000;
-  font-weight: 700;
-  padding: 11px 28px;
-  font-size: 0.7rem;
-}
-
-.btn-execute::before { background: rgba(0,0,0,0.12); }
-
-.btn-execute:hover {
-  background: var(--t1);
-  border-color: var(--t1);
-  color: #000;
-  box-shadow: 0 0 60px var(--accent-glow), 0 0 120px rgba(0,229,195,0.06);
-}
-
-.btn-execute:disabled {
-  background: var(--elevated);
-  border-color: var(--border);
-  color: var(--t4);
-  box-shadow: none;
-  cursor: not-allowed;
-}
-
-/* ================================================================
-   INPUTS — DeLorean console style: borderless, underline only
-   ================================================================ */
-
-input, textarea {
-  font-family: var(--font-m);
-  font-size: 0.8rem;
-  font-weight: 300;
-  letter-spacing: 0.02em;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--border);
-  color: var(--t1);
-  padding: 12px 0;
-  outline: none;
-  width: 100%;
-  transition: border-color var(--t-s) var(--ease);
-  resize: none;
-}
-
-input::placeholder, textarea::placeholder {
-  color: var(--t4);
-  font-style: italic;
-  font-weight: 300;
-}
-
-input:focus, textarea:focus {
-  border-bottom-color: var(--accent);
-}
-
-/* ================================================================
-   PANEL — DeLorean depth cards
-   ================================================================ */
-
-.panel {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  position: relative;
-}
-
-.panel-dark {
-  background: rgba(6,6,10,0.8);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-/* Accent left bar — a DeLorean detail language element */
-.panel-accent-l { border-left: 1px solid var(--accent-line); }
-.panel-accent-t { border-top: 1px solid var(--accent-line); }
-
-/* ================================================================
-   TAGS — minimal, frameless
-   ================================================================ */
-
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--font-m);
-  font-size: 0.6rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  padding: 3px 9px;
-  border: 1px solid currentColor;
-  line-height: 1.6;
-}
-
-.tag-accent { color: var(--accent); border-color: var(--accent-line); background: var(--accent-haze); }
-.tag-green  { color: var(--green); border-color: rgba(24,228,122,0.28); background: rgba(24,228,122,0.05); }
-.tag-amber  { color: var(--amber); border-color: rgba(240,180,41,0.28); background: rgba(240,180,41,0.05); }
-.tag-red    { color: var(--red);   border-color: rgba(255,71,71,0.28);  background: rgba(255,71,71,0.05);  }
-.tag-dim    { color: var(--t3);    border-color: var(--border); }
-
-/* ================================================================
-   STATUS DOTS
-   ================================================================ */
-
-.dot {
-  display: inline-block;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.dot-sm { width: 6px; height: 6px; }
-.dot-md { width: 8px; height: 8px; }
-
-.dot-green  { background: var(--green);  box-shadow: 0 0 7px var(--green);  animation: pulse-dot 2.4s ease-in-out infinite; }
-.dot-accent { background: var(--accent); box-shadow: 0 0 7px var(--accent); animation: pulse-dot 2.8s ease-in-out infinite; }
-.dot-amber  { background: var(--amber);  box-shadow: 0 0 7px var(--amber);  animation: pulse-dot 0.85s ease-in-out infinite; }
-.dot-dim    { background: var(--t4); }
-
-/* ================================================================
-   TERMINAL
-   ================================================================ */
-
-.terminal-wrap {
-  background: var(--void);
-  border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
-}
-
-.terminal-body {
-  font-family: var(--font-m);
-  font-size: 0.69rem;
-  font-weight: 300;
-  line-height: 1.85;
-  overflow-y: auto;
-  padding: 14px 16px;
-  flex: 1;
-}
-
-.tline {
-  display: flex;
-  gap: 10px;
-  animation: tline-appear 0.12s ease both;
-}
-
-.tline-time  { color: var(--t4); flex-shrink: 0; min-width: 72px; }
-
-.tline-label {
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  flex-shrink: 0;
-  min-width: 66px;
-}
-
-.tline-msg { color: var(--t3); flex: 1; }
-
-/* Per-event type coloring */
-.ev-TASK      .tline-label { color: var(--t2); }
-.ev-REASONING .tline-label { color: #A78BFA; }
-.ev-DECIDED   .tline-label { color: var(--accent); }
-.ev-CALLING   .tline-label { color: var(--blue); }
-.ev-402       .tline-label { color: var(--amber); }
-.ev-PAYING    .tline-label { color: var(--amber); }
-.ev-SETTLED   .tline-label { color: var(--green); }
-.ev-SETTLED   .tline-msg   { color: rgba(24,228,122,0.5); }
-.ev-LOGGING   .tline-label { color: var(--accent); }
-.ev-DONE      .tline-label { color: var(--green); font-weight: 700; }
-.ev-DONE      .tline-msg   { color: rgba(24,228,122,0.6); }
-.ev-info      .tline-label { color: var(--t4); }
-.ev-event     .tline-label { color: var(--blue); }
-
-.t-cursor {
-  display: inline-block;
-  width: 7px;
-  height: 1.1em;
-  background: var(--accent);
-  margin-left: 3px;
-  vertical-align: text-bottom;
-  animation: blink 1.1s step-end infinite;
-}
-
-/* ================================================================
-   DATA TABLE
-   ================================================================ */
-
-.data-table { width: 100%; border-collapse: collapse; }
-
-.data-table th {
-  font-family: var(--font-m);
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--t4);
-  font-weight: 400;
-  padding: 8px 14px;
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-}
-
-.data-table td {
-  padding: 11px 14px;
-  border-bottom: 1px solid var(--border-lo);
-  font-size: 0.692rem;
-  color: var(--t3);
-  transition: color var(--t-s), background var(--t-s);
-}
-
-.data-table tr { transition: background var(--t-s) var(--ease); }
-
-.data-table tr:hover td {
-  background: rgba(0,229,195,0.03);
-  color: var(--t2);
-}
-
-.data-table tr:hover td:first-child {
-  border-left: 1px solid var(--accent-line);
-}
-
-/* ================================================================
-   UTILITY
-   ================================================================ */
-
-.spinner {
-  width: 13px; height: 13px;
-  border: 1.5px solid var(--border-hi);
-  border-top-color: #000;
-  border-radius: 50%;
-  animation: spin 0.65s linear infinite;
-  flex-shrink: 0;
-}
-
-.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-.link-ext {
-  color: var(--t3);
-  text-decoration: none;
-  font-family: var(--font-m);
-  font-size: 0.6rem;
-  transition: color var(--t-s);
-}
-.link-ext:hover { color: var(--accent); }
-
-.skeleton {
-  background: linear-gradient(90deg, var(--elevated) 25%, rgba(255,255,255,0.04) 50%, var(--elevated) 75%);
-  background-size: 400% 100%;
-  animation: shimmer 1.6s ease-in-out infinite;
-}
-
-:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
-
-/* ================================================================
-   ANIMATIONS
-   ================================================================ */
-
-@keyframes blink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 0.8; transform: scale(1);    }
-  50%       { opacity: 0.3; transform: scale(0.82); }
-}
-
-@keyframes tline-appear {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-/* SVG orbital animations */
-@keyframes orbit-slow  { from { transform: rotate(0deg); } to { transform: rotate(360deg); }  }
-@keyframes orbit-rev   { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
-@keyframes orbit-slow2 { from { transform: rotate(30deg); } to { transform: rotate(390deg); } }
-
-@keyframes node-pulse {
-  0%, 100% { opacity: 0.5; }
-  50%       { opacity: 1; }
-}
-
-@keyframes path-draw {
-  from { stroke-dashoffset: 800; opacity: 0.2; }
-  to   { stroke-dashoffset: 0;   opacity: 1; }
-}
-
-@keyframes glow-breathe {
-  0%, 100% { filter: drop-shadow(0 0 4px var(--accent-line)); }
-  50%       { filter: drop-shadow(0 0 18px var(--accent-glow)); }
-}
-
-@keyframes float-y {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-6px); }
-}
-
-@keyframes progress-move {
-  0%   { left: -40%; width: 40%; }
-  100% { left: 100%; width: 40%; }
-}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--white-40); }
+::-webkit-scrollbar-thumb:hover { background: var(--red-neon); }
