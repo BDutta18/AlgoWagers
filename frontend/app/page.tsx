@@ -1,51 +1,11 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { MOCK_AGENTS, MOCK_TASKS, generateAuditEntry, generateTerminalEvent, AuditEntry, TerminalEvent } from '@/lib/mockData'
-
-/* =========================================================================
-   DELOREAN "BUILD SLOT" CARD
-   These represent the "Target Agents" we can hire.
-   ========================================================================= */
-
-function AgentSlotCard({
-  agent, num, active, onClick
-}: {
-  agent: { name: string, id: string, model: string }, num: string, active: boolean, onClick: () => void
-}) {
-  return (
-    <div className="slot-card" onClick={onClick} style={{
-      borderColor: active ? 'var(--red-neon)' : 'var(--border-dim)',
-      boxShadow: active ? '0 0 30px var(--red-glow), inset 0 0 20px rgba(255,42,30,0.1)' : 'none',
-    }}>
-      <div className="slot-brand">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <span className="mech-label">AGENT MODEL</span>
-          <span style={{ fontFamily: 'var(--font-logo)', fontSize: '0.8rem', letterSpacing: '0.2em' }}>
-            {agent.model}
-          </span>
-        </div>
-        <svg viewBox="0 0 10 10" width="10" height="10">
-          <rect x="0" y="0" width="4" height="4"/><rect x="6" y="6" width="4" height="4"/>
-        </svg>
-      </div>
-
-      <div className="slot-num">{num}</div>
-
-      <div className="slot-status">
-        <div className="slot-status-label" style={{
-          borderColor: active ? 'var(--red-neon)' : 'var(--white-40)',
-          color: active ? 'var(--red-neon)' : 'var(--white-70)'
-        }}>
-          {active ? 'SELECTED' : 'UNLISTED'}
-        </div>
-        <div style={{ fontFamily: 'var(--font-body)', fontSize: '1.2rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-          {agent.name}
-        </div>
-      </div>
-    </div>
-  )
-}
+import { motion, AnimatePresence } from 'framer-motion'
+import { MOCK_AGENTS, generateAuditEntry, generateTerminalEvent, AuditEntry, TerminalEvent } from '@/lib/mockData'
+import { AmbientWavyBackground } from '@/components/AmbientWavyBackground'
+import { GlitchDissolveText } from '@/components/GlitchDissolveText'
+import { AgentSlotCard } from '@/components/AgentSlotCard'
 
 /* =========================================================================
    DELOREAN "ALPHA" GLITCH HERO
@@ -53,36 +13,43 @@ function AgentSlotCard({
 
 function HeroDisplay() {
   return (
-    <div style={{ padding: '60px 40px', position: 'relative' }}>
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+      style={{ padding: '60px 40px', position: 'relative' }}
+    >
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <h1 className="glitch-text" data-text="AGENT" style={{
+        <div style={{
+          fontFamily: 'var(--font-body)',
           fontSize: 'clamp(80px, 12vw, 160px)',
+          fontWeight: 700,
           lineHeight: '0.85',
-          color: 'var(--red-neon)',
-          textShadow: '0 0 60px var(--red-glow)',
+          textTransform: 'uppercase'
         }}>
-          AGENT
-        </h1>
+          <GlitchDissolveText text="AGENT" glowColor="#FF2A1E" />
+        </div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 20 }}>
-          <h1 className="glitch-text" data-text="PROTO" style={{
+          <div style={{
+            fontFamily: 'var(--font-body)',
             fontSize: 'clamp(80px, 12vw, 160px)',
+            fontWeight: 700,
             lineHeight: '0.85',
-            color: 'var(--red-neon)',
-            textShadow: '0 0 60px var(--red-glow)',
-            WebkitTextStroke: '2px var(--red-neon)',
-            WebkitTextFillColor: 'transparent',
+            textTransform: 'uppercase',
+            color: 'transparent',
+            WebkitTextStroke: '2px #FF2A1E',
           }}>
-            PROTO
-          </h1>
+            <GlitchDissolveText glowColor="#FF2A1E">PROTO</GlitchDissolveText>
+          </div>
           <span style={{
             fontFamily: 'var(--font-body)',
             fontWeight: 300,
             fontSize: 'clamp(60px, 10vw, 140px)',
-            color: 'var(--red-neon)',
-            textShadow: '0 0 60px var(--red-glow)',
+            color: '#FF2A1E',
+            textShadow: '0 0 60px rgba(255,42,30,0.35)',
             marginLeft: -10
           }}>
-            01
+            <GlitchDissolveText glowColor="#FF2A1E">01</GlitchDissolveText>
           </span>
         </div>
       </div>
@@ -92,18 +59,18 @@ function HeroDisplay() {
         display: 'flex',
         alignItems: 'flex-end',
         justifyContent: 'space-between',
-        borderBottom: '2px solid var(--red-neon)',
+        borderBottom: '2px solid #FF2A1E',
         paddingBottom: 20,
       }}>
         <div>
-          <div style={{ fontFamily: 'var(--font-logo)', fontSize: '1.2rem', color: 'var(--red-neon)', letterSpacing: '0.15em', marginBottom: 10 }}>MARKETPLACE</div>
+          <div style={{ fontFamily: 'var(--font-logo)', fontSize: '1.2rem', color: '#FF2A1E', letterSpacing: '0.15em', marginBottom: 10 }}>MARKETPLACE</div>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-            <span style={{ width: 10, height: 2, background: 'var(--red-neon)' }}/>
-            <span className="mech-label" style={{ color: 'var(--red-neon)' }}>ACTIVE WORKERS: {MOCK_AGENTS.length}</span>
+            <span style={{ width: 10, height: 2, background: '#FF2A1E' }}/>
+            <span className="mech-label" style={{ color: '#FF2A1E' }}>ACTIVE WORKERS: {MOCK_AGENTS.length}</span>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
@@ -112,11 +79,11 @@ function HeroDisplay() {
    ========================================================================= */
 
 const EV_META: Record<string, { label: string, col: string }> = {
-  info:    { label: 'SYS_MSG',  col: 'var(--white-40)' },
-  success: { label: 'SETTLED',  col: 'var(--red-neon)' },
+  info:    { label: 'SYS_MSG',  col: 'rgba(255,255,255,0.4)' },
+  success: { label: 'SETTLED',  col: '#FF2A1E' },
   warning: { label: 'AWAIT_TX', col: '#ffaa00' },
-  payment: { label: 'X402_REQ', col: 'var(--white-70)' },
-  event:   { label: 'LOG_EVT',  col: 'var(--white-70)' },
+  payment: { label: 'X402_REQ', col: 'rgba(255,255,255,0.7)' },
+  event:   { label: 'LOG_EVT',  col: 'rgba(255,255,255,0.7)' },
 }
 
 function TerminalPanel({ events }: { events: TerminalEvent[] }) {
@@ -128,26 +95,35 @@ function TerminalPanel({ events }: { events: TerminalEvent[] }) {
       {/* Header */}
       <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border-dim)', display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <div style={{ width: 4, height: 16, background: 'var(--red-neon)' }}/>
+          <div style={{ width: 4, height: 16, background: '#FF2A1E' }}/>
           <span className="mech-label">LIVE SYSTEM FEED // DATA STREAM</span>
         </div>
-        <span className="mech-label">REC_</span>
+        <span className="mech-label text-[#FF2A1E] animate-pulse">REC_</span>
       </div>
 
       {/* Body */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', lineHeight: 2 }}>
         {events.length === 0 ? (
-          <div style={{ color: 'var(--white-40)' }}>> System ready. Awaiting operational input...<span style={{ animation: 'blink 1s step-end infinite' }}>_</span></div>
-        ) : events.map(ev => {
-          const m = EV_META[ev.type] || EV_META.info
-          return (
-            <div key={ev.id} style={{ display: 'flex', gap: 16 }}>
-              <span style={{ color: 'var(--white-40)', minWidth: 60 }}>[{new Date(ev.timestamp).toLocaleTimeString('en-US', {hour12:false})}]</span>
-              <span style={{ color: m.col, minWidth: 80 }}>{m.label}</span>
-              <span style={{ color: 'var(--white-70)' }}>{ev.message}</span>
-            </div>
-          )
-        })}
+          <div style={{ color: 'rgba(255,255,255,0.4)' }}>{'>'} System ready. Awaiting operational input...<span style={{ animation: 'blink 1s step-end infinite' }}>_</span></div>
+        ) : (
+          <AnimatePresence initial={false}>
+            {events.map(ev => {
+              const m = EV_META[ev.type] || EV_META.info
+              return (
+                <motion.div 
+                  key={ev.id} 
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  style={{ display: 'flex', gap: 16 }}
+                >
+                  <span style={{ color: 'rgba(255,255,255,0.4)', minWidth: 60 }}>[{new Date(ev.timestamp).toLocaleTimeString('en-US', {hour12:false})}]</span>
+                  <span style={{ color: m.col, minWidth: 80 }}>{m.label}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.7)' }}>{ev.message}</span>
+                </motion.div>
+              )
+            })}
+          </AnimatePresence>
+        )}
         <div ref={ref}/>
       </div>
     </div>
@@ -193,19 +169,24 @@ export default function App() {
 
   return (
     <>
-      <div className="ambient-light"/>
+      <AmbientWavyBackground />
 
       {/* ─────────────────────────────────────────────────────────
           HEADER BAR (DeLorean Top Nav)
           ───────────────────────────────────────────────────────── */}
-      <header style={{
-        padding: '24px 40px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        position: 'relative',
-        zIndex: 10,
-      }}>
+      <motion.header 
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+        style={{
+          padding: '24px 40px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          position: 'relative',
+          zIndex: 10,
+        }}
+      >
         {/* DeLorean-style Logo Layout */}
         <div style={{ display: 'flex', gap: 20 }}>
           <div style={{ width: 44, height: 44, background: 'var(--bg-surface)', border: '1px solid var(--border-dim)', display: 'grid', placeItems: 'center' }}>
@@ -235,12 +216,12 @@ export default function App() {
             <span className="mech-label" style={{ color: 'var(--white)' }}>REGISTER</span>
           </div>
           <div style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
-            <span style={{ fontFamily: 'var(--font-logo)', fontSize: '0.9rem', color: 'var(--white)', letterSpacing: '0.1em' }}>MARKETPLACE</span>
-            <span style={{ fontFamily: 'var(--font-logo)', fontSize: '0.9rem', color: 'var(--white-70)', letterSpacing: '0.1em' }}>DOCS</span>
-            <span className="mech-btn mech-btn-red" style={{ padding: '8px 16px', fontSize: '0.75rem' }}><span>CONNECT EVM</span></span>
+            <span className="cursor-pointer transition-colors hover:text-[#FF2A1E]" style={{ fontFamily: 'var(--font-logo)', fontSize: '0.9rem', color: 'var(--white)', letterSpacing: '0.1em' }}>MARKETPLACE</span>
+            <span className="cursor-pointer transition-colors hover:text-white" style={{ fontFamily: 'var(--font-logo)', fontSize: '0.9rem', color: 'var(--white-70)', letterSpacing: '0.1em' }}>DOCS</span>
+            <button className="mech-btn mech-btn-red" style={{ padding: '8px 16px', fontSize: '0.75rem' }}><span>CONNECT EVM</span></button>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       {/* ─────────────────────────────────────────────────────────
           PAGE CONTENT
@@ -262,25 +243,38 @@ export default function App() {
           {/* LEFT: Agent Slots & Console */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
 
-            {/* Grid of slot cards */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-              gap: 20,
-            }}>
+            {/* Grid of 3D slot cards */}
+            <motion.div 
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: 20,
+              }}
+              initial="hidden"
+              animate="show"
+              variants={{
+                show: { transition: { staggerChildren: 0.1 } }
+              }}
+            >
               {MOCK_AGENTS.map((agent, i) => (
-                <AgentSlotCard
-                  key={agent.id}
-                  agent={agent}
-                  num={(i + 7).toString().padStart(2, '0')} /* Make it look like build slots 07, 08, 09 */
-                  active={selectedAgent === agent.id}
-                  onClick={() => setSelectedAgent(agent.id)}
-                />
+                <motion.div key={agent.id} variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}>
+                  <AgentSlotCard
+                    agent={agent}
+                    num={(i + 7).toString().padStart(2, '0')}
+                    active={selectedAgent === agent.id}
+                    onClick={() => setSelectedAgent(agent.id)}
+                  />
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
             {/* Command Input Area */}
-            <div className="mech-panel">
+            <motion.div 
+              className="mech-panel"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
               <div style={{ padding: '0 0 24px', borderBottom: '1px solid var(--border-dim)', marginBottom: 24 }}>
                 <h3 style={{ fontSize: '1.4rem', marginBottom: 8 }}>COMMAND_INTERFACE</h3>
                 <span className="mech-label">DIRECTIVE INPUT FOR TARGET AGENT</span>
@@ -297,12 +291,17 @@ export default function App() {
                   <span>{isExecuting ? 'PROCESSING_TICK...' : 'EXECUTE_PROTOCOL [ENTER]'}</span>
                 </button>
               </div>
-            </div>
+            </motion.div>
 
           </div>
 
           {/* RIGHT: Terminal & Audit */}
-          <div style={{ display: 'flex', flexDirection: 'column', border: '1px solid var(--border-dim)' }}>
+          <motion.div 
+            style={{ display: 'flex', flexDirection: 'column', border: '1px solid var(--border-dim)' }}
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
             <TerminalPanel events={events} />
 
             {/* Log Table underneath */}
@@ -312,20 +311,24 @@ export default function App() {
               </div>
               <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {audit.length === 0 ? <span className="mech-label">NO RECORDS FOUND.</span> : audit.map(a => (
-                  <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-dim)', paddingBottom: 10 }}>
+                  <motion.div 
+                    key={a.id} 
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                    style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-dim)', paddingBottom: 10 }}
+                  >
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                      <span className="mech-label" style={{ color: 'var(--white)' }}>TX: {a.id.slice(-10)}</span>
+                      <span className="mech-label text-white">TX: {a.id.slice(-10)}</span>
                       <span className="mech-label">ROUTINE: {a.taskName}</span>
                     </div>
                     <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                      <span style={{ fontFamily: 'var(--font-logo)', fontSize: '0.8rem', color: 'var(--red-neon)' }}>{a.amount} USDC</span>
+                      <span style={{ fontFamily: 'var(--font-logo)', fontSize: '0.8rem', color: '#FF2A1E' }}>{a.amount} USDC</span>
                       <span className="mech-label">{a.status}</span>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
 
         </div>
 
@@ -339,7 +342,7 @@ export default function App() {
           <span className="mech-label">© 2026 AUTONOMOUS AGENT ORG.</span>
           <div style={{ display: 'flex', gap: 24 }}>
             <span className="mech-label">SYS_STATUS: ONLINE</span>
-            <span className="mech-label">C-CHAIN: SYNCED</span>
+            <span className="mech-label text-[#FF2A1E]">C-CHAIN: SYNCED</span>
           </div>
         </div>
 
