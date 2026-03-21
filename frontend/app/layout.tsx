@@ -3,9 +3,9 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'AgentPay — Autonomous Multi-Agent Commerce',
+  title: 'Azentyc — Autonomous Multi-Agent Commerce',
   description: 'Autonomous blockchain-powered AI agent commerce system. Real USDC payments on Avalanche. On-chain audit via Algorand.',
-  generator: 'AgentPay',
+  generator: 'Azentyc',
 }
 
 export default function RootLayout({
