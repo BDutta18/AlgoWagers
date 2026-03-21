@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MOCK_AGENTS, generateAuditEntry, generateTerminalEvent, AuditEntry, TerminalEvent } from '@/lib/mockData'
 import { AmbientWavyBackground } from '@/components/AmbientWavyBackground'
+import { ParticleNetwork } from '@/components/ParticleNetwork'
 import { GlitchDissolveText } from '@/components/GlitchDissolveText'
 import { AgentSlotCard } from '@/components/AgentSlotCard'
 
@@ -170,6 +171,7 @@ export default function App() {
   return (
     <div className="flex flex-col h-screen w-full relative overflow-hidden z-10">
       <AmbientWavyBackground />
+      <ParticleNetwork />
 
       {/* ─────────────────────────────────────────────────────────
           HEADER BAR (DeLorean Top Nav)
@@ -179,12 +181,17 @@ export default function App() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
         style={{
+          margin: '20px 40px',
           padding: '24px 40px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           position: 'relative',
           zIndex: 10,
+          background: 'rgba(255, 255, 255, 0.03)',
+          backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          borderRadius: '8px'
         }}
       >
         {/* DeLorean-style Logo Layout */}

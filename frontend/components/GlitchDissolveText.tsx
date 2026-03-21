@@ -16,14 +16,14 @@ export function GlitchDissolveText({ text, glowColor = '#FF2A1E', children }: { 
   
   // Actually, a true slice/fragment effect is best achieved by
   // mapping the text multiple times with different clip-paths.
-  const slices = 12
+  const slices = 8
   
   return (
     <div 
       className="relative inline-block cursor-pointer select-none"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      style={{ filter: isHovered ? `drop-shadow(0 0 40px ${glowColor})` : 'none', transition: 'filter 0.5s' }}
+      style={{ filter: isHovered ? `drop-shadow(0 0 30px ${glowColor})` : 'none', transition: 'filter 0.3s', willChange: 'filter' }}
     >
       {/* Base invisible text just for sizing */}
       <div className="opacity-0">{text || children}</div>
@@ -37,23 +37,21 @@ export function GlitchDissolveText({ text, glowColor = '#FF2A1E', children }: { 
           scale: isHovered ? 1.05 : 1,
           filter: isHovered ? 'blur(4px)' : 'blur(0px)'
         }}
-        transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-        style={{ color: glowColor }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+        style={{ color: glowColor, willChange: 'opacity, transform, filter', transform: 'translateZ(0)' }}
       >
         {text || children}
       </motion.div>
 
       {/* The Fragments layer (scatter in on hover) */}
       {Array.from({ length: slices }).map((_, i) => {
-        // Create horizontal slice clip paths
         const heightPercent = 100 / slices
         const top = i * heightPercent
         const bottom = 100 - (i + 1) * heightPercent
 
-        // Randomize scatter destination
-        const scatterX = (Math.random() - 0.5) * 60
-        const scatterY = (Math.random() - 0.5) * 40
-        const rotate = (Math.random() - 0.5) * 15
+        const scatterX = (Math.random() - 0.5) * 40
+        const scatterY = (Math.random() - 0.5) * 20
+        const rotate = (Math.random() - 0.5) * 10
 
         return (
           <motion.div
@@ -62,20 +60,22 @@ export function GlitchDissolveText({ text, glowColor = '#FF2A1E', children }: { 
             style={{ 
               clipPath: `inset(${top}% 0 ${bottom}% 0)`,
               color: '#FFFFFF',
-              textShadow: `0 0 20px ${glowColor}`
+              textShadow: `0 0 15px ${glowColor}`,
+              willChange: 'transform, opacity',
+              WebkitBackfaceVisibility: 'hidden'
             }}
-            initial={{ opacity: 0, x: 0, y: 0, rotate: 0 }}
+            initial={{ opacity: 0, x: 0, y: 0, rotate: 0, scale: 1 }}
             animate={{ 
               opacity: isHovered ? 1 : 0,
               x: isHovered ? scatterX : 0,
               y: isHovered ? scatterY : 0,
               rotate: isHovered ? rotate : 0,
-              scale: isHovered ? 0.9 : 1,
+              scale: isHovered ? 0.95 : 1,
             }}
             transition={{
-              duration: 0.5,
-              ease: [0.19, 1, 0.22, 1],
-              delay: i * 0.015 // Stagger effect
+              duration: 0.4,
+              ease: [0.25, 1, 0.5, 1],
+              delay: i * 0.01 // Faster stagger for smoother execution
             }}
           >
            {text || children}
