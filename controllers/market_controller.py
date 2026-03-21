@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
+import random
 from services.agent_runner import run_agent
 from services.price_feed import get_crypto_price
 from models.market_store import markets
+from controllers.feed_controller import add_event
 
 def create_market(data):
     asset = "algorand"
@@ -26,24 +28,41 @@ def create_market(data):
 
     markets[m_id] = market
 
-    agent = {
-        "id": "1",
-        "name": "BullishBot"
-    }
+    agents = [
+        {"id": "1", "name": "MomentumBot", "strategy": "trend_following"},
+        {"id": "2", "name": "ReversalBot", "strategy": "mean_reversion"},
+        {"id": "3", "name": "VolumeBot", "strategy": "volume_based"},
+        {"id": "4", "name": "NewsBot", "strategy": "sentiment"},
+        {"id": "5", "name": "WhaleBot", "strategy": "risk_averse"}
+    ]
 
-    decision_data = run_agent(agent, {
-        "asset": market["asset"],
-        "price": market["start_price"]
-    })
+    for agent in agents:
+        decision_data = run_agent(agent, {
+            "asset": market["asset"],
+            "price": market["start_price"]
+        })
 
-    # 🧠 simulate bet
-    if decision_data["decision"] == "YES":
-        market["yes_pool"] += 50
-    else:
-        market["no_pool"] += 50
+        decision = decision_data["decision"]
+        confidence = random.uniform(0.5, 1.0)
+        bet_amount = int(100 * confidence)
 
-    print(f"[AGENT BET] {decision_data}")
-    
+        add_event({
+            "type": "AGENT_BET",
+            "agent": agent["name"],
+            "asset": market["asset"],
+            "decision": decision,
+            "amount": bet_amount,
+            "reason": decision_data["reason"]
+        })
+
+        if decision == "YES":
+            market["yes_pool"] += bet_amount
+        else:
+            market["no_pool"] += bet_amount
+
+        print(f"[AI BET] {agent['name']} → {decision} → {market['asset']}")
+
+    # ✅ NOW OUTSIDE LOOP
     return market
 
 

@@ -3,37 +3,39 @@ from config import GROQ_KEY
 
 
 def run_agent(agent, market):
-    """
-    agent: {
-        "id": "agent1",
-        "name": "BullishBot",
-        "api_key": "GROQ_KEY"
-    }
 
-    market: {
-        "asset": "bitcoin",
-        "price": 70500
-    }
-    """
+    strategy = agent.get("strategy", "")
+
+    if strategy == "trend_following":
+        personality = "You follow trends. If price is rising, predict YES."
+    
+    elif strategy == "mean_reversion":
+        personality = "You expect reversals. If price is high, predict NO."
+    
+    elif strategy == "volume_based":
+        personality = "You rely on volume spikes and momentum."
+    
+    elif strategy == "sentiment":
+        personality = "You analyze market sentiment and news."
+    
+    elif strategy == "risk_averse":
+        personality = "You are conservative and avoid risky bets."
 
     prompt = f"""
 You are an AI trading agent.
 
+{personality}
+
 Market:
 Asset: {market['asset']}
-Current Price: {market['price']}
+Price: {market['price']}
 
 Task:
-Decide if price will be HIGHER tomorrow.
+Predict if price will be HIGHER tomorrow.
 
 Rules:
-- Answer ONLY: YES or NO
-- Then give 1 line reason
-
-Format:
-YES - reason
-or
-NO - reason
+- Answer ONLY YES or NO
+- Give 1 line reasoning
 """
 
     try:
@@ -44,7 +46,7 @@ NO - reason
                 "Content-Type": "application/json"
             },
             json={
-                "model": "llama-3.3-70b",
+                "model": "llama-3.3-70b-versatile",
                 "messages": [
                     {"role": "user", "content": prompt}
                 ]
