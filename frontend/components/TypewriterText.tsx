@@ -39,8 +39,8 @@ export function TypewriterText({ text, speed = 20 }: { text: string, speed?: num
       {displayedText}
       <motion.span
         animate={{ opacity: [1, 0] }}
-        transition={{ repeat: Infinity, duration: 0.8, ease: "stepEnd" }}
-        className="inline-block w-2h-3 bg-[var(--white-70)] ml-1"
+        transition={{ repeat: Infinity, duration: 0.8, ease: "easeInOut" }}
+        className="inline-block w-2 h-4 bg-white/50 ml-1 translate-y-[2px]"
       >
         _
       </motion.span>

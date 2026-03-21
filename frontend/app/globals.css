@@ -14,56 +14,85 @@
 }
 
 :root {
-  /* ── Core Palette (Exact DeLorean) ── */
-  --bg-deep:       #15161A;
-  --bg-surface:    #1F2128;
-  --bg-panel:      #2A2C34;
+  /* ── Premium Color Palette (Enhanced DeLorean) ── */
+  --bg-deep:       #0F1117;
+  --bg-surface:    #1A1D26;
+  --bg-panel:      #252B3B;
+  --bg-glass:      rgba(31, 33, 40, 0.4);
+  --bg-elevated:   #2A3149;
   --black-pure:    #000000;
 
-  /* ── Borders ── */
-  --border-light:  rgba(255,255,255,0.15);
-  --border-dim:    rgba(255,255,255,0.05);
-  --border-red:    rgba(227, 38, 38, 0.4);
+  /* ── Borders (Premium glass-morphism) ── */
+  --border-light:  rgba(255,255,255,0.12);
+  --border-dim:    rgba(255,255,255,0.04);
+  --border-red:    rgba(255, 42, 30, 0.35);
+  --border-gold:   rgba(255, 200, 87, 0.15);
+  --border-cyan:   rgba(0, 255, 200, 0.15);
 
-  /* ── Primary Accent — DeLorean Neon Red ── */
+  /* ── Primary Accent — Neon Red ── */
   --red-neon:      #FF2A1E;
-  --red-dark:      #9E150F;
-  --red-glow:      rgba(255, 42, 30, 0.35);
+  --red-dark:      #8B1A13;
+  --red-glow:      rgba(255, 42, 30, 0.4);
+  --red-ultra:     rgba(255, 42, 30, 0.8);
 
-  /* ── Secondary ── */
+  /* ── Secondary Accents — Cyan & Gold ── */
+  --cyan-neon:     #00FFC8;
+  --cyan-dark:     #008B7A;
+  --cyan-glow:     rgba(0, 255, 200, 0.3);
+  
+  --gold-accent:   #FFC857;
+  --gold-dark:     #AA8C2E;
+  --gold-glow:     rgba(255, 200, 87, 0.25);
+
+  /* ── Neutrals ── */
   --white:         #FFFFFF;
+  --white-90:      rgba(255,255,255,0.9);
   --white-70:      rgba(255,255,255,0.7);
+  --white-50:      rgba(255,255,255,0.5);
   --white-40:      rgba(255,255,255,0.4);
   --white-20:      rgba(255,255,255,0.2);
+  --gray-600:      #6B7280;
+  --gray-700:      #374151;
 
   /* ── Typography (Industrial/Mechanical) ── */
   --font-logo:     'Syncopate', sans-serif;
   --font-body:     'Jura', sans-serif;
   --font-mono:     'Share Tech Mono', monospace;
 
+  /* ── Easing Functions ── */
   --ease-mech:     cubic-bezier(0.86, 0, 0.07, 1); /* Snappy mechanical */
+  --ease-smooth:   cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth */
+  --ease-elastic:  cubic-bezier(0.34, 1.56, 0.64, 1); /* Springy */
+
+  /* ── Shadows (Premium glass effect) ── */
+  --shadow-sm:     0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md:     0 8px 24px rgba(0,0,0,0.4);
+  --shadow-lg:     0 16px 48px rgba(0,0,0,0.5);
+  --shadow-glow:   0 0 20px rgba(255, 42, 30, 0.2), 0 0 40px rgba(255, 42, 30, 0.1);
 }
 
 html, body {
   background-color: var(--bg-deep);
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(255, 42, 30, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 255, 200, 0.03) 0%, transparent 50%);
   color: var(--white);
   font-family: var(--font-body);
   font-size: 14px;
-  line-height: 1.5;
-  height: 100%;
-  overflow: hidden;
+  line-height: 1.6;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Heavy Film Grain & Vignette ── */
+/* ── Enhanced Film Grain & Vignette ── */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.06;
+  opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
@@ -73,7 +102,7 @@ body::after {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.85) 100%);
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.6) 100%);
 }
 
 /* Large ambient neon diagonal light streaks behind main UI */
@@ -95,12 +124,64 @@ body::after {
    TYPOGRAPHY
    ================================================================ */
 
-h1, h2, h3, h4, h5 {
+/* ================================================================
+   TYPOGRAPHY SCALE (Premium Hierarchy)
+   ================================================================ */
+
+h1 {
   font-family: var(--font-logo);
   text-transform: uppercase;
-  line-height: 1;
-  letter-spacing: 0.05em;
+  font-size: 3.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-balance: true;
+}
+
+h2 {
+  font-family: var(--font-logo);
+  text-transform: uppercase;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+
+h3 {
+  font-family: var(--font-logo);
+  text-transform: uppercase;
+  font-size: 1.75rem;
+  line-height: 1.3;
+  letter-spacing: 0.03em;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+h4 {
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+h5 {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  color: var(--white-90);
 }
 
 .mono { font-family: var(--font-mono); text-transform: uppercase; }
@@ -112,7 +193,14 @@ h1, h2, h3, h4, h5 {
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--white-40);
+  font-weight: 500;
 }
+
+.text-muted { color: var(--white-50); }
+.text-subtle { color: var(--white-40); }
+.text-accent { color: var(--red-neon); }
+.text-accent-cyan { color: var(--cyan-neon); }
+.text-accent-gold { color: var(--gold-accent); }
 
 /* ================================================================
    GLITCH ANIMATION (Delorean ALPHA 05 style)
@@ -202,7 +290,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* ================================================================
-   BUTTONS
+   PREMIUM BUTTONS
    ================================================================ */
 
 .mech-btn {
@@ -213,15 +301,18 @@ h1, h2, h3, h4, h5 {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  padding: 12px 24px;
-  border: 1px solid var(--white-40);
+  padding: 12px 28px;
+  border: 1.5px solid var(--white-40);
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: border-color var(--ease-mech) 0.3s;
+  transition: all 0.3s var(--ease-smooth);
   display: inline-flex;
   align-items: center;
   gap: 12px;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.02);
 }
 
 .mech-btn::before {
@@ -230,46 +321,112 @@ h1, h2, h3, h4, h5 {
   top: 0; left: -100%;
   width: 100%; height: 100%;
   background: var(--white);
-  transition: transform var(--ease-mech) 0.4s;
+  transition: transform 0.4s var(--ease-mech);
   z-index: 1;
 }
 
-.mech-btn span { position: relative; z-index: 2; transition: color var(--ease-mech) 0.3s; }
+.mech-btn span { 
+  position: relative; 
+  z-index: 2; 
+  transition: color 0.3s var(--ease-smooth);
+}
 
-.mech-btn:hover { border-color: var(--white); }
+.mech-btn:hover { 
+  border-color: var(--white);
+  box-shadow: 
+    inset 0 0 10px rgba(255,255,255,0.05),
+    0 0 20px rgba(255,255,255,0.1);
+  transform: translateY(-2px);
+}
+
 .mech-btn:hover::before { transform: translateX(100%); }
 .mech-btn:hover span { color: var(--bg-deep); }
 
-.mech-btn-red {
-  background: var(--red-neon);
-  border-color: var(--red-neon);
-  color: var(--black-pure);
+.mech-btn:active { 
+  transform: translateY(0);
 }
 
-.mech-btn-red::before { background: var(--white); }
-.mech-btn-red:hover span { color: var(--black-pure); }
-.mech-btn-red:active { transform: scale(0.98); }
+/* Primary Red Button */
+.mech-btn-red {
+  background: linear-gradient(135deg, var(--red-neon) 0%, var(--red-dark) 100%);
+  border-color: var(--red-neon);
+  color: var(--black-pure);
+  box-shadow: 
+    0 0 20px var(--red-glow),
+    inset 0 0 10px rgba(255,255,255,0.1);
+}
+
+.mech-btn-red::before { 
+  background: var(--white);
+}
+
+.mech-btn-red:hover { 
+  border-color: var(--white);
+  box-shadow: 
+    0 0 30px var(--red-glow),
+    inset 0 0 15px rgba(255,255,255,0.15);
+  transform: translateY(-2px);
+}
+
+.mech-btn-red:hover span { color: var(--red-neon); }
+
+.mech-btn-red:active { 
+  transform: scale(0.98);
+}
+
+/* Secondary Cyan Button */
+.mech-btn-cyan {
+  background: rgba(0, 255, 200, 0.1);
+  border-color: var(--cyan-neon);
+  color: var(--cyan-neon);
+  box-shadow: 0 0 15px var(--cyan-glow);
+}
+
+.mech-btn-cyan:hover {
+  background: rgba(0, 255, 200, 0.15);
+  box-shadow: 0 0 25px var(--cyan-glow);
+  transform: translateY(-2px);
+}
+
+/* Disabled State */
+.mech-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: var(--white-20);
+  box-shadow: none;
+}
+
+.mech-btn:disabled:hover {
+  transform: none;
+}
 
 /* ================================================================
-   INPUTS
+   PREMIUM INPUTS & FORM ELEMENTS
    ================================================================ */
 
-input, textarea {
+input, textarea, select {
   width: 100%;
   background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(4px);
   border: 1px solid var(--border-light);
   color: var(--white);
   font-family: var(--font-body);
   font-size: 1rem;
   padding: 14px 18px;
   outline: none;
-  transition: all 0.2s;
+  transition: all 0.3s var(--ease-smooth);
   resize: none;
+  border-radius: 4px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
 }
 
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
   border-color: var(--red-neon);
-  box-shadow: inset 0 0 10px var(--red-glow);
+  background: rgba(0,0,0,0.5);
+  box-shadow: 
+    inset 0 0 10px var(--red-glow),
+    0 0 15px var(--red-glow);
+  transform: translateY(-1px);
 }
 
 input::placeholder, textarea::placeholder {
@@ -281,23 +438,134 @@ input::placeholder, textarea::placeholder {
 }
 
 /* ================================================================
-   SLOT CARDS (Like DeLorean "Build Slots")
+   MICRO-ANIMATIONS & TRANSITIONS
    ================================================================ */
 
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 10px var(--red-glow);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--red-glow);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-slide-in {
+  animation: slideInUp 0.6s var(--ease-smooth);
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s var(--ease-smooth);
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ================================================================
+   PREMIUM GLASS-MORPHISM CARDS
+   ================================================================ */
+
+.glass-card {
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 24px;
+  transition: all 0.3s var(--ease-smooth);
+  box-shadow: var(--shadow-sm);
+}
+
+.glass-card:hover {
+  border-color: var(--border-red);
+  box-shadow: var(--shadow-md), var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+/* Slot Cards (Enhanced DeLorean "Build Slots") */
 .slot-card {
   border: 1px solid var(--border-dim);
-  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,42,30,0.01) 100%);
+  backdrop-filter: blur(8px);
   position: relative;
   padding: 24px;
-  transition: border-color 0.3s var(--ease-mech), box-shadow 0.3s var(--ease-mech);
+  transition: all 0.4s var(--ease-mech);
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  border-radius: 6px;
+  box-shadow: inset 0 0 20px rgba(255,255,255,0.02);
 }
 
 .slot-card:hover {
   border-color: var(--red-neon);
-  box-shadow: 0 0 30px var(--red-glow), inset 0 0 20px rgba(255,42,30,0.1);
+  box-shadow: 
+    0 0 30px var(--red-glow),
+    inset 0 0 20px rgba(255,42,30,0.08),
+    inset 0 0 40px rgba(255,255,255,0.04);
+  transform: translateY(-4px);
+  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,42,30,0.03) 100%);
+}
+
+.slot-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(400px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,42,30,0.1), transparent 80%);
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.slot-card:hover::before {
+  opacity: 1;
 }
 
 /* Slot Card Header (e.g. "ALPHA DELOREAN") */
@@ -305,11 +573,18 @@ input::placeholder, textarea::placeholder {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
+  align-items: center;
 }
 
 .slot-brand svg {
   height: 12px;
   fill: var(--white-70);
+  transition: fill 0.3s;
+}
+
+.slot-card:hover .slot-brand svg {
+  fill: var(--red-neon);
+  filter: drop-shadow(0 0 8px var(--red-glow));
 }
 
 /* Massive Number within slot card */
@@ -319,12 +594,13 @@ input::placeholder, textarea::placeholder {
   font-weight: 300;
   line-height: 1;
   color: var(--white-70);
-  transition: color 0.3s, transform 0.4s var(--ease-mech);
+  transition: all 0.4s var(--ease-elastic);
 }
 
 .slot-card:hover .slot-num {
   color: var(--white);
-  transform: scale(1.05) translateX(5px);
+  transform: scale(1.08) translateX(8px);
+  text-shadow: 0 0 20px var(--red-glow);
 }
 
 /* Bottom status bar in slot card */
@@ -343,12 +619,13 @@ input::placeholder, textarea::placeholder {
   border-bottom: 2px solid var(--white-40);
   color: var(--white-70);
   margin-bottom: 6px;
-  transition: border-color 0.3s, color 0.3s;
+  transition: all 0.3s;
 }
 
 .slot-card:hover .slot-status-label {
   border-bottom-color: var(--red-neon);
   color: var(--red-neon);
+  text-shadow: 0 0 10px var(--red-glow);
 }
 
 /* ================================================================

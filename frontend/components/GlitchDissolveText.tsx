@@ -10,16 +10,16 @@ import { useState } from 'react'
  */
 export function GlitchDissolveText({ text, glowColor = '#FF2A1E', children }: { text?: string, glowColor?: string, children?: React.ReactNode }) {
   const [isHovered, setIsHovered] = useState(false)
-  
+
   // We'll split the text visually into a grid of small blocks.
   // When hovered, these blocks scatter, fade, and rotate out, revealing another layer.
-  
+
   // Actually, a true slice/fragment effect is best achieved by
   // mapping the text multiple times with different clip-paths.
   const slices = 8
-  
+
   return (
-    <div 
+    <div
       className="relative inline-block cursor-pointer select-none"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -32,7 +32,7 @@ export function GlitchDissolveText({ text, glowColor = '#FF2A1E', children }: { 
       <motion.div
         className="absolute inset-0"
         initial={{ opacity: 1, scale: 1 }}
-        animate={{ 
+        animate={{
           opacity: isHovered ? 0 : 1,
           scale: isHovered ? 1.05 : 1,
           filter: isHovered ? 'blur(4px)' : 'blur(0px)'
@@ -49,15 +49,15 @@ export function GlitchDissolveText({ text, glowColor = '#FF2A1E', children }: { 
         const top = i * heightPercent
         const bottom = 100 - (i + 1) * heightPercent
 
-        const scatterX = (Math.random() - 0.5) * 40
-        const scatterY = (Math.random() - 0.5) * 20
-        const rotate = (Math.random() - 0.5) * 10
+        const scatterX = (i - slices / 2) * 4
+        const scatterY = (i % 2 === 0 ? 1 : -1) * 10
+        const rotate = (i % 3 - 1) * 5
 
         return (
           <motion.div
             key={i}
             className="absolute inset-0"
-            style={{ 
+            style={{
               clipPath: `inset(${top}% 0 ${bottom}% 0)`,
               color: '#FFFFFF',
               textShadow: `0 0 15px ${glowColor}`,
@@ -65,7 +65,7 @@ export function GlitchDissolveText({ text, glowColor = '#FF2A1E', children }: { 
               WebkitBackfaceVisibility: 'hidden'
             }}
             initial={{ opacity: 0, x: 0, y: 0, rotate: 0, scale: 1 }}
-            animate={{ 
+            animate={{
               opacity: isHovered ? 1 : 0,
               x: isHovered ? scatterX : 0,
               y: isHovered ? scatterY : 0,
@@ -73,12 +73,12 @@ export function GlitchDissolveText({ text, glowColor = '#FF2A1E', children }: { 
               scale: isHovered ? 0.95 : 1,
             }}
             transition={{
-              duration: 0.4,
-              ease: [0.25, 1, 0.5, 1],
-              delay: i * 0.01 // Faster stagger for smoother execution
+              duration: 0.2,
+              ease: [0.05, 1, 0.5, 0.45],
+              delay: i * 0.01 
             }}
           >
-           {text || children}
+            {text || children}
           </motion.div>
         )
       })}

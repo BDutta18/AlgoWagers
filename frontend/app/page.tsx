@@ -1,296 +1,347 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { MOCK_AGENTS, generateAuditEntry, TerminalEvent, AuditEntry } from '@/lib/mockData'
-import { AmbientWavyBackground } from '@/components/AmbientWavyBackground'
-import { ParticleNetwork } from '@/components/ParticleNetwork'
-import { GlitchDissolveText } from '@/components/GlitchDissolveText'
-import { AgentSlotCard } from '@/components/AgentSlotCard'
-import { CustomCursor } from '@/components/CustomCursor'
-import { TypewriterText } from '@/components/TypewriterText'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
 import { MagneticButton } from '@/components/MagneticButton'
+import { useState } from 'react'
 
-const EV_META: Record<string, { label: string, col: string }> = {
-  info:    { label: 'SYS_MSG',  col: 'rgba(255,255,255,0.4)' },
-  success: { label: 'SETTLED',  col: '#FF2A1E' },
-  warning: { label: 'AWAIT_TX', col: '#ffaa00' },
-  payment: { label: 'X402_REQ', col: 'rgba(255,255,255,0.7)' },
-  event:   { label: 'LOG_EVT',  col: 'rgba(255,255,255,0.7)' },
-}
-
-export default function App() {
-  const [view, setView] = useState<'MARKETPLACE' | 'TERMINAL'>('MARKETPLACE')
-  const [selectedAgent, setSelectedAgent] = useState(MOCK_AGENTS[1].id)
-  const [taskInput, setTaskInput] = useState('')
-  const [isExecuting, setIsExecuting] = useState(false)
-  
-  const [events, setEvents] = useState<TerminalEvent[]>([])
-  const [audit, setAudit] = useState<AuditEntry[]>([])
-
-  useEffect(() => { setAudit(Array.from({ length: 4 }, (_, i) => generateAuditEntry(i))) }, [])
-
-  const handleExecute = async () => {
-    if (isExecuting) return
-    setIsExecuting(true)
-    setView('TERMINAL') // Trigger grand iris transition
-    
-    // Slight delay before matrix stream starts
-    setTimeout(async () => {
-      setEvents([])
-      const steps = [
-        { type: 'info' as const, msg: 'INITIALIZING AUTONOMOUS ROUTINE...' },
-        { type: 'payment' as const, msg: 'NEGOTIATING X402 PROTOCOL WITH TARGET AGENT' },
-        { type: 'warning' as const, msg: 'AWAITING AVALANCHE C-CHAIN SETTLEMENT [42000 GWEI]' },
-        { type: 'success' as const, msg: 'TXN OK: 0x4a3f...e817. FUNDS DEPOSITED.' },
-        { type: 'event' as const, msg: 'EXECUTION PARAMETERS SENT. AWAITING PROCESSOR...' },
-        { type: 'success' as const, msg: 'PROCESS OK. TERMINATING THREAD.' },
-      ]
-
-      for (const step of steps) {
-        await new Promise(r => setTimeout(r, 800 + Math.random() * 800))
-        setEvents(p => [...p, { id: Date.now().toString(), type: step.type, message: step.msg, timestamp: new Date().toISOString() }])
-      }
-
-      setAudit(p => [generateAuditEntry(p.length), ...p].slice(0,8))
-      setIsExecuting(false)
-    }, 1500)
-  }
-
-  // Auto-scroll terminal
-  const terminalEndRef = useRef<HTMLDivElement>(null)
-  useEffect(() => { terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [events])
+// Renders a line of text with per-character hover distortion.
+// Hover a letter → it shatters with chromatic split + scale burst.
+// All letters AFTER it drag to the right.
+function DistortLine({ text, color = 'white' }: { text: string; color?: string }) {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
 
   return (
-    <div className="flex flex-col h-screen w-full relative overflow-hidden z-10 selection:bg-[#FF2A1E] selection:text-white">
-      {/* GLOBAL BACKGROUND ENGINES */}
-      <CustomCursor />
-      <AmbientWavyBackground />
-      <ParticleNetwork />
+    <span style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+      {text.split('').map((char, i) => {
+        const isHovered = hoveredIdx === i
+        const isAfter = hoveredIdx !== null && i > hoveredIdx
+        const distance = hoveredIdx !== null ? i - hoveredIdx : 0
 
-      {/* ─────────────────────────────────────────────────────────
-          HEADER BAR (Floating Glassmorphism)
-          ───────────────────────────────────────────────────────── */}
-      <motion.header 
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-        style={{
-          margin: '20px 40px',
-          padding: '24px 40px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          position: 'relative',
-          zIndex: 100,
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: '8px'
-        }}
-      >
-        <div style={{ display: 'flex', gap: 20 }}>
-          <div style={{ width: 44, height: 44, background: 'var(--bg-surface)', border: '1px solid var(--border-dim)', display: 'grid', placeItems: 'center' }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--white)" strokeWidth="1.5">
-              <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/>
-            </svg>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <div style={{ fontFamily: 'var(--font-logo)', fontSize: '1.4rem', letterSpacing: '0.25em', lineHeight: 1.1 }}>
-              AZENTYC
-            </div>
-            <div className="mech-label" style={{ letterSpacing: '0.35em', marginTop: 4 }}>
-              AUTONOMOUS COMMERCE INFRASTRUCTURE
-            </div>
-          </div>
+        // How far after letters drag (px), capped
+        const dragX = isAfter ? Math.min(distance * 6, 36) : 0
+
+        return (
+          <motion.span
+            key={i}
+            onMouseEnter={() => char !== ' ' && setHoveredIdx(i)}
+            onMouseLeave={() => setHoveredIdx(null)}
+            animate={{
+              x: dragX,
+              // Hovered letter: slight skew + pop
+              skewX: isHovered ? -8 : 0,
+              scale: isHovered ? 1.12 : 1,
+              y: isHovered ? -4 : 0,
+            }}
+            transition={{
+              type: 'spring',
+              stiffness: 400,
+              damping: 20,
+              mass: 0.4,
+            }}
+            style={{
+              display: 'inline-block',
+              color: isHovered ? '#FF2A1E' : color,
+              // Chromatic aberration: offset red + cyan ghost shadows on hover
+              textShadow: isHovered
+                ? `-4px 0px 0 rgba(255, 42, 30, 0.85),
+                   4px 0px 0 rgba(0, 255, 200, 0.75),
+                   0 0 20px rgba(255, 42, 30, 0.6),
+                   0 0 40px rgba(255, 42, 30, 0.3)`
+                : isAfter
+                ? `${Math.min(distance * 1.5, 6)}px 0 0 rgba(255, 42, 30, 0.2)`
+                : 'none',
+              // Clip effect: slight opacity reduction on shattered char
+              filter: isHovered ? 'brightness(1.4) contrast(1.2)' : 'none',
+              cursor: char === ' ' ? 'default' : 'none',
+              userSelect: 'none',
+              // Preserve space width
+              minWidth: char === ' ' ? '0.3em' : undefined,
+              willChange: 'transform, text-shadow',
+            }}
+          >
+            {char === ' ' ? '\u00A0' : char}
+          </motion.span>
+        )
+      })}
+    </span>
+  )
+}
+
+function DistortTitle() {
+  return (
+    <h1
+      className="mb-8"
+      style={{
+        fontFamily: 'var(--font-body)',
+        fontSize: 'clamp(40px, 8vw, 90px)',
+        fontWeight: 700,
+        lineHeight: '1.15',
+        textTransform: 'uppercase',
+        letterSpacing: '-0.02em',
+      }}
+    >
+      <DistortLine text="BET AGAINST AI." />
+      <br />
+      <DistortLine text="BEAT THE ODDS." />
+    </h1>
+  )
+}
+
+import { useEffect } from 'react'
+import { api } from '@/lib/api'
+
+export default function LandingPage() {
+  const [marketCount, setMarketCount] = useState(42)
+  const [volume, setVolume] = useState('1.2M')
+  const [agents, setAgents] = useState('1,405')
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const markets = await api.getMarkets()
+        setMarketCount(markets.length + 38) // Base 38 + live ones
+        setVolume(((markets.length * 12.5) + 1150).toFixed(1) + 'K')
+        setAgents((markets.length * 3 + 1380).toLocaleString())
+      } catch (err) {
+        console.error("Failed to fetch landing stats:", err)
+      }
+    }
+    fetchStats()
+    const interval = setInterval(fetchStats, 30000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const stats = [
+    { label: 'TOTAL VOLUME', value: `${volume} ALGO`, change: '+24%' },
+    { label: 'ACTIVE MARKETS', value: marketCount.toString(), change: '+8' },
+    { label: 'AGENTS DEPLOYED', value: agents, change: '+142' },
+    { label: 'BIGGEST WIN (24H)', value: '84,000 ALGO', change: '⚡' },
+  ]
+
+  const features = [
+    { 
+      title: 'BINARY MARKETS', 
+      desc: 'Predict crypto, stocks, and real-world events. Pure probability. Winner takes the pool.',
+      icon: '📊'
+    },
+    { 
+      title: 'AGENTS VS HUMANS', 
+      desc: 'Deploy AI bots or trade manually. Level playing field. May the best prediction win.',
+      icon: '🤖'
+    },
+    { 
+      title: 'PYTHON SDK', 
+      desc: 'Autonomous agents in 10 lines of code. Powered by Groq LLaMA 70B. Ship faster.',
+      icon: '🐍'
+    },
+    { 
+      title: 'ON-CHAIN SETTLEMENT', 
+      desc: 'Trustless. Transparent. Smart contracts on Algorand. Your funds, your rules.',
+      icon: '⛓️'
+    },
+  ]
+
+  const containerVariants = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0,
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 1, y: 0 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, ease: "easeOut" }
+    }
+  }
+
+  return (
+    <div className="flex flex-col w-full">
+      {/* HERO SECTION */}
+      <section className="flex flex-col items-center justify-center min-h-[85vh] px-4 md:px-10 py-20 relative overflow-hidden">
+        
+        {/* Animated background gradient */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-red-900/20 to-transparent rounded-full blur-3xl animate-float" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-l from-cyan-900/10 to-transparent rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
-          <div style={{ display: 'flex', gap: 24 }}>
-            <span className="mech-label cursor-pointer hover:text-white transition-colors">LOG_IN</span>
-            <span className="mech-label cursor-pointer hover:text-white transition-colors">REGISTER</span>
-          </div>
-          <div style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
-            <span onClick={() => setView('MARKETPLACE')} className={`cursor-pointer transition-colors ${view === 'MARKETPLACE' ? 'text-[#FF2A1E]' : 'text-white/70 hover:text-white'}`} style={{ fontFamily: 'var(--font-logo)', fontSize: '0.9rem', letterSpacing: '0.1em' }}>
-              MARKETPLACE
+        <motion.div 
+          initial={{ opacity: 0, y: 50, filter: 'blur(10px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
+          className="flex flex-col items-center text-center max-w-[1200px] z-10"
+        >
+          {/* Eyebrow */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="inline-block mb-8"
+          >
+            <span className="text-cyan-neon text-sm tracking-[0.25em] font-mono uppercase px-4 py-2 border border-cyan-neon/30 rounded-full bg-cyan-neon/5 backdrop-blur-sm">
+              ⚡ Prediction Market 2.0
             </span>
-            <span className="cursor-pointer transition-colors hover:text-white text-white/70" style={{ fontFamily: 'var(--font-logo)', fontSize: '0.9rem', letterSpacing: '0.1em' }}>DOCS</span>
-            <MagneticButton className="mech-btn mech-btn-red text-[0.75rem] px-[16px] py-[8px]"><span>CONNECT EVM</span></MagneticButton>
+          </motion.div>
+
+          {/* Main Headline — with distortion on hover */}
+          <DistortTitle />
+          
+          {/* Subheadline */}
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="font-mono text-base md:text-lg text-white/60 max-w-[800px] leading-relaxed mb-12"
+          >
+            The first continuous prediction market where humans and autonomous AI agents compete directly on Algorand. Pure probability. Smart contracts. Your alpha against theirs.
+          </motion.p>
+
+          {/* CTA Buttons */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="flex gap-6 flex-wrap justify-center items-center mb-20"
+          >
+            <Link href="/markets">
+              <MagneticButton className="mech-btn mech-btn-red text-lg md:text-base px-8 md:px-10 py-4">
+                <span>EXPLORE MARKETS</span>
+              </MagneticButton>
+            </Link>
+            <Link href="/sdk">
+              <MagneticButton className="mech-btn mech-btn-cyan text-lg md:text-base px-8 md:px-10 py-4">
+                <span>DEPLOY AN AGENT</span>
+              </MagneticButton>
+            </Link>
+          </motion.div>
+
+          {/* Trust indicators */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="text-center"
+          >
+            <p className="text-xs text-white/40 uppercase tracking-[0.15em] mb-4">Trusted by traders and developers</p>
+            <div className="flex gap-6 justify-center items-center flex-wrap">
+              <span className="text-white/30 font-mono text-sm">✓ 24/7 Trading</span>
+              <span className="text-white/30 font-mono text-sm">✓ Algorand Smart Contracts</span>
+              <span className="text-white/30 font-mono text-sm">✓ Python SDK</span>
+            </div>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* LIVE STATS TAPE */}
+      <motion.section 
+        initial={{ opacity: 1, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className="w-full py-12 md:py-16 border-y border-red-neon/20 bg-gradient-to-r from-red-neon/5 via-transparent to-red-neon/5 backdrop-blur-sm"
+      >
+        <div className="flex justify-center md:justify-around items-center max-w-[1400px] mx-auto w-full px-6 md:px-8 flex-wrap gap-8 md:gap-12">
+          {stats.map((stat, i) => (
+            <motion.div 
+              key={i}
+              initial={{ opacity: 1, scale: 1 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.05, duration: 0.3, ease: "easeOut" }}
+              className="flex flex-col items-center gap-3 group"
+            >
+              <span className="mech-label text-white/40 text-[0.65rem] tracking-[0.25em] group-hover:text-red-neon transition-colors duration-300">{stat.label}</span>
+              <div className="flex items-baseline gap-2">
+                <span style={{ fontFamily: 'var(--font-logo)' }} className="text-2xl md:text-3xl text-red-neon tracking-widest font-bold drop-shadow-[0_0_15px_rgba(255,42,30,0.4)] group-hover:text-white transition-colors duration-300">
+                  {stat.value}
+                </span>
+                <span className="text-xs text-cyan-neon">{stat.change}</span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* FEATURES GRID */}
+      <section className="w-full max-w-[1240px] mx-auto mt-20 md:mt-32 mb-20 md:mb-40 px-4 md:px-10">
+        <motion.div
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="mb-16"
+        >
+          <span className="text-red-neon text-sm tracking-[0.25em] font-mono uppercase">Why AlgoWager</span>
+          <h2 className="text-4xl md:text-5xl font-bold uppercase mt-4 mb-4">Built for Winners</h2>
+          <p className="text-white/60 max-w-[600px] font-mono">
+            Four core innovations that change how prediction markets work.
+          </p>
+        </motion.div>
+
+        <motion.div 
+          variants={containerVariants}
+          initial="visible"
+          animate="visible"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+          {features.map((feat, i) => (
+            <motion.div 
+              key={i}
+              variants={itemVariants}
+              className="glass-card group hover:border-red-neon border-red-neon/50 relative overflow-hidden transition-all duration-300"
+            >
+              {/* Hover glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-red-neon/0 to-red-neon/0 group-hover:from-red-neon/10 group-hover:to-red-neon/5 transition-all duration-300 pointer-events-none" />
+              
+              {/* Icon */}
+              <div className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">{feat.icon}</div>
+              
+              {/* Title */}
+              <h3 className="text-lg md:text-xl font-bold tracking-widest uppercase mb-4 group-hover:text-red-neon transition-colors duration-300">{feat.title}</h3>
+              
+              {/* Description */}
+              <p className="font-mono text-white/60 leading-relaxed text-sm group-hover:text-white/80 transition-colors duration-300">
+                {feat.desc}
+              </p>
+
+              {/* Bottom accent line */}
+              <div className="absolute bottom-0 left-0 h-px w-0 bg-gradient-to-r from-red-neon to-transparent group-hover:w-full transition-all duration-300" />
+            </motion.div>
+          ))}
+        </motion.div>
+      </section>
+
+      {/* CTA SECTION */}
+      <motion.section 
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        className="w-full mb-20 px-4 md:px-10"
+      >
+        <div className="max-w-[900px] mx-auto glass-card border-red-neon/40 bg-gradient-to-r from-red-neon/10 via-transparent to-red-neon/5 p-8 md:p-16 text-center transition-all duration-300">
+          <h2 className="text-3xl md:text-5xl font-bold uppercase mb-6">Ready to Compete?</h2>
+          <p className="text-white/70 font-mono mb-10 text-base md:text-lg max-w-[700px] mx-auto">
+            Start trading now or deploy your first AI agent. No barriers. No limits. Just pure prediction market competition.
+          </p>
+          <div className="flex gap-4 flex-wrap justify-center">
+            <Link href="/markets">
+              <MagneticButton className="mech-btn mech-btn-red px-8 py-3 transition-all duration-300">
+                <span>START TRADING</span>
+              </MagneticButton>
+            </Link>
+            <Link href="/feed">
+              <MagneticButton className="mech-btn px-8 py-3 transition-all duration-300">
+                <span>VIEW ACTIVITY</span>
+              </MagneticButton>
+            </Link>
           </div>
         </div>
-      </motion.header>
-
-      {/* ─────────────────────────────────────────────────────────
-          PAGE CONTENT (AnimatePresence View Router)
-          ───────────────────────────────────────────────────────── */}
-      <main style={{ flex: 1, position: 'relative', zIndex: 10 }}>
-        <AnimatePresence mode="wait">
-
-          {/* =======================================================
-              VIEW: MARKETPLACE
-              ======================================================= */}
-          {view === 'MARKETPLACE' && (
-            <motion.div
-              key="marketplace"
-              initial={{ opacity: 0, scale: 0.98, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)', transition: { duration: 0.4 } }}
-              transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-              className="absolute inset-0 flex flex-col overflow-y-auto"
-            >
-              {/* Massive Hero Text */}
-              <div style={{ padding: '40px 40px 20px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(60px, 10vw, 140px)', fontWeight: 700, lineHeight: '0.85', textTransform: 'uppercase' }}>
-                    <GlitchDissolveText text="AZENTYC" glowColor="#FF2A1E" />
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 20 }}>
-                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(60px, 10vw, 140px)', fontWeight: 700, lineHeight: '0.85', textTransform: 'uppercase', color: 'transparent', WebkitTextStroke: '2px #FF2A1E' }}>
-                      <GlitchDissolveText glowColor="#FF2A1E">PROTO</GlitchDissolveText>
-                    </div>
-                    <span style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: 'clamp(40px, 8vw, 100px)', color: '#FF2A1E', textShadow: '0 0 60px rgba(255,42,30,0.35)', marginLeft: -10 }}>
-                      <GlitchDissolveText glowColor="#FF2A1E">01</GlitchDissolveText>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Grid Layout for Slots & Input */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(500px, 1fr) 400px', gap: 40, padding: '0 40px 60px', flex: 1 }}>
-                
-                <motion.div 
-                  initial="hidden" animate="show"
-                  variants={{ show: { transition: { staggerChildren: 0.1 } } }}
-                  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}
-                >
-                  {MOCK_AGENTS.map((agent, i) => (
-                    <motion.div key={agent.id} variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }}>
-                      <AgentSlotCard
-                        agent={agent}
-                        num={(i + 7).toString().padStart(2, '0')}
-                        active={selectedAgent === agent.id}
-                        onClick={() => setSelectedAgent(agent.id)}
-                      />
-                    </motion.div>
-                  ))}
-                </motion.div>
-
-                <div className="flex flex-col sticky top-10 self-start w-full">
-                  <div className="mech-panel">
-                    <div style={{ padding: '0 0 24px', borderBottom: '1px solid var(--border-dim)', marginBottom: 24 }}>
-                      <h3 style={{ fontSize: '1.4rem', marginBottom: 8 }}>COMMAND_INTERFACE</h3>
-                      <span className="mech-label">DIRECTIVE FOR <strong>{MOCK_AGENTS.find(a => a.id === selectedAgent)?.name}</strong></span>
-                    </div>
-                    <textarea
-                      rows={5}
-                      placeholder="INPUT OPERATIONAL DIRECTIVES HERE..."
-                      value={taskInput}
-                      onChange={e => setTaskInput(e.target.value)}
-                      style={{ marginBottom: 24, background: 'rgba(0,0,0,0.5)', border: '1px solid var(--border-dim)' }}
-                    />
-                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                      <MagneticButton className="mech-btn mech-btn-red" onClick={handleExecute} disabled={isExecuting}>
-                        <span>AUTHORIZE PROTOCOL</span>
-                      </MagneticButton>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </motion.div>
-          )}
-
-          {/* =======================================================
-              VIEW: TERMINAL (IRIS WIPE)
-              ======================================================= */}
-          {view === 'TERMINAL' && (
-            <motion.div
-              key="terminal"
-              initial={{ clipPath: 'circle(0% at 50% 50%)', opacity: 0 }}
-              animate={{ clipPath: 'circle(150% at 50% 50%)', opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }} // Grand cinematic iris wipe
-              className="absolute inset-0 flex flex-col padding-0 overflow-hidden"
-              style={{ background: 'var(--bg-deep)' }} // solid backdrop to hide marketplace entirely
-            >
-              
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, padding: '40px', height: '100%' }}>
-                
-                {/* TERMINAL FEED (Live Matrix) */}
-                <div style={{ display: 'flex', flexDirection: 'column', border: '1px solid var(--border-red)', background: 'rgba(0,0,0,0.4)', position: 'relative' }}>
-                  <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border-red)', background: 'rgba(255,42,30,0.05)', display: 'flex', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                      <div style={{ width: 4, height: 16, background: '#FF2A1E' }}/>
-                      <span className="mech-label text-white">AUTONOMOUS FEED // ENCRYPTED NODE</span>
-                    </div>
-                    {isExecuting && <span className="mech-label text-[#FF2A1E] animate-pulse">REC_</span>}
-                  </div>
-
-                  <div style={{ flex: 1, overflowY: 'auto', padding: '30px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 2.5 }}>
-                    {events.length === 0 ? (
-                      <div style={{ color: 'rgba(255,255,255,0.4)' }}>
-                        <TypewriterText text="> INITIATING HANDSHAKE PROTOCOL. AWAITING FEED FROM COORDINATOR..." speed={30} />
-                      </div>
-                    ) : (
-                      events.map((ev, idx) => {
-                        const m = EV_META[ev.type] || EV_META.info
-                        // Only typewrite the very latest event
-                        const isLatest = idx === events.length - 1 && isExecuting
-                        
-                        return (
-                          <div key={ev.id} style={{ display: 'flex', gap: 24, marginBottom: 16 }}>
-                            <span style={{ color: 'rgba(255,255,255,0.3)', minWidth: 80 }}>[{new Date(ev.timestamp).toLocaleTimeString('en-US', {hour12:false})}]</span>
-                            <span style={{ color: m.col, minWidth: 100 }}>{m.label}</span>
-                            <span style={{ color: 'rgba(255,255,255,0.85)', flex: 1 }}>
-                              {isLatest ? <TypewriterText text={ev.message} speed={25} /> : ev.message}
-                            </span>
-                          </div>
-                        )
-                      })
-                    )}
-                    <div ref={terminalEndRef}/>
-                  </div>
-                </div>
-
-                {/* AUDIT LOG & STATUS */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
-                  <div className="mech-panel" style={{ flex: 1 }}>
-                    <div style={{ padding: '0 0 24px', borderBottom: '1px solid var(--border-dim)' }}>
-                      <span className="mech-label text-white text-[0.8rem]">ALGORAND ON-CHAIN WRITE_LOG</span>
-                    </div>
-                    <div style={{ padding: '20px 0', display: 'flex', flexDirection: 'column', gap: 16 }}>
-                      {audit.length === 0 ? <span className="mech-label">NO RECORDS FOUND.</span> : audit.map(a => (
-                        <motion.div 
-                          key={a.id} 
-                          initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
-                          style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-dim)', paddingBottom: 16 }}
-                        >
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                            <span className="mech-label text-[0.7rem] text-white">TX_HASH: {a.id.slice(-12)}</span>
-                            <span className="mech-label text-[0.8rem] text-white/70">ROUTINE: {a.taskName}</span>
-                          </div>
-                          <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', gap: 6 }}>
-                            <span style={{ fontFamily: 'var(--font-logo)', fontSize: '0.9rem', color: '#FF2A1E', letterSpacing: '0.05em' }}>{a.amount} USDC</span>
-                            <span className="mech-label tracking-widest">{a.status}</span>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <MagneticButton className="mech-btn" onClick={() => setView('MARKETPLACE')}>
-                      <span>ABORT & RETURN</span>
-                    </MagneticButton>
-                  </div>
-                </div>
-
-              </div>
-            </motion.div>
-          )}
-
-        </AnimatePresence>
-      </main>
+      </motion.section>
     </div>
   )
 }
