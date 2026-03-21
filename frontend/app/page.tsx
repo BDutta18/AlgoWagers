@@ -15,51 +15,36 @@ import {
   generateAuditEntry,
   AuditEntry,
 } from '@/lib/mockData'
-import { colors, spacing } from '@/lib/animations'
 
 export default function Home() {
-  const [selectedAgentId, setSelectedAgentId] = useState<string>(MOCK_AGENTS[0].id)
+  const [selectedAgentId] = useState<string>(MOCK_AGENTS[0].id)
   const [auditEntries, setAuditEntries] = useState<AuditEntry[]>([])
-  const [sidebarOpen, setSidebarOpen] = useState(true)
   const [isDesktop, setIsDesktop] = useState(true)
 
-  const { events, isRunning, togglePlayback, clearEvents } = useTerminalEvents(true)
-  const { isExecuting, lastResult, executeTask, reset } = useTaskExecution()
+  const { events, isRunning, togglePlayback } = useTerminalEvents(true)
+  const { isExecuting, lastResult, executeTask } = useTaskExecution()
 
-  // Initialize audit entries
   useEffect(() => {
-    const initialAudits = Array.from({ length: 8 }, (_, i) =>
-      generateAuditEntry(i)
-    )
+    const initialAudits = Array.from({ length: 8 }, (_, i) => generateAuditEntry(i))
     setAuditEntries(initialAudits)
   }, [])
 
-  // Handle responsive layout
   useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 1024)
-    }
-    
+    const handleResize = () => setIsDesktop(window.innerWidth >= 1024)
     handleResize()
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // Simulate periodic audit updates
   useEffect(() => {
     const interval = setInterval(() => {
-      setAuditEntries((prev) => {
+      setAuditEntries(prev => {
         const newEntry = generateAuditEntry(prev.length)
-        return [newEntry, ...prev].slice(0, 10)
+        return [newEntry, ...prev].slice(0, 12)
       })
     }, 15000)
-
     return () => clearInterval(interval)
   }, [])
-
-  const handleTaskExecute = async (taskId: string) => {
-    await executeTask()
-  }
 
   return (
     <div
@@ -67,27 +52,27 @@ export default function Home() {
         display: 'flex',
         flexDirection: 'column',
         height: '100vh',
-        backgroundColor: colors.void,
-        color: colors.textPrimary,
         overflow: 'hidden',
+        position: 'relative',
+        zIndex: 1,
       }}
     >
-      {/* Top Navigation */}
+      {/* Fixed Top Nav */}
       <TopNavBar />
 
-      {/* Main Content Area */}
+      {/* Body — sits between TopNav (60px) and BottomBar (34px) */}
       <div
         style={{
-          display: 'grid',
-          gridTemplateColumns: isDesktop && sidebarOpen ? '280px 1fr' : '1fr',
-          gridTemplateRows: '1fr auto',
+          display: 'flex',
           flex: 1,
+          marginTop: 60,
+          marginBottom: 34,
           overflow: 'hidden',
-          transition: 'grid-template-columns 0.3s ease',
+          height: 'calc(100vh - 60px - 34px)',
         }}
       >
-        {/* Left Sidebar - Desktop Only */}
-        {isDesktop && sidebarOpen && (
+        {/* Left Sidebar */}
+        {isDesktop && (
           <LeftSidebar
             agents={MOCK_AGENTS}
             selectedAgentId={selectedAgentId}
@@ -97,71 +82,67 @@ export default function Home() {
         {/* Center Content */}
         <div
           style={{
+            flex: 1,
+            overflow: 'hidden',
             display: 'grid',
-            gridTemplateColumns: isDesktop ? '1fr 320px' : '1fr',
-            gridTemplateRows: isDesktop ? '1fr auto' : 'auto auto auto',
-            gap: spacing.lg,
-            padding: spacing.lg,
-            overflowY: 'auto',
+            gridTemplateColumns: isDesktop ? '1fr 300px' : '1fr',
+            gap: 0,
           }}
         >
-          {/* Main Panel */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.lg }}>
-            {/* Task Command Center */}
-            <TaskCommandCenter
-              tasks={MOCK_TASKS}
-              onExecute={handleTaskExecute}
-              isExecuting={isExecuting}
-            />
-
-            {/* Audit Trail */}
-            <AuditTrailPanel entries={auditEntries} />
-          </div>
-
-          {/* Right Panel - Terminal */}
+          {/* Main scrollable column */}
           <div
             style={{
-              gridColumn: isDesktop ? '2' : '1',
-              gridRow: isDesktop ? '1 / 3' : 'auto',
+              overflowY: 'auto',
+              padding: '16px',
               display: 'flex',
               flexDirection: 'column',
-              minHeight: isDesktop ? '400px' : '300px',
+              gap: 14,
+              borderRight: '1px solid var(--border-subtle)',
             }}
           >
-            <RightPanel
-              events={events}
-              isRunning={isRunning}
-              onTogglePlayback={togglePlayback}
-            />
+            <div className="fade-in-up" style={{ animationDelay: '0.05s' }}>
+              <TaskCommandCenter
+                tasks={MOCK_TASKS}
+                onExecute={executeTask}
+                isExecuting={isExecuting}
+              />
+            </div>
+
+            <div className="fade-in-up" style={{ animationDelay: '0.1s' }}>
+              <ResultWindow
+                result={lastResult}
+                isExecuting={isExecuting}
+              />
+            </div>
+
+            <div className="fade-in-up" style={{ animationDelay: '0.15s' }}>
+              <AuditTrailPanel entries={auditEntries} />
+            </div>
           </div>
 
-          {/* Result Window */}
+          {/* Right Panel — Terminal */}
           {isDesktop && (
-            <ResultWindow
-              result={lastResult}
-              isExecuting={isExecuting}
-            />
+            <div
+              className="fade-in-up"
+              style={{
+                padding: '16px 14px',
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                animationDelay: '0.08s',
+              }}
+            >
+              <RightPanel
+                events={events}
+                isRunning={isRunning}
+                onTogglePlayback={togglePlayback}
+              />
+            </div>
           )}
         </div>
-
-        {/* Result Window - Mobile */}
-        {!isDesktop && (
-          <div
-            style={{
-              gridColumn: '1',
-              padding: spacing.lg,
-              borderTop: `1px solid ${colors.borderSubtle}`,
-            }}
-          >
-            <ResultWindow
-              result={lastResult}
-              isExecuting={isExecuting}
-            />
-          </div>
-        )}
       </div>
 
-      {/* Bottom Status Bar */}
+      {/* Fixed Bottom Bar */}
       <BottomStatusBar />
     </div>
   )

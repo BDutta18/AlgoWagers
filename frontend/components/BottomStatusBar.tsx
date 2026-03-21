@@ -1,59 +1,73 @@
 'use client'
 
-import { colors, spacing } from '@/lib/animations'
+import { useState, useEffect } from 'react'
 
 export function BottomStatusBar() {
-  const coordinatorAddress = '0x7a2f8c9d3e1b5a6f9c2d8e1a3f7b9c5e2a8d1f3'
-  const blockHeight = 18342156
+  const [blockHeight, setBlockHeight] = useState(18342156)
+  const [gasPrice, setGasPrice] = useState(42)
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setBlockHeight(h => h + 1)
+      setGasPrice(Math.floor(38 + Math.random() * 12))
+    }, 12000)
+    return () => clearInterval(id)
+  }, [])
 
   return (
     <footer
       style={{
-        backgroundColor: colors.surfaceDarker,
-        borderTop: `1px solid ${colors.borderSubtle}`,
-        padding: `${spacing.md} ${spacing.lg}`,
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-        gap: spacing.lg,
-        fontSize: '0.75rem',
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 34,
+        zIndex: 100,
+        background: 'rgba(4,6,14,0.92)',
+        backdropFilter: 'blur(12px)',
+        borderTop: '1px solid var(--border-subtle)',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 16px',
+        gap: 0,
       }}
     >
-      <div>
-        <div style={{ color: colors.textMuted, marginBottom: spacing.xs }}>COORDINATOR</div>
-        <div
-          style={{
-            fontFamily: 'JetBrains Mono, monospace',
-            color: colors.accentPrimary,
-            fontSize: '0.7rem',
-          }}
-        >
-          {coordinatorAddress}
+      {/* Left — Network icons */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          <svg width="8" height="8" viewBox="0 0 8 8"><polygon points="4,0 8,8 0,8" fill="#e84138"/></svg>
+          <span className="mono" style={{ fontSize: '0.65rem', color: '#e84138', opacity: 0.8 }}>Fuji</span>
+        </div>
+        <div style={{ width: 1, height: 12, background: 'var(--border-subtle)' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          <span className="mono" style={{ fontSize: '0.65rem', color: '#0070dc', opacity: 0.8 }}>⬢ Algorand</span>
+        </div>
+        <div style={{ width: 1, height: 12, background: 'var(--border-subtle)' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          <span className="dot dot-purple" style={{ width: 5, height: 5 }} />
+          <span className="mono" style={{ fontSize: '0.65rem', color: 'var(--accent-purple)', opacity: 0.8 }}>Claude</span>
         </div>
       </div>
 
-      <div>
-        <div style={{ color: colors.textMuted, marginBottom: spacing.xs }}>BLOCK HEIGHT</div>
-        <div style={{ color: colors.textPrimary, fontWeight: 600 }}>#{blockHeight}</div>
+      {/* Center — Coordinator address */}
+      <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+        <span className="mono" style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
+          Coordinator:{' '}
+          <span style={{ color: 'var(--accent-blue)', opacity: 0.7 }}>0x3B2F…a8c4</span>
+        </span>
       </div>
 
-      <div>
-        <div style={{ color: colors.textMuted, marginBottom: spacing.xs }}>GAS PRICE</div>
-        <div style={{ color: colors.textSecondary }}>42 gwei</div>
-      </div>
-
-      <div>
-        <div style={{ color: colors.textMuted, marginBottom: spacing.xs }}>NETWORK STATUS</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: spacing.xs }}>
-          <div
-            style={{
-              width: '4px',
-              height: '4px',
-              borderRadius: '50%',
-              backgroundColor: colors.accentSuccess,
-              animation: 'pulse-glow 2s ease-in-out infinite',
-            }}
-          />
-          <span style={{ color: colors.accentSuccess }}>Synced</span>
+      {/* Right — Block height + gas + time */}
+      <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 14 }}>
+        <span className="mono" style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
+          Block <span style={{ color: 'var(--text-secondary)' }}>#{blockHeight.toLocaleString()}</span>
+        </span>
+        <span className="mono" style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
+          Gas <span style={{ color: 'var(--accent-cyan)', opacity: 0.8 }}>{gasPrice} gwei</span>
+        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          <span className="dot dot-green" style={{ width: 5, height: 5 }} />
+          <span className="mono" style={{ fontSize: '0.65rem', color: 'var(--accent-green)', opacity: 0.8 }}>Synced</span>
         </div>
       </div>
     </footer>
