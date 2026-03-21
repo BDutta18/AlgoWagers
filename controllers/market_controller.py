@@ -4,6 +4,9 @@ from services.agent_runner import run_agent
 from services.price_feed import get_crypto_price
 from models.market_store import markets
 from controllers.feed_controller import add_event
+from controllers.agent_controller import init_agent
+from models.agent_store import agents_stats
+
 
 def create_market(data):
     asset = "algorand"
@@ -23,7 +26,8 @@ def create_market(data):
         "created_at": datetime.utcnow().isoformat(),
         "ends_at": (datetime.utcnow() + timedelta(minutes=5)).isoformat(),
         "resolved": False,
-        "outcome": None
+        "outcome": None,
+        "bets": []   # ✅ initialize here
     }
 
     markets[m_id] = market
@@ -37,32 +41,51 @@ def create_market(data):
     ]
 
     for agent in agents:
+
+        # ✅ initialize agent stats
+        init_agent(agent)
+        agents_stats[agent["name"]]["bets"] += 1
+
+        # 🤖 run agent
         decision_data = run_agent(agent, {
             "asset": market["asset"],
             "price": market["start_price"]
         })
 
         decision = decision_data["decision"]
+
+        # 🎲 variable bet
         confidence = random.uniform(0.5, 1.0)
         bet_amount = int(100 * confidence)
 
+        # ✅ store bet for resolution
+        market["bets"].append({
+            "agent": agent["name"],
+            "decision": decision,
+            "amount": bet_amount
+        })
+
+        # ✅ add to feed
         add_event({
             "type": "AGENT_BET",
             "agent": agent["name"],
+            "strategy": agent["strategy"],
             "asset": market["asset"],
             "decision": decision,
             "amount": bet_amount,
             "reason": decision_data["reason"]
         })
 
+        # 💰 update pool
         if decision == "YES":
             market["yes_pool"] += bet_amount
         else:
             market["no_pool"] += bet_amount
 
-        print(f"[AI BET] {agent['name']} → {decision} → {market['asset']}")
+        print(f"[AI BET] {agent['name']} → {decision} → {market['asset']} → {bet_amount}")
 
-    # ✅ NOW OUTSIDE LOOP
+    print(f"[MARKET STATE] YES: {market['yes_pool']} | NO: {market['no_pool']}")
+
     return market
 
 
@@ -78,7 +101,9 @@ def get_all_markets():
         result.append({
             "id": m["id"],
             "asset": m["asset"],
-            "price": get_crypto_price(m["asset"]),
+            "question": "Will ALGORAND be higher tomorrow?",
+            "start_price": m["start_price"],
+            "current_price": get_crypto_price(m["asset"]),
             "yes_prob": round(yes_prob, 2),
             "no_prob": round(no_prob, 2),
             "ends_at": m["ends_at"],
@@ -111,5 +136,20 @@ def resolve_market(m_id):
 
     market["resolved"] = True
     market["outcome"] = outcome
+
+    # 🔥 update agent stats
+    for bet in market.get("bets", []):
+        agent_name = bet["agent"]
+        decision = bet["decision"]
+        amount = bet["amount"]
+
+        if decision == outcome:
+            agents_stats[agent_name]["wins"] += 1
+            agents_stats[agent_name]["profit"] += amount
+        else:
+            agents_stats[agent_name]["losses"] += 1
+            agents_stats[agent_name]["profit"] -= amount
+
+    print(f"[RESOLVE] Market {m_id} → {outcome}")
 
     return {"outcome": outcome}
