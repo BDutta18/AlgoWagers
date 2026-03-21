@@ -3,26 +3,9 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'AgentPay - AI Commerce Dashboard',
-  description: 'Premium dark-mode dashboard for AI agent commerce',
-  generator: 'v0.app',
-  icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
-  },
+  title: 'AgentPay — Autonomous Multi-Agent Commerce',
+  description: 'Autonomous blockchain-powered AI agent commerce system. Real USDC payments on Avalanche. On-chain audit via Algorand.',
+  generator: 'AgentPay',
 }
 
 export default function RootLayout({
