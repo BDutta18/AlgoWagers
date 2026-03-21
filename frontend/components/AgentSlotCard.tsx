@@ -123,10 +123,11 @@ export function AgentSlotCard({
         <motion.div 
           className="absolute inset-0 pointer-events-none mix-blend-screen"
           style={{
-            background: \`radial-gradient(circle at \${(x.get() + 0.5) * 100}% \${(y.get() + 0.5) * 100}%, rgba(255,42,30,0.1) 0%, transparent 60%)\`
+            background: `radial-gradient(circle at ${(x.get() + 0.5) * 100}% ${(y.get() + 0.5) * 100}%, rgba(255,42,30,0.1) 0%, transparent 60%)`
           }}
         />
       </div>
     </motion.div>
   )
 }
+  

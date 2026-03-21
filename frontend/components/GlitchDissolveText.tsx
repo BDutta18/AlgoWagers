@@ -23,7 +23,7 @@ export function GlitchDissolveText({ text, glowColor = '#FF2A1E', children }: { 
       className="relative inline-block cursor-pointer select-none"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      style={{ filter: isHovered ? \`drop-shadow(0 0 40px \${glowColor})\` : 'none', transition: 'filter 0.5s' }}
+      style={{ filter: isHovered ? `drop-shadow(0 0 40px ${glowColor})` : 'none', transition: 'filter 0.5s' }}
     >
       {/* Base invisible text just for sizing */}
       <div className="opacity-0">{text || children}</div>
@@ -60,9 +60,9 @@ export function GlitchDissolveText({ text, glowColor = '#FF2A1E', children }: { 
             key={i}
             className="absolute inset-0"
             style={{ 
-              clipPath: \`inset(\${top}% 0 \${bottom}% 0)\`,
+              clipPath: `inset(${top}% 0 ${bottom}% 0)`,
               color: '#FFFFFF',
-              textShadow: \`0 0 20px \${glowColor}\`
+              textShadow: `0 0 20px ${glowColor}`
             }}
             initial={{ opacity: 0, x: 0, y: 0, rotate: 0 }}
             animate={{ 

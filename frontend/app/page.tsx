@@ -168,7 +168,7 @@ export default function App() {
   }
 
   return (
-    <>
+    <div className="flex flex-col h-screen w-full relative overflow-hidden z-10">
       <AmbientWavyBackground />
 
       {/* ─────────────────────────────────────────────────────────
@@ -347,6 +347,6 @@ export default function App() {
         </div>
 
       </main>
-    </>
+    </div>
   )
 }
