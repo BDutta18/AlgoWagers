@@ -41,12 +41,12 @@ interface FighterState {
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const FIGHTER_CONFIGS: Record<string, { strategy: string; color: string; icon: string }> = {
-  LSTMBot:        { strategy: 'PyTorch LSTM · 80/20 split', color: '#00FFC8', icon: '🧠' },
-  ReversalBot:    { strategy: 'Mean Reversion Statistical', color: '#6C63FF', icon: '↩️' },
-  VolumeBot:      { strategy: 'On-Chain Volume Analysis',   color: '#FFC857', icon: '📊' },
-  NewsBot:        { strategy: 'NLP Sentiment Engine',       color: '#FF6B6B', icon: '📰' },
-  WhaleBot:       { strategy: 'Risk-Averse Whale Tracker',  color: '#4ECDC4', icon: '🐳' },
+const FIGHTER_CONFIGS: Record<string, { strategy: string; color: string; code: string }> = {
+  LSTMBot:        { strategy: 'PYTORCH LSTM · 80/20 SPLIT', color: '#00FFC8', code: 'LS' },
+  ReversalBot:    { strategy: 'MEAN REVERSION STATISTICAL', color: '#6C63FF', code: 'RV' },
+  VolumeBot:      { strategy: 'ON-CHAIN VOLUME ANALYSIS',   color: '#FFC857', code: 'VB' },
+  NewsBot:        { strategy: 'NLP SENTIMENT ENGINE',       color: '#FF6B6B', code: 'NB' },
+  WhaleBot:       { strategy: 'RISK-AVERSE WHALE TRACKER',  color: '#4ECDC4', code: 'WB' },
 }
 
 const EV_META: Record<string, { label: string; col: string }> = {
@@ -58,10 +58,24 @@ const EV_META: Record<string, { label: string; col: string }> = {
   error:   { label: 'ERROR',    col: '#FF2A1E' },
 }
 
-const MARKET_TYPE_STYLE: Record<string, { icon: string; label: string; border: string; glow: string }> = {
-  crypto: { icon: '₿', label: 'CRYPTO',  border: '#00FFC8', glow: 'rgba(0,255,200,0.2)' },
-  stock:  { icon: '📈', label: 'STOCKS',  border: '#6C63FF', glow: 'rgba(108,99,255,0.2)' },
-  sports: { icon: '⚽', label: 'SPORTS',  border: '#FFC857', glow: 'rgba(255,200,87,0.2)' },
+const MARKET_TYPE_STYLE: Record<string, { label: string; border: string; glow: string; tag: string }> = {
+  crypto: { label: 'CRYPTO', tag: 'C',  border: '#00FFC8', glow: 'rgba(0,255,200,0.15)' },
+  stock:  { label: 'STOCKS', tag: 'S',  border: '#6C63FF', glow: 'rgba(108,99,255,0.15)' },
+  sports: { label: 'SPORTS', tag: 'X',  border: '#FFC857', glow: 'rgba(255,200,87,0.15)' },
+}
+
+// Helper: Mechanical corner brackets
+function Brackets({ color = 'rgba(255,42,30,0.7)', size = 10, thick = 1.5 }: { color?: string; size?: number; thick?: number }) {
+  const s: React.CSSProperties = { position: 'absolute', width: size, height: size }
+  const b = `${thick}px solid ${color}`
+  return (
+    <>
+      <span style={{ ...s, top: 8, left: 8, borderTop: b, borderLeft: b }} />
+      <span style={{ ...s, top: 8, right: 8, borderTop: b, borderRight: b }} />
+      <span style={{ ...s, bottom: 8, left: 8, borderBottom: b, borderLeft: b }} />
+      <span style={{ ...s, bottom: 8, right: 8, borderBottom: b, borderRight: b }} />
+    </>
+  )
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -254,7 +268,7 @@ export default function MarketsPage() {
         </div>
         <div className="flex gap-3">
           <MagneticButton onClick={() => { fetchMarkets() }} className="mech-btn text-xs px-4 py-2">
-            <span>⟳ REFRESH</span>
+            <span>↻ REFRESH</span>
           </MagneticButton>
           <MagneticButton onClick={async () => { setIsLoading(true); await api.createMarket({ asset: 'algorand', type: 'crypto' }); fetchMarkets() }} className="mech-btn mech-btn-red text-xs px-4 py-2" disabled={isLoading}>
             <span>+ CREATE MARKET</span>
@@ -267,133 +281,210 @@ export default function MarketsPage() {
         {(battlePhase !== 'idle' || battleWinner) && (
           <motion.div
             key="battle"
-            initial={{ opacity: 0, y: 30, scaleY: 0.8 }}
-            animate={{ opacity: 1, y: 0, scaleY: 1 }}
-            exit={{ opacity: 0, y: -30, scaleY: 0.8 }}
-            transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-            className="mx-6 md:mx-10 mb-8 rounded-2xl overflow-hidden"
-            style={{ border: '1px solid rgba(255,200,87,0.4)', background: 'linear-gradient(135deg, rgba(255,200,87,0.05) 0%, rgba(0,0,0,0.9) 50%, rgba(255,42,30,0.05) 100%)' }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+            style={{
+              margin: '0 2.5rem 2rem',
+              border: '1px solid rgba(255,200,87,0.25)',
+              background: 'rgba(12,13,17,0.95)',
+              overflow: 'hidden',
+              position: 'relative',
+            }}
           >
+            {/* Top gold accent bar */}
+            <div style={{ height: 2, background: 'linear-gradient(90deg, #FFC857, rgba(255,200,87,0.2), transparent)' }} />
+
+            {/* Corner brackets — gold */}
+            <span style={{ position:'absolute',top:10,left:10, width:10,height:10, borderTop:'1.5px solid rgba(255,200,87,0.6)',borderLeft:'1.5px solid rgba(255,200,87,0.6)' }} />
+            <span style={{ position:'absolute',top:10,right:10, width:10,height:10, borderTop:'1.5px solid rgba(255,200,87,0.6)',borderRight:'1.5px solid rgba(255,200,87,0.6)' }} />
+            <span style={{ position:'absolute',bottom:10,left:10, width:10,height:10, borderBottom:'1.5px solid rgba(255,200,87,0.6)',borderLeft:'1.5px solid rgba(255,200,87,0.6)' }} />
+            <span style={{ position:'absolute',bottom:10,right:10, width:10,height:10, borderBottom:'1.5px solid rgba(255,200,87,0.6)',borderRight:'1.5px solid rgba(255,200,87,0.6)' }} />
+
             {/* Arena Header */}
-            <div className="px-6 py-4 flex items-center justify-between border-b border-white/10">
-              <div className="flex items-center gap-3">
+            <div style={{ padding: '0.9rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                {/* Mechanical cross indicator instead of emoji */}
                 <motion.div
-                  animate={{ rotate: battlePhase === 'fighting' ? 360 : 0 }}
-                  transition={{ duration: 2, repeat: battlePhase === 'fighting' ? Infinity : 0, ease: 'linear' }}
-                  className="text-2xl"
-                >⚔️</motion.div>
+                  animate={battlePhase === 'fighting' ? { opacity: [1, 0.3, 1] } : { opacity: 1 }}
+                  transition={{ duration: 0.8, repeat: battlePhase === 'fighting' ? Infinity : 0 }}
+                  style={{
+                    fontFamily: 'var(--font-mono)', fontSize: '0.75rem', letterSpacing: '0.15em',
+                    color: '#FFC857', border: '1px solid rgba(255,200,87,0.5)',
+                    padding: '3px 8px', lineHeight: 1,
+                  }}
+                >[X]</motion.div>
                 <div>
-                  <span className="font-mono font-bold text-sm text-yellow-400 tracking-widest uppercase">Agent Battle Arena</span>
-                  <p className="text-xs text-white/40 font-mono">5 AI models competing · Best confidence executes on-chain</p>
+                  <span style={{ fontFamily: 'var(--font-logo)', fontSize: '0.75rem', letterSpacing: '0.25em', color: '#FFC857', textTransform: 'uppercase' }}>AGENT BATTLE ARENA</span>
+                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.15em', margin: '3px 0 0' }}>5 AI MODELS COMPETING · BEST CONFIDENCE EXECUTES ON-CHAIN</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div>
                 {battlePhase === 'fighting' && (
-                  <span className="font-mono text-xs text-yellow-400 animate-pulse px-3 py-1 rounded border border-yellow-400/40 bg-yellow-400/10">● LIVE BATTLE</span>
+                  <motion.span
+                    animate={{ opacity: [1, 0.4, 1] }}
+                    transition={{ duration: 0.9, repeat: Infinity }}
+                    style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.2em', color: '#FFC857', border: '1px solid rgba(255,200,87,0.3)', padding: '3px 10px' }}
+                  >● LIVE BATTLE</motion.span>
                 )}
                 {battlePhase === 'resolved' && battleWinner && (
                   <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="font-mono text-xs text-green-neon px-3 py-1 rounded border border-green-neon/40 bg-green-neon/10"
-                  >🏆 {battleWinner.winner} WON</motion.span>
+                    initial={{ scale: 0 }} animate={{ scale: 1 }}
+                    style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.2em', color: '#00FFC8', border: '1px solid rgba(0,255,200,0.3)', padding: '3px 10px' }}
+                  >✓ {battleWinner.winner.toUpperCase()} WINS</motion.span>
                 )}
               </div>
             </div>
 
-            {/* Fighters Grid */}
-            <div className="p-6 grid grid-cols-2 md:grid-cols-5 gap-4">
+            {/* Fighters Grid — DeLorean numbered cards */}
+            <div style={{ padding: '1.25rem 1.5rem', display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 12 }}>
               {fighters.map((fighter, i) => {
-                const cfg = FIGHTER_CONFIGS[fighter.name] || { color: '#fff', icon: '🤖' }
+                const cfg = FIGHTER_CONFIGS[fighter.name] || { color: '#fff', code: '??' }
                 const isWinner = battleWinner?.winner === fighter.name
                 return (
                   <motion.div
                     key={fighter.name}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="relative rounded-xl p-4 flex flex-col items-center gap-3 text-center"
+                    transition={{ delay: i * 0.08, duration: 0.45, ease: [0.23,1,0.32,1] }}
                     style={{
-                      border: `1px solid ${isWinner ? '#FFC857' : cfg.color}40`,
-                      background: isWinner ? 'rgba(255,200,87,0.1)' : `${cfg.color}08`,
-                      boxShadow: isWinner ? `0 0 20px rgba(255,200,87,0.3)` : 'none',
+                      position: 'relative',
+                      border: `1px solid ${isWinner ? '#FFC857' : cfg.color}30`,
+                      background: isWinner
+                        ? 'linear-gradient(135deg, rgba(255,200,87,0.08) 0%, rgba(12,13,17,0.98) 70%)'
+                        : 'rgba(12,13,17,0.9)',
+                      padding: '1.1rem 1rem 1rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 10,
+                      overflow: 'hidden',
                     }}
                   >
-                    {isWinner && (
+                    {/* Corner brackets — accent color */}
+                    <span style={{ position:'absolute',top:5,left:5, width:7,height:7, borderTop:`1px solid ${isWinner ? '#FFC857' : cfg.color}70`,borderLeft:`1px solid ${isWinner ? '#FFC857' : cfg.color}70` }} />
+                    <span style={{ position:'absolute',top:5,right:5, width:7,height:7, borderTop:`1px solid ${isWinner ? '#FFC857' : cfg.color}70`,borderRight:`1px solid ${isWinner ? '#FFC857' : cfg.color}70` }} />
+                    <span style={{ position:'absolute',bottom:5,left:5, width:7,height:7, borderBottom:`1px solid ${isWinner ? '#FFC857' : cfg.color}70`,borderLeft:`1px solid ${isWinner ? '#FFC857' : cfg.color}70` }} />
+                    <span style={{ position:'absolute',bottom:5,right:5, width:7,height:7, borderBottom:`1px solid ${isWinner ? '#FFC857' : cfg.color}70`,borderRight:`1px solid ${isWinner ? '#FFC857' : cfg.color}70` }} />
+
+                    {/* Scan-line animation for active fighters */}
+                    {fighter.status === 'analyzing' && (
                       <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute -top-3 left-1/2 -translate-x-1/2 text-lg"
-                      >🏆</motion.div>
+                        animate={{ top: ['0%', '100%', '0%'] }}
+                        transition={{ duration: 1.8, repeat: Infinity, ease: 'linear' }}
+                        style={{
+                          position: 'absolute', left: 0, right: 0, height: 1,
+                          background: `linear-gradient(90deg, transparent, ${cfg.color}60, transparent)`,
+                          pointerEvents: 'none',
+                        }}
+                      />
                     )}
-                    <div className="text-2xl">{cfg.icon}</div>
-                    <div>
-                      <p className="font-mono text-xs font-bold text-white">{fighter.name}</p>
-                      <p className="font-mono text-[9px] text-white/40 mt-0.5">{cfg.strategy}</p>
+
+                    {/* Index + code plate row */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <span style={{
+                        fontFamily: 'var(--font-logo)', fontSize: '1.4rem', fontWeight: 700,
+                        color: isWinner ? '#FFC857' : `${cfg.color}30`,
+                        lineHeight: 1, letterSpacing: '-0.02em', userSelect: 'none',
+                        transition: 'color 0.4s',
+                      }}>0{i + 1}</span>
+                      <span style={{
+                        fontFamily: 'var(--font-mono)', fontSize: '0.52rem', letterSpacing: '0.2em',
+                        color: isWinner ? '#FFC857' : cfg.color,
+                        border: `1px solid ${isWinner ? '#FFC857' : cfg.color}40`,
+                        padding: '2px 6px', lineHeight: 1.3,
+                        background: isWinner ? 'rgba(255,200,87,0.08)' : `${cfg.color}10`,
+                      }}>{(cfg as any).code}</span>
                     </div>
 
-                    {/* Confidence bar */}
-                    <div className="w-full">
-                      <div className="flex justify-between text-[9px] font-mono mb-1">
-                        <span style={{ color: cfg.color }}>CONF</span>
+                    {/* Agent name + strategy */}
+                    <div>
+                      <p style={{ fontFamily: 'var(--font-logo)', fontSize: '0.7rem', fontWeight: 700, color: '#fff', letterSpacing: '0.08em', margin: 0, textTransform: 'uppercase' }}>{fighter.name}</p>
+                      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.52rem', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', margin: '3px 0 0', lineHeight: 1.4 }}>{cfg.strategy}</p>
+                    </div>
+
+                    {/* Separator */}
+                    <div style={{ height: 1, background: `linear-gradient(90deg, ${isWinner ? '#FFC857' : cfg.color}50, transparent)` }} />
+
+                    {/* Confidence */}
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.52rem', letterSpacing: '0.2em', color: isWinner ? '#FFC857' : cfg.color }}>CONF</span>
                         <motion.span
                           animate={{ opacity: fighter.status === 'analyzing' ? [1, 0.3, 1] : 1 }}
                           transition={{ duration: 0.8, repeat: fighter.status === 'analyzing' ? Infinity : 0 }}
-                          className="text-white"
-                        >{fighter.confidence > 0 ? `${fighter.confidence}%` : '...'}</motion.span>
+                          style={{ fontFamily: 'var(--font-mono)', fontSize: '0.52rem', letterSpacing: '0.1em', color: '#fff' }}
+                        >{fighter.confidence > 0 ? `${fighter.confidence}%` : '···'}</motion.span>
                       </div>
-                      <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                      <div style={{ height: 2, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
                         <motion.div
                           initial={{ width: 0 }}
-                          animate={{ width: fighter.confidence > 0 ? `${fighter.confidence}%` : '15%' }}
+                          animate={{ width: fighter.confidence > 0 ? `${fighter.confidence}%` : '12%' }}
                           transition={{ duration: 1.2, ease: 'easeOut' }}
-                          className="h-full rounded-full"
-                          style={{ background: isWinner ? '#FFC857' : cfg.color }}
+                          style={{ height: '100%', background: isWinner ? '#FFC857' : cfg.color }}
                         />
                       </div>
                     </div>
 
+                    {/* Decision stamp */}
                     {fighter.decision && (
-                      <span
-                        className="font-mono text-[9px] px-2 py-0.5 rounded font-bold"
-                        style={{
-                          background: fighter.decision === 'YES' ? 'rgba(0,255,200,0.15)' : 'rgba(255,42,30,0.15)',
+                      <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <span style={{
+                          fontFamily: 'var(--font-logo)', fontSize: '0.65rem', fontWeight: 700,
+                          letterSpacing: '0.2em', padding: '3px 10px',
+                          border: `1px solid ${fighter.decision === 'YES' ? 'rgba(0,255,200,0.5)' : 'rgba(255,42,30,0.5)'}`,
                           color: fighter.decision === 'YES' ? '#00FFC8' : '#FF2A1E',
-                          border: `1px solid ${fighter.decision === 'YES' ? '#00FFC8' : '#FF2A1E'}40`,
-                        }}
-                      >{fighter.decision}</span>
+                          background: fighter.decision === 'YES' ? 'rgba(0,255,200,0.06)' : 'rgba(255,42,30,0.06)',
+                        }}>{fighter.decision}</span>
+                      </div>
                     )}
 
-                    {fighter.status === 'analyzing' && (
-                      <motion.div
+                    {/* Analyzing status */}
+                    {fighter.status === 'analyzing' && !fighter.decision && (
+                      <motion.p
                         animate={{ opacity: [0.3, 1, 0.3] }}
                         transition={{ duration: 1.2, repeat: Infinity }}
-                        className="text-[9px] font-mono text-white/40"
-                      >analyzing...</motion.div>
+                        style={{ fontFamily: 'var(--font-mono)', fontSize: '0.52rem', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.15em', textAlign: 'center', margin: 0 }}
+                      >ANALYZING···</motion.p>
+                    )}
+
+                    {/* Winner left accent */}
+                    {isWinner && (
+                      <motion.div
+                        initial={{ scaleY: 0 }} animate={{ scaleY: 1 }}
+                        style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 2, background: 'linear-gradient(to bottom, #FFC857, transparent)', transformOrigin: 'top' }}
+                      />
                     )}
                   </motion.div>
                 )
               })}
             </div>
 
-            {/* Winner Banner */}
+            {/* Winner Banner — DeLorean style */}
             {battlePhase === 'resolved' && battleWinner && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="px-6 pb-6"
+                style={{ padding: '0 1.5rem 1.5rem' }}
               >
-                <div
-                  className="rounded-xl p-4 flex items-center justify-between"
-                  style={{ background: 'linear-gradient(90deg, rgba(255,200,87,0.2), rgba(255,200,87,0.05))', border: '1px solid rgba(255,200,87,0.4)' }}
-                >
+                <div style={{
+                  border: '1px solid rgba(255,200,87,0.35)',
+                  background: 'linear-gradient(90deg, rgba(255,200,87,0.07), rgba(12,13,17,0.98))',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '1rem 1.5rem', position: 'relative', overflow: 'hidden',
+                }}>
+                  <div style={{ height: 2, background: 'linear-gradient(90deg, #FFC857, transparent)', position: 'absolute', top: 0, left: 0, right: 0 }} />
                   <div>
-                    <p className="font-mono text-xs text-yellow-400/60 uppercase tracking-widest mb-1">🏆 Winner Executes Transaction</p>
-                    <p className="font-bold text-white"><span className="text-yellow-400">{battleWinner.winner}</span> → {battleWinner.amount} ALGO on <span className={battleWinner.decision === 'YES' ? 'text-green-neon' : 'text-red-neon'}>{battleWinner.decision}</span></p>
+                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.3em', color: 'rgba(255,200,87,0.5)', textTransform: 'uppercase', margin: '0 0 6px' }}>▸ WINNER EXECUTES TRANSACTION</p>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                      <span style={{ fontFamily: 'var(--font-logo)', fontSize: '1rem', fontWeight: 700, color: '#FFC857', letterSpacing: '0.08em' }}>{battleWinner.winner.toUpperCase()}</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em' }}>› {battleWinner.amount} ALGO ON</span>
+                      <span style={{ fontFamily: 'var(--font-logo)', fontSize: '0.85rem', fontWeight: 700, letterSpacing: '0.12em', color: battleWinner.decision === 'YES' ? '#00FFC8' : '#FF2A1E' }}>{battleWinner.decision}</span>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs text-white/40 font-mono">Confidence</p>
-                    <p className="text-2xl font-bold text-yellow-400">{battleWinner.confidence}%</p>
+                  <div style={{ textAlign: 'right' }}>
+                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.52rem', letterSpacing: '0.25em', color: 'rgba(255,255,255,0.3)', margin: '0 0 4px' }}>CONFIDENCE</p>
+                    <p style={{ fontFamily: 'var(--font-logo)', fontSize: '1.8rem', fontWeight: 700, color: '#FFC857', letterSpacing: '0.02em', margin: 0 }}>{battleWinner.confidence}<span style={{ fontSize: '0.8rem', color: 'rgba(255,200,87,0.5)' }}>%</span></p>
                   </div>
                 </div>
               </motion.div>
@@ -425,80 +516,149 @@ export default function MarketsPage() {
       </div>
 
       {/* ── Main Content: Markets + Wager Panel ──────────────────────────── */}
-      <div className="flex gap-6 px-6 md:px-10 pb-12 flex-1">
+      <div style={{ display: 'flex', gap: 24, padding: '0 2.5rem 3rem', flex: 1, alignItems: 'flex-start' }}>
 
-        {/* Markets Grid */}
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 auto-rows-max overflow-y-auto">
+        {/* ── DeLorean Market Cards Grid ─────────────────────────────────── */}
+        <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20, alignContent: 'start' }}>
           {isLoading ? (
             Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="rounded-xl border border-white/8 bg-white/3 h-52 animate-pulse" />
+              <div key={i} style={{ border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)', height: 220, animation: 'pulse 1.5s ease-in-out infinite' }} />
             ))
           ) : filteredMarkets.length === 0 ? (
-            <div className="col-span-3 text-center py-20 text-white/30 font-mono">No markets found for this filter.</div>
+            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '5rem 0', fontFamily: 'var(--font-mono)', color: 'rgba(255,255,255,0.2)', fontSize: '0.8rem', letterSpacing: '0.2em' }}>
+              ▸ NO ACTIVE MARKETS IN THIS CATEGORY
+            </div>
           ) : (
-            filteredMarkets.map((m_raw) => {
+            filteredMarkets.map((m_raw, cardIdx) => {
               const m = transformMarket(m_raw)
-              const style = MARKET_TYPE_STYLE[m_raw.type] || MARKET_TYPE_STYLE.crypto
+              const style = MARKET_TYPE_STYLE[m_raw.type || m_raw.market_type] || MARKET_TYPE_STYLE.crypto
+              const isSelected = selectedMarketId === m.id
+              const yesP = Math.round((m.yes_prob || 0.5) * 100)
+              const noP  = Math.round((m.no_prob  || 0.5) * 100)
               return (
                 <motion.div
                   key={m.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 28 }}
                   animate={{ opacity: 1, y: 0 }}
-                  whileHover={{ scale: 1.02, y: -2 }}
+                  transition={{ delay: cardIdx * 0.06, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
                   onClick={() => { setSelectedMarketId(m.id); setBetDirection(null); setBetAmount(''); setShowWagerPanel(true) }}
-                  className="cursor-pointer rounded-xl border p-5 flex flex-col gap-4 relative overflow-hidden transition-all duration-300"
                   style={{
-                    borderColor: selectedMarketId === m.id ? style.border : 'rgba(255,255,255,0.08)',
-                    background:  selectedMarketId === m.id ? style.glow : 'rgba(255,255,255,0.02)',
-                    boxShadow:   selectedMarketId === m.id ? `0 0 24px ${style.glow}` : 'none',
+                    position: 'relative',
+                    border: `1px solid ${isSelected ? style.border : 'rgba(255,255,255,0.07)'}`,
+                    background: isSelected
+                      ? `linear-gradient(135deg, ${style.glow} 0%, rgba(10,11,15,0.95) 60%)`
+                      : 'rgba(13,14,18,0.85)',
+                    cursor: 'pointer',
+                    overflow: 'hidden',
+                    backdropFilter: 'blur(8px)',
+                    transition: 'border-color 0.3s, background 0.3s',
+                    padding: '2rem 1.75rem 1.5rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1.2rem',
                   }}
                 >
-                  {/* Type Badge */}
-                  <div className="flex items-center justify-between">
-                    <span
-                      className="font-mono text-[10px] font-bold px-2 py-0.5 rounded tracking-widest"
-                      style={{ background: `${style.border}15`, color: style.border, border: `1px solid ${style.border}30` }}
-                    >{style.icon} {style.label}</span>
-                    <span className="font-mono text-[10px] text-white/30">{m.closeTime}</span>
+                  {/* Corner brackets */}
+                  <Brackets color={isSelected ? style.border : 'rgba(255,255,255,0.12)'} size={12} thick={1.5} />
+
+                  {/* Giant sequential number – top-left watermark */}
+                  <div style={{
+                    position: 'absolute', top: 12, left: 18,
+                    fontFamily: 'var(--font-logo)',
+                    fontSize: '3.5rem', fontWeight: 700,
+                    color: isSelected ? style.border : 'rgba(255,255,255,0.06)',
+                    lineHeight: 1, userSelect: 'none', letterSpacing: '-0.02em',
+                    transition: 'color 0.3s',
+                  }}>
+                    {String(cardIdx + 1).padStart(2, '0')}
                   </div>
 
-                  {/* Ticker + Price */}
-                  <div>
-                    <div className="flex items-baseline gap-3 mb-1">
-                      <span className="font-mono font-bold text-xl text-white">{m.ticker}</span>
+                  {/* Type plate – top-right */}
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start' }}>
+                    <div style={{
+                      fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.3em',
+                      color: style.border, textTransform: 'uppercase',
+                      border: `1px solid ${style.border}40`,
+                      padding: '2px 8px',
+                      background: `${style.border}12`,
+                    }}>
+                      {style.label}
+                    </div>
+                  </div>
+
+                  {/* Ticker + Price — pushed down past the giant number */}
+                  <div style={{ paddingTop: '1.4rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem', marginBottom: '0.4rem' }}>
+                      <span style={{
+                        fontFamily: 'var(--font-logo)', fontSize: 'clamp(1.2rem, 2.5vw, 1.6rem)',
+                        fontWeight: 700, letterSpacing: '0.05em', color: '#fff',
+                      }}>{m.ticker}</span>
                       {m.price != null && m.price > 0 && (
-                        <span className="font-mono text-sm" style={{ color: style.border }}>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: style.border, letterSpacing: '0.04em' }}>
                           ${typeof m.price === 'number' ? m.price.toLocaleString(undefined, { maximumFractionDigits: 2 }) : m.price}
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-white/60 leading-relaxed">{m.question}</p>
+                    <p style={{
+                      fontFamily: 'var(--font-mono)', fontSize: '0.72rem',
+                      color: 'rgba(255,255,255,0.45)', lineHeight: 1.6,
+                      letterSpacing: '0.03em', margin: 0,
+                    }}>{m.question}</p>
                   </div>
 
-                  {/* Probability Bar */}
+                  {/* Mechanical separator */}
+                  <div style={{ height: 1, background: `linear-gradient(90deg, ${style.border}60, transparent)` }} />
+
+                  {/* Probability — mechanical bar style */}
                   <div>
-                    <div className="flex justify-between text-[9px] font-mono text-white/40 mb-1.5">
-                      <span>YES <strong className="text-green-neon">{Math.round((m.yes_prob || 0.5) * 100)}%</strong></span>
-                      <span>NO <strong className="text-red-neon">{Math.round((m.no_prob || 0.5) * 100)}%</strong></span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.2em', color: 'rgba(0,255,200,0.8)' }}>YES {yesP}%</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.2em', color: 'rgba(255,42,30,0.8)' }}>NO {noP}%</span>
                     </div>
-                    <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden flex">
-                      <div className="h-full bg-green-neon/70 transition-all duration-500" style={{ width: `${(m.yes_prob || 0.5) * 100}%` }} />
-                      <div className="h-full bg-red-neon/70 transition-all duration-500" style={{ width: `${(m.no_prob || 0.5) * 100}%` }} />
+                    <div style={{ display: 'flex', height: 3, gap: 2, background: 'rgba(255,255,255,0.06)' }}>
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${yesP}%` }}
+                        transition={{ duration: 1, delay: 0.3 }}
+                        style={{ height: '100%', background: 'rgba(0,255,200,0.7)' }}
+                      />
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${noP}%` }}
+                        transition={{ duration: 1, delay: 0.3 }}
+                        style={{ height: '100%', background: 'rgba(255,42,30,0.7)' }}
+                      />
                     </div>
                   </div>
 
-                  {/* Volume + CTA */}
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-[9px] text-white/40">VOL: <strong className="text-white/60">{(m.volume / 1000).toFixed(1)}K ALGO</strong></span>
-                    <span
-                      className="font-mono text-[9px] tracking-widest px-2 py-1 rounded transition-all"
-                      style={{ background: style.glow, color: style.border, border: `1px solid ${style.border}30` }}
-                    >WAGER →</span>
+                  {/* Footer */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)' }}>
+                      VOL · {(m.volume / 1).toFixed(0)} ALGO
+                    </span>
+                    <motion.span
+                      whileHover={{ letterSpacing: '0.3em' }}
+                      style={{
+                        fontFamily: 'var(--font-mono)', fontSize: '0.58rem',
+                        letterSpacing: '0.2em', color: style.border,
+                        borderBottom: `1px solid ${style.border}60`,
+                        paddingBottom: 1,
+                        transition: 'all 0.2s',
+                      }}
+                    >WAGER ›</motion.span>
                   </div>
 
-                  {/* Active overlay indicator */}
-                  {selectedMarketId === m.id && (
-                    <div className="absolute top-0 right-0 w-1 h-full opacity-80" style={{ background: `linear-gradient(to bottom, ${style.border}, transparent)` }} />
+                  {/* Active left accent stripe */}
+                  {isSelected && (
+                    <motion.div
+                      initial={{ scaleY: 0 }}
+                      animate={{ scaleY: 1 }}
+                      style={{
+                        position: 'absolute', left: 0, top: 0, bottom: 0, width: 2,
+                        background: `linear-gradient(to bottom, ${style.border}, transparent)`,
+                        transformOrigin: 'top',
+                      }}
+                    />
                   )}
                 </motion.div>
               )
@@ -506,8 +666,8 @@ export default function MarketsPage() {
           )}
         </div>
 
-        {/* ── Wager + Battle Panel (right side) ──────────────────────────── */}
-        <div className="w-full md:w-[420px] flex flex-col gap-6 sticky top-8 h-fit">
+        {/* ── Wager + Panels (right side) ─────────────────────────────────── */}
+        <div style={{ width: 380, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 16, position: 'sticky', top: 100 }}>
 
           {/* WAGER PANEL */}
           <AnimatePresence>
@@ -517,37 +677,54 @@ export default function MarketsPage() {
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 30 }}
-                className="rounded-xl border border-red-neon/40 overflow-hidden"
-                style={{ background: 'linear-gradient(135deg, rgba(255,42,30,0.05) 0%, rgba(0,0,0,0.9) 100%)' }}
+                style={{
+                  position: 'relative',
+                  border: '1px solid rgba(255,42,30,0.35)',
+                  background: 'linear-gradient(135deg, rgba(255,42,30,0.07) 0%, rgba(10,11,15,0.97) 60%)',
+                  overflow: 'hidden',
+                }}
               >
+                <Brackets color="rgba(255,42,30,0.6)" size={10} thick={1.5} />
+
+                {/* Top accent bar */}
+                <div style={{ height: 2, background: 'linear-gradient(90deg, var(--red-neon), transparent)' }} />
+
                 {/* Panel Header */}
-                <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+                <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div>
-                    <span className="font-mono text-xs text-white/40 tracking-widest uppercase">Place Wager</span>
-                    <p className="font-bold text-white mt-0.5">{selectedTransformed.ticker} · {(MARKET_TYPE_STYLE[selectedTransformed.type] || MARKET_TYPE_STYLE.crypto).label}</p>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.3em', color: 'var(--red-neon)', textTransform: 'uppercase', display: 'block', marginBottom: 4 }}>▸ PLACE WAGER</span>
+                    <p style={{ fontFamily: 'var(--font-logo)', fontSize: '1rem', fontWeight: 700, color: '#fff', margin: 0, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                      {selectedTransformed.ticker} · {(MARKET_TYPE_STYLE[selectedTransformed.type] || MARKET_TYPE_STYLE.crypto).label}
+                    </p>
                   </div>
-                  <button onClick={() => setShowWagerPanel(false)} className="text-white/30 hover:text-white transition-colors text-lg">✕</button>
+                  <button
+                    onClick={() => setShowWagerPanel(false)}
+                    style={{ fontFamily: 'var(--font-mono)', color: 'rgba(255,255,255,0.3)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.8rem', letterSpacing: '0.1em' }}
+                  >CLOSE ✕</button>
                 </div>
 
-                <div className="p-6 flex flex-col gap-5">
+                <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                   {/* Question */}
-                  <p className="text-sm text-white/80 leading-relaxed font-medium border-l-2 border-red-neon/50 pl-3">
-                    {selectedTransformed.question}
-                  </p>
+                  <p style={{
+                    fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)',
+                    lineHeight: 1.7, letterSpacing: '0.03em',
+                    borderLeft: '2px solid rgba(255,42,30,0.5)', paddingLeft: 12, margin: 0,
+                  }}>{selectedTransformed.question}</p>
 
                   {/* YES/NO */}
-                  <div className="grid grid-cols-2 gap-3">
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     {(['YES', 'NO'] as const).map(dir => (
                       <motion.button
                         key={dir}
                         whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                         onClick={() => setBetDirection(dir)}
-                        className="py-4 font-bold text-base uppercase tracking-widest rounded-lg border-2 transition-all duration-200"
                         style={{
-                          borderColor: betDirection === dir ? (dir === 'YES' ? '#00FFC8' : '#FF2A1E') : 'rgba(255,255,255,0.1)',
-                          color:        betDirection === dir ? (dir === 'YES' ? '#00FFC8' : '#FF2A1E') : 'rgba(255,255,255,0.4)',
-                          background:   betDirection === dir ? (dir === 'YES' ? 'rgba(0,255,200,0.1)' : 'rgba(255,42,30,0.1)') : 'rgba(255,255,255,0.02)',
-                          boxShadow:    betDirection === dir ? `0 0 20px ${dir === 'YES' ? 'rgba(0,255,200,0.2)' : 'rgba(255,42,30,0.2)'}` : 'none',
+                          padding: '1rem', fontFamily: 'var(--font-logo)', fontWeight: 700,
+                          fontSize: '0.9rem', letterSpacing: '0.15em', textTransform: 'uppercase',
+                          border: `1px solid ${betDirection === dir ? (dir === 'YES' ? '#00FFC8' : '#FF2A1E') : 'rgba(255,255,255,0.1)'}`,
+                          color: betDirection === dir ? (dir === 'YES' ? '#00FFC8' : '#FF2A1E') : 'rgba(255,255,255,0.4)',
+                          background: betDirection === dir ? (dir === 'YES' ? 'rgba(0,255,200,0.08)' : 'rgba(255,42,30,0.08)') : 'rgba(255,255,255,0.02)',
+                          cursor: 'pointer', transition: 'all 0.2s',
                         }}
                       >{dir}</motion.button>
                     ))}
@@ -555,36 +732,43 @@ export default function MarketsPage() {
 
                   {/* Amount */}
                   <div>
-                    <label className="block text-xs font-mono text-white/40 tracking-widest mb-2">AMOUNT (ALGO)</label>
+                    <label style={{ display: 'block', fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', marginBottom: 8 }}>AMOUNT (ALGO)</label>
                     <input
-                      type="number"
-                      placeholder="100"
-                      value={betAmount}
+                      type="number" placeholder="100" value={betAmount}
                       onChange={e => setBetAmount(e.target.value)}
-                      className="w-full bg-white/5 border border-white/15 text-white font-mono rounded-lg p-3 placeholder-white/20 focus:border-red-neon focus:outline-none transition-all"
+                      style={{
+                        width: '100%', background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid rgba(255,255,255,0.12)', color: '#fff',
+                        fontFamily: 'var(--font-mono)', fontSize: '1rem',
+                        padding: '0.75rem 1rem', outline: 'none', boxSizing: 'border-box',
+                        letterSpacing: '0.05em',
+                      }}
                     />
                   </div>
 
                   {/* Return estimate */}
                   {betDirection && betAmount && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-3 rounded-lg border border-white/10 bg-white/3">
-                      <p className="text-xs text-white/40 font-mono mb-1">ESTIMATED RETURN</p>
-                      <p className="text-xl font-bold text-white">{Math.round(parseFloat(betAmount || '0') * (betDirection === 'YES' ? 1.85 : 2.15))} ALGO</p>
+                    <motion.div
+                      initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                      style={{ padding: '1rem', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.02)' }}
+                    >
+                      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.25em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', marginBottom: 6 }}>ESTIMATED RETURN</p>
+                      <p style={{ fontFamily: 'var(--font-logo)', fontSize: '1.5rem', fontWeight: 700, color: '#fff', letterSpacing: '0.05em' }}>{Math.round(parseFloat(betAmount || '0') * (betDirection === 'YES' ? 1.85 : 2.15))} <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>ALGO</span></p>
                     </motion.div>
                   )}
 
                   {/* Execute */}
                   <MagneticButton
-                    className={`w-full text-center py-4 font-bold uppercase tracking-widest rounded-lg ${betDirection && betAmount ? 'mech-btn mech-btn-red' : 'mech-btn opacity-40 cursor-not-allowed'}`}
+                    className={`w-full text-center py-4 font-bold uppercase tracking-widest ${betDirection && betAmount ? 'mech-btn mech-btn-red' : 'mech-btn opacity-40 cursor-not-allowed'}`}
                     onClick={handleExecuteBet}
                     disabled={isExecuting || !betDirection || !betAmount}
                   >
-                    <span>{isExecuting ? '⟳ PROCESSING...' : '⚡ EXECUTE WAGER'}</span>
+                    <span>{isExecuting ? '◌ PROCESSING...' : '▸ EXECUTE WAGER'}</span>
                   </MagneticButton>
 
                   {isExecuting && (
-                    <p className="text-xs text-center font-mono text-yellow-400/70 animate-pulse">
-                      5 AI agents analyzing market · Winner executes trade
+                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', textAlign: 'center', color: 'rgba(255,200,87,0.7)', letterSpacing: '0.1em', animation: 'pulse 1.5s ease-in-out infinite' }}>
+                      5 AI AGENTS ANALYZING · WINNER EXECUTES TRADE
                     </p>
                   )}
                 </div>
@@ -592,23 +776,29 @@ export default function MarketsPage() {
             )}
           </AnimatePresence>
 
-          {/* ── Live Terminal (Agent Thoughts) ────────────────────────────── */}
-          <div className="rounded-xl border border-red-neon/30 overflow-hidden">
-            <div className="px-5 py-3 border-b border-red-neon/20 flex items-center justify-between bg-red-neon/5">
-              <span className="font-mono text-xs text-red-neon tracking-widest uppercase">ALGORAND SETTLEMENT LAYER</span>
-              {isExecuting && <span className="text-xs font-mono text-red-neon animate-pulse">● LIVE</span>}
+          {/* ── Settlement Layer Terminal ───────────────────────────────────── */}
+          <div style={{ border: '1px solid rgba(255,42,30,0.2)', overflow: 'hidden' }}>
+            <div style={{
+              padding: '0.75rem 1.25rem', borderBottom: '1px solid rgba(255,42,30,0.15)',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              background: 'rgba(255,42,30,0.04)',
+            }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.3em', color: 'var(--red-neon)', textTransform: 'uppercase' }}>▸ ALGORAND SETTLEMENT LAYER</span>
+              {isExecuting && <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', color: 'var(--red-neon)', letterSpacing: '0.15em', animation: 'pulse 1s ease-in-out infinite' }}>● LIVE</span>}
             </div>
-            <div className="h-52 overflow-y-auto px-5 py-4 font-mono text-xs leading-relaxed space-y-2">
+            <div style={{ height: 180, overflowY: 'auto', padding: '1rem 1.25rem', display: 'flex', flexDirection: 'column', gap: 6 }}>
               {events.length === 0 ? (
-                <div className="text-white/20 animate-pulse"><TypewriterText text="> AWAITING WAGER TO INITIATE AGENT ANALYSIS..." speed={30} /></div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'rgba(255,255,255,0.2)', letterSpacing: '0.05em' }}>
+                  <TypewriterText text="> AWAITING WAGER TO INITIATE AGENT ANALYSIS..." speed={30} />
+                </div>
               ) : (
                 events.map((ev, idx) => {
-                  const m = EV_META[ev.type] || EV_META.info
+                  const meta = EV_META[ev.type] || EV_META.info
                   return (
-                    <motion.div key={ev.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="flex gap-3">
-                      <span className="text-white/25 shrink-0">[{new Date(ev.timestamp).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}]</span>
-                      <span style={{ color: m.col }} className="shrink-0 font-bold">{m.label}</span>
-                      <span className="text-white/70 flex-1 break-all">
+                    <motion.div key={ev.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} style={{ display: 'flex', gap: 8, fontSize: '0.65rem', fontFamily: 'var(--font-mono)' }}>
+                      <span style={{ color: 'rgba(255,255,255,0.25)', flexShrink: 0 }}>[{new Date(ev.timestamp).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}]</span>
+                      <span style={{ color: meta.col, flexShrink: 0, fontWeight: 700 }}>{meta.label}</span>
+                      <span style={{ color: 'rgba(255,255,255,0.6)', flex: 1, wordBreak: 'break-all' }}>
                         {idx === 0 && isExecuting ? <TypewriterText text={ev.message} speed={20} /> : ev.message}
                       </span>
                     </motion.div>
@@ -619,32 +809,35 @@ export default function MarketsPage() {
             </div>
           </div>
 
-          {/* ── On-chain Audit Trail ─────────────────────────────────────── */}
-          <div className="rounded-xl border border-cyan-neon/30 overflow-hidden">
-            <div className="px-5 py-3 border-b border-cyan-neon/20 bg-cyan-neon/5">
-              <span className="font-mono text-xs text-cyan-neon tracking-widest uppercase">ON-CHAIN AUDIT TRAIL</span>
+          {/* ── On-Chain Audit Trail ──────────────────────────────────────── */}
+          <div style={{ border: '1px solid rgba(0,255,200,0.15)', overflow: 'hidden' }}>
+            <div style={{
+              padding: '0.75rem 1.25rem', borderBottom: '1px solid rgba(0,255,200,0.1)',
+              background: 'rgba(0,255,200,0.03)',
+            }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.3em', color: 'var(--cyan-neon)', textTransform: 'uppercase' }}>▸ ON-CHAIN AUDIT TRAIL</span>
             </div>
-            <div className="divide-y divide-white/5">
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               {audit.slice(0, 6).map((a, idx) => (
                 <motion.div
                   key={a.id || idx}
                   initial={{ opacity: 0, x: 10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: idx * 0.05 }}
-                  className="px-5 py-3 flex items-center gap-4"
+                  style={{ padding: '0.75rem 1.25rem', display: 'flex', alignItems: 'center', gap: 16, borderBottom: '1px solid rgba(255,255,255,0.04)' }}
                 >
-                  <div className="flex-1 min-w-0">
-                    <p className="font-mono text-[10px] text-white/30 truncate">TX: {(a.id || '').slice(-12)}</p>
-                    <p className="font-mono text-xs text-white/80 font-bold">{a.taskName}</p>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', color: 'rgba(255,255,255,0.25)', letterSpacing: '0.15em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', margin: 0 }}>TX #{(a.id || '').slice(-12)}</p>
+                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'rgba(255,255,255,0.75)', fontWeight: 700, margin: '2px 0 0', letterSpacing: '0.05em' }}>{a.taskName}</p>
                   </div>
-                  <div className="text-right shrink-0">
-                    <p className={`font-mono text-[10px] font-bold ${a.status === 'SETTLED' ? 'text-green-neon' : a.status === 'CONFIRMED' ? 'text-cyan-neon' : 'text-yellow-400'}`}>{a.status}</p>
-                    <p className="font-mono text-sm font-bold text-white">{a.amount} <span className="text-xs text-white/40">ALGO</span></p>
+                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', fontWeight: 700, letterSpacing: '0.15em', margin: 0, color: a.status === 'SETTLED' ? '#00FFC8' : a.status === 'CONFIRMED' ? 'var(--cyan-neon)' : '#FFC857' }}>{a.status}</p>
+                    <p style={{ fontFamily: 'var(--font-logo)', fontSize: '0.9rem', fontWeight: 700, color: '#fff', margin: '2px 0 0', letterSpacing: '0.05em' }}>{a.amount} <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.3)' }}>ALGO</span></p>
                   </div>
                 </motion.div>
               ))}
               {audit.length === 0 && (
-                <p className="px-5 py-6 text-xs font-mono text-white/20 text-center">No transactions yet. Place a wager to begin.</p>
+                <p style={{ padding: '1.5rem', fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'rgba(255,255,255,0.2)', textAlign: 'center', letterSpacing: '0.1em' }}>No transactions yet. Place a wager to begin.</p>
               )}
             </div>
           </div>

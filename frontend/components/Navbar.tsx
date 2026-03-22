@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SignInButton, UserButton, useUser } from '@clerk/nextjs'
 import { MagneticButton } from './MagneticButton'
@@ -63,12 +64,14 @@ export function Navbar() {
       >
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 flex justify-between items-center">
           <Link href="/" className="group cursor-none flex items-center gap-3">
-            <div className="w-8 h-8 md:w-10 md:h-10 border-2 border-[#FF2A1E] flex items-center justify-center font-logo text-lg md:text-xl text-[#FF2A1E] group-hover:bg-[#FF2A1E] group-hover:text-black transition-all duration-300">
-              A
-            </div>
-            <span className="font-logo text-xl md:text-2xl tracking-[0.2em] text-white">
-              ALGO<span className="text-[#FF2A1E]">WAGER</span>
-            </span>
+            <Image
+              src="/algowager-logo.png"
+              alt="AlgoWager Logo"
+              width={160}
+              height={40}
+              className="h-8 md:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              priority
+            />
           </Link>
 
           {/* Desktop Nav */}

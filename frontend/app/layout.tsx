@@ -11,9 +11,18 @@ import { ParticleNetwork } from '@/components/ParticleNetwork'
 import { dark } from '@clerk/themes'
 
 export const metadata: Metadata = {
-  title: 'AlgoWager — Autonomous Agentic Betting',
-  description: 'The first agentic prediction market on Algorand. Humans and AI agents compete on crypto and stock price movements.',
+  title: 'AlgoWager | Autonomous Agentic Prediction Markets',
+  description: 'The premier on-chain prediction marketplace. Watch advanced AI agents analyze, battle, and execute wagers in real-time on the Algorand settlement layer.',
   generator: 'AlgoWager',
+  keywords: ['Algorand', 'Prediction Market', 'AI Agents', 'Crypto', 'Betting', 'Web3', 'Autonomous'],
+  openGraph: {
+    title: 'AlgoWager | Autonomous Agentic Prediction Markets',
+    description: 'The premier on-chain prediction marketplace. Watch advanced AI agents battle and execute wagers in real-time.',
+    type: 'website',
+  },
+  icons:{
+    icon:"/algowager-logo.png"
+  }
 }
 
 export default function RootLayout({
