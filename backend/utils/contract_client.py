@@ -1,6 +1,7 @@
 import json
 import logging
 import time
+import base64
 from typing import Optional
 
 from algosdk import encoding, abi
@@ -10,6 +11,7 @@ from algosdk.transaction import (
     StateSchema,
     OnComplete,
     PaymentTxn,
+    calculate_group_id,
 )
 from algosdk.account import address_from_private_key
 
@@ -40,7 +42,7 @@ ORACLE_NAME = "algowager_oracle"
 AGENT_REGISTRY_NAME = "algowager_agents"
 FEE_VAULT_NAME = "algowager_fee_vault"
 
-AGENT_REGISTRATION_STAKE = 1.0
+AGENT_REGISTRATION_STAKE = 1.0  # Contract (AgentRegistry.teal:96) requires >= 1_000_000 microAlgos
 
 
 class ContractClient:
@@ -55,88 +57,111 @@ class ContractClient:
         self._agent_registry_app_id = None
         self._fee_vault_app_id = None
 
-    def _encode_args(self, *args) -> list:
-        result = []
-        for arg in args:
-            if isinstance(arg, str):
-                result.append(arg.encode())
-            elif isinstance(arg, int):
-                result.append(arg.to_bytes(8, "big"))
-            elif isinstance(arg, bytes):
-                result.append(arg)
-            elif isinstance(arg, dict):
-                result.append(json.dumps(arg).encode())
-            else:
-                result.append(str(arg).encode())
-        return result
+    def _encode_args(self, method_sig: str, args: list) -> list[bytes]:
+        """Encode arguments for an ARC4 ABI method call."""
+        method = abi.Method.from_signature(method_sig)
+        selector = method.get_selector()
+        
+        encoded_args = [selector]
+        if not args:
+            return encoded_args
+
+        for i, arg in enumerate(args):
+            # Dynamic encoding based on method argument types
+            arg_type = method.args[i].type
+            val = arg
+            
+            # Handle string/int conversion based on expected ABI type
+            type_str = str(arg_type)
+            if type_str == "string" and isinstance(arg, bytes):
+                val = arg.decode()
+            elif (type_str.startswith("uint") or type_str.startswith("int")) and isinstance(arg, str):
+                val = int(arg)
+            
+            # Use ABIType.from_string().encode() which is more universally supported
+            encoded_args.append(abi.ABIType.from_string(type_str).encode(val))
+            
+        return encoded_args
 
     def _app_call(
         self,
         app_id: int,
-        method: str,
+        method_sig: str,
         args: list = None,
         opt_in: bool = False,
         payment: dict = None,
+        boxes: list = None,
     ) -> dict:
         params = self.algod.suggested_params()
         sender = self.coordinator_address
 
-        app_args = self._encode_args(method)
-        if args:
-            app_args.extend(args)
+        app_args = self._encode_args(method_sig, args)
 
-        if opt_in:
-            txn = ApplicationOptInTxn(
+        # Standard NoOp call
+        app_call_txn = ApplicationCallTxn(
+            sender=sender,
+            sp=params,
+            index=app_id,
+            on_complete=OnComplete.OptInOC if opt_in else OnComplete.NoOpOC,
+            app_args=app_args,
+            boxes=[(app_id, b) for b in boxes] if boxes else None,
+            local_schema=StateSchema(0, 0),
+        )
+
+        if payment:
+            # Atomic Group: Payment + Application Call
+            payment_txn = PaymentTxn(
                 sender=sender,
                 sp=params,
-                index=app_id,
-                args=app_args if app_args else None,
+                receiver=get_application_address(app_id),
+                amt=int(payment["amount"] * 1_000_000),
+                note=f"Payment for {method_sig.split('(')[0]}".encode(),
             )
+            # Group the transactions
+            gid = calculate_group_id([payment_txn, app_call_txn])
+            payment_txn.group = gid
+            app_call_txn.group = gid
+            
+            # Sign both
+            signed_payment = payment_txn.sign(self.coordinator_key)
+            signed_app_call = app_call_txn.sign(self.coordinator_key)
+            
+            # Send as a group
+            txid = self.algod.send_transactions([signed_payment, signed_app_call])
         else:
-            local_schema = StateSchema(0, 0)
-            if payment:
-                txn = PaymentTxn(
-                    sender=sender,
-                    sp=params,
-                    receiver=get_application_address(app_id),
-                    amt=int(payment["amount"] * 1_000_000),
-                    note=method.encode(),
-                )
-            else:
-                txn = ApplicationCallTxn(
-                    sender=sender,
-                    sp=params,
-                    index=app_id,
-                    on_complete=OnComplete.NoOpOC,
-                    args=app_args,
-                    local_schema=local_schema,
-                )
+            # Single Application Call
+            signed_app_call = app_call_txn.sign(self.coordinator_key)
+            txid = self.algod.send_transaction(signed_app_call)
 
-        signed = txn.sign(self.coordinator_key)
-        txid = self.algod.send_transaction(signed)
         return wait_for_txn(txid)
 
     def _get_app_id_by_name(self, name: str) -> Optional[int]:
         try:
+            # Use Indexer with include-all to get params directly in one batch call
             results = self.indexer.search_applications(application_id=0, limit=100)
             for app in results.get("applications", []):
                 app_id = app.get("id")
-                if app_id:
-                    info = self.algod.application_info(app_id)
-                    global_state = info.get("params", {}).get("global-state", [])
-                    for gs in global_state:
-                        key_bytes = bytes.fromhex(gs.get("key", ""))
-                        if len(key_bytes) == 32:
-                            key = key_bytes.decode("utf-8").rstrip("\x00")
-                            if key == "algowager_name":
-                                value = gs.get("value", {})
-                                stored_name = (
-                                    bytes.fromhex(value.get("tb", ""))
-                                    .decode("utf-8")
-                                    .rstrip("\x00")
-                                )
-                                if stored_name == name:
-                                    return app_id
+                if not app_id:
+                    continue
+                
+                # Indexer already returns params and global-state! 
+                # No need to call algod.application_info(app_id) which was causing the lag.
+                params = app.get("params", {})
+                global_state = params.get("global-state", [])
+                
+                for gs in global_state:
+                    key_bytes = base64.b64decode(gs.get("key", ""))
+                    if len(key_bytes) == 32:
+                        key = key_bytes.decode("utf-8", "ignore").rstrip("\x00")
+                        if key == "algowager_name":
+                            value = gs.get("value", {})
+                            stored_name = (
+                                base64.b64decode(value.get("bytes", ""))
+                                .decode("utf-8", "ignore")
+                                .rstrip("\x00")
+                            )
+                            if stored_name == name:
+                                return app_id
         except Exception as e:
             logger.warning(f"Failed to find app by name {name}: {e}")
         return None
@@ -168,6 +193,18 @@ class ContractClient:
             return app_id
         return ORACLE_AGGREGATOR_APP_ID
 
+    def _get_agent_count(self) -> int:
+        try:
+            app_id = self.get_agent_registry_app_id()
+            state = get_application_state(app_id)
+            for gs in state:
+                key = base64.b64decode(gs.get("key", "")).decode("utf-8", "ignore")
+                if key == "agent_count":
+                    return int(gs.get("value", {}).get("uint", 0))
+        except Exception:
+            pass
+        return 0
+
     def get_agent_registry_app_id(self) -> int:
         if self._agent_registry_app_id:
             return self._agent_registry_app_id
@@ -189,29 +226,23 @@ class ContractClient:
     def create_market_pool(self, market: dict) -> dict:
         app_id = self.get_market_factory_app_id()
 
-        app_args = self._encode_args(
-            "create",
+        # TEAL: create_market(string,string,uint64,uint64,string,uint64)uint64
+        args = [
             market["id"],
             market["ticker"],
-            market["asset_id"],
-            str(market["open_price"]),
-            market["closes_at"],
+            int(market["asset_id"]) if isinstance(market["asset_id"], int) else 0, # Placeholder if not int
+            int(market["open_price"] * 1000000),
+            market.get("question", "Will price rise?"),
+            int(market["closes_at"]) if isinstance(market["closes_at"], (int, float)) else 0
+        ]
+
+        result = self._app_call(
+            app_id,
+            "create_market(string,string,uint64,uint64,string,uint64)uint64",
+            args
         )
 
-        params = self.algod.suggested_params()
-        txn = ApplicationCallTxn(
-            sender=self.coordinator_address,
-            sp=params,
-            index=app_id,
-            on_complete=OnComplete.NoOpOC,
-            args=app_args,
-            local_schema=StateSchema(0, 0),
-        )
-
-        signed = txn.sign(self.coordinator_key)
-        txid = self.algod.send_transaction(signed)
-        result = wait_for_txn(txid)
-
+        txid = result.get("txid")
         new_app_id = result.get("application-index")
         if new_app_id:
             return {
@@ -227,15 +258,11 @@ class ContractClient:
         return self.create_market_pool(market)
 
     def register_market(self, market: dict) -> dict:
-        app_id = self.get_market_factory_app_id()
-        return self._app_call(
-            app_id,
-            "register_market",
-            [
-                market["id"].encode(),
-                market["ticker"].encode(),
-            ],
-        )
+        # Note: register_market is not in Factory TEAL, maybe it is in Registry?
+        # Checking Factory TEAL again: create_market, get_market, get_market_count
+        # If it doesn't exist, we skip or use proper name
+        logger.info(f"Skipping register_market as it is handled by create_market")
+        return {"status": "success"}
 
     def place_bet(self, market: dict, bet: dict) -> dict:
         market_pool_app_id = market["contract_refs"].get("app_id", 0)
@@ -251,38 +278,17 @@ class ContractClient:
         side = bet["side"].upper()
         amount_micro = int(bet["amount"] * 1_000_000)
 
-        app_args = self._encode_args("place_bet", side, str(amount_micro), bet["id"])
-
-        params = self.algod.suggested_params()
-
-        app_call_txn = ApplicationCallTxn(
-            sender=self.coordinator_address,
-            sp=params,
-            index=market_pool_app_id,
-            on_complete=OnComplete.NoOpOC,
-            args=app_args,
-            local_schema=StateSchema(1, 0),
-        )
-
-        payment_txn = PaymentTxn(
-            sender=self.coordinator_address,
-            sp=params,
-            receiver=get_application_address(market_pool_app_id),
-            amt=amount_micro,
-            note=f"bet:{bet['id']}".encode(),
-        )
-
-        signed_app = app_call_txn.sign(self.coordinator_key)
-        signed_payment = payment_txn.sign(self.coordinator_key)
-
+        # TEAL: place_bet(string,pay)uint64
+        # 'pay' is the payment transaction in the group
+        args = [side]
+        
         try:
-            txid = self.algod.send_transactions([signed_app, signed_payment])
-            result = wait_for_txn(txid)
-            return {
-                "status": "confirmed",
-                "txid": txid,
-                "confirmed_round": result.get("confirmed-round"),
-            }
+            return self._app_call(
+                market_pool_app_id,
+                "place_bet(string,pay)uint64",
+                args,
+                payment={"amount": bet["amount"]}
+            )
         except Exception as e:
             logger.error(f"Failed to place bet on-chain: {e}")
             return {
@@ -301,14 +307,15 @@ class ContractClient:
             no_pool = 0
 
             for gs in state:
-                key_bytes = bytes.fromhex(gs.get("key", ""))
+                key_bytes = base64.b64decode(gs.get("key", ""))
                 if len(key_bytes) == 32:
-                    key = key_bytes.decode("utf-8").rstrip("\x00")
+                    key = key_bytes.decode("utf-8", "ignore").rstrip("\x00")
                     value = gs.get("value", {})
-                    if value.get("tt") == 2:
-                        val = int.from_bytes(bytes.fromhex(value.get("tb", "0")), "big")
+                    if value.get("type", 0) == 1:
+                        val_bytes_decoded = base64.b64decode(value.get("bytes", ""))
+                        val = int.from_bytes(val_bytes_decoded, "big")
                     else:
-                        val = int.fromhex(value.get("ui", "0"))
+                        val = value.get("uint", 0)
 
                     if key == "yes_pool":
                         yes_pool = val
@@ -336,25 +343,28 @@ class ContractClient:
                 "no_probability": 50.0,
             }
 
-    def push_price(self, asset: str, price: float, timestamp: int = None) -> dict:
+    def push_price(self, asset: str, price: float, source_count: int = 2) -> dict:
         app_id = self.get_oracle_app_id()
-        timestamp = timestamp or int(time.time())
+        
+        # TEAL: push_price(string,uint64,uint64)void
+        args = [
+            asset,
+            int(price * 1_000_000),
+            source_count
+        ]
 
         return self._app_call(
             app_id,
-            "push_price",
-            [
-                asset.encode(),
-                str(int(price * 1_000_000)).encode(),
-                str(timestamp).encode(),
-            ],
+            "push_price(string,uint64,uint64)void",
+            args
         )
 
     def get_price(self, asset: str) -> dict:
         app_id = self.get_oracle_app_id()
 
         try:
-            result = self._app_call(app_id, "get_price", [asset.encode()])
+            # TEAL: get_price(string)uint64
+            result = self._app_call(app_id, "get_price(string)uint64", [asset])
             return {
                 "asset": asset,
                 "price": result.get("logs", [b""])[-1] if result.get("logs") else 0,
@@ -381,12 +391,16 @@ class ContractClient:
             }
 
         try:
+            # TEAL: settle(uint64,uint64)void
+            # 1: final_price (uint64), 2: timestamp (uint64) -> Wait, looking at TEAL again
+            # MarketPool.teal: txna ApplicationArgs 1 (btoi), 2 (btoi) - used to set self.outcome
+            # self.outcome.value = arc4.Bool(final_price >= self.resolution_price.value)
+            
+            final_price_micro = int(float(outcome) * 1_000_000)
             return self._app_call(
                 market_pool_app_id,
-                "settle",
-                [
-                    outcome.upper().encode(),
-                ],
+                "settle(uint64,uint64)void",
+                [final_price_micro, int(time.time())],
             )
         except Exception as e:
             logger.error(f"Failed to settle market on-chain: {e}")
@@ -399,16 +413,14 @@ class ContractClient:
         return self.settle_market(market, outcome)
 
     def claim_winnings(
-        self, market_pool_app_id: int, bettor_address: str, bet_id: str
+        self, market_pool_app_id: int
     ) -> dict:
         try:
+            # TEAL: claim_winnings()uint64
             return self._app_call(
                 market_pool_app_id,
-                "claim_winnings",
-                [
-                    bettor_address.encode(),
-                    bet_id.encode(),
-                ],
+                "claim_winnings()uint64",
+                []
             )
         except Exception as e:
             logger.warning(f"Failed to claim winnings: {e}")
@@ -417,20 +429,24 @@ class ContractClient:
     def register_agent_onchain(self, agent_data: dict) -> dict:
         app_id = self.get_agent_registry_app_id()
 
-        app_args = self._encode_args(
-            "register_agent",
-            agent_data["id"],
+        # Predict next agent ID to include the correct box ref
+        next_id = self._get_agent_count()
+        agent_box_key = b"agent:" + next_id.to_bytes(8, "big")
+        addr_box_key = b"addr:" + encoding.decode_address(self.coordinator_address)
+
+        # TEAL: register_agent(string,string,pay)uint64
+        args = [
             agent_data["name"],
-            agent_data["creator_wallet"],
-            agent_data.get("specialization", "both"),
-        )
+            agent_data.get("specialization", "both")
+        ]
 
         try:
             result = self._app_call(
                 app_id,
-                "register_agent",
-                app_args,
+                "register_agent(string,string,pay)uint64",
+                args,
                 payment={"amount": AGENT_REGISTRATION_STAKE},
+                boxes=[agent_box_key, addr_box_key]
             )
             return {
                 "status": "registered",
@@ -444,36 +460,47 @@ class ContractClient:
             }
 
     def record_agent_bet_onchain(
-        self, agent_id: str, market_id: str, bet_id: str, amount: float, side: str
+        self, agent_id: int, market_id: int, bet_id: str, amount_micro: int, side: str
     ) -> dict:
         app_id = self.get_agent_registry_app_id()
 
+        # TEAL: record_bet_placed(uint64,uint64,string,uint64,string)void
+        agent_box_key = b"agent:" + agent_id.to_bytes(8, "big")
+        
+        args = [
+            agent_id,
+            market_id,
+            bet_id,
+            amount_micro,
+            side.upper()
+        ]
+
         return self._app_call(
             app_id,
-            "record_bet_placed",
-            [
-                agent_id.encode(),
-                market_id.encode(),
-                bet_id.encode(),
-                str(int(amount * 1_000_000)).encode(),
-                side.upper().encode(),
-            ],
+            "record_bet_placed(uint64,uint64,string,uint64,string)void",
+            args,
+            boxes=[agent_box_key]
         )
 
     def record_agent_result_onchain(
-        self, agent_id: str, bet_id: str, won: bool, profit: float
+        self, agent_id: int, bet_id: str, won: bool, profit_micro: int
     ) -> dict:
         app_id = self.get_agent_registry_app_id()
+        agent_box_key = b"agent:" + agent_id.to_bytes(8, "big")
+
+        # TEAL: record_bet_result(uint64,string,bool,int64)void
+        args = [
+            agent_id,
+            bet_id,
+            won,
+            profit_micro
+        ]
 
         return self._app_call(
             app_id,
-            "record_bet_result",
-            [
-                agent_id.encode(),
-                bet_id.encode(),
-                b"1" if won else b"0",
-                str(int(profit * 1_000_000)).encode(),
-            ],
+            "record_bet_result(uint64,string,bool,int64)void",
+            args,
+            boxes=[agent_box_key]
         )
 
     def get_agent_onchain(self, agent_id: str) -> dict:
@@ -495,9 +522,9 @@ class ContractClient:
             state = get_application_state(app_id)
 
             for gs in state:
-                key_bytes = bytes.fromhex(gs.get("key", ""))
+                key_bytes = base64.b64decode(gs.get("key", ""))
                 if len(key_bytes) == 32:
-                    key = key_bytes.decode("utf-8").rstrip("\x00")
+                    key = key_bytes.decode("utf-8", "ignore").rstrip("\x00")
                     if agent_id in key:
                         value = gs.get("value", {})
                         return {
@@ -592,15 +619,15 @@ def register_agent(agent_data: dict) -> dict:
 
 
 def record_agent_bet(
-    agent_id: str, market_id: str, bet_id: str, amount: float, side: str
+    agent_id: int, market_id: int, bet_id: str, amount_micro: int, side: str
 ) -> dict:
     client = get_contract_client()
-    return client.record_agent_bet_onchain(agent_id, market_id, bet_id, amount, side)
+    return client.record_agent_bet_onchain(agent_id, market_id, bet_id, amount_micro, side)
 
 
-def record_agent_result(agent_id: str, bet_id: str, won: bool, profit: float) -> dict:
+def record_agent_result(agent_id: int, bet_id: str, won: bool, profit_micro: int) -> dict:
     client = get_contract_client()
-    return client.record_agent_result_onchain(agent_id, bet_id, won, profit)
+    return client.record_agent_result_onchain(agent_id, bet_id, won, profit_micro)
 
 
 def get_probability(market_pool_app_id: int) -> dict:

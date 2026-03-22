@@ -48,8 +48,8 @@ def validate_agent_config(config: Dict[str, Any]) -> Dict[str, Any]:
 
     if config.get("default_bet_amount"):
         amount = float(config["default_bet_amount"])
-        if amount < 0.1:
-            errors.append("Minimum bet amount is 0.1 ALGO")
+        if amount < 0.01:
+            errors.append("Minimum bet amount is 0.01 ALGO")
         elif amount > 100:
             warnings.append("Bet amount exceeds recommended maximum of 100 ALGO")
 
@@ -76,12 +76,11 @@ def _is_valid_address(address: str) -> bool:
 def _is_valid_private_key(key: str) -> bool:
     if not key:
         return False
-    if len(key) == 25:
-        try:
-            int.from_bytes(bytes(key, "utf-8"), "base32")
-            return True
-        except Exception:
-            return False
+    # Check if it's a 25-word mnemonic
+    words = key.strip().split()
+    if len(words) == 25:
+        return True
+    # Check if it's a 64-character hex key
     if len(key) == 64:
         try:
             bytes.fromhex(key)
@@ -95,7 +94,8 @@ def _derive_address_from_key(private_key: str) -> Optional[str]:
     try:
         from algosdk import account
 
-        if len(private_key) == 25:
+        words = private_key.strip().split()
+        if len(words) == 25:
             from algosdk import mnemonic
 
             key = mnemonic.to_private_key(private_key)

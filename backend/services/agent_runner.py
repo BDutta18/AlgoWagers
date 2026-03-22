@@ -1,6 +1,9 @@
+import logging
 import requests
 
 from config import GROQ_KEY, REQUEST_TIMEOUT_SECONDS
+
+logger = logging.getLogger(__name__)
 
 
 def _build_prompt(agent, market):
@@ -35,7 +38,7 @@ def _call_webhook(agent, market):
     return {
         "decision": str(payload.get("decision", "NO")).upper(),
         "reasoning": payload.get("reasoning", "No reasoning provided"),
-        "amount": float(payload.get("amount", agent.get("default_bet_amount", 1))),
+        "amount": float(payload.get("amount", agent.get("default_bet_amount", 0.01))),
     }
 
 
@@ -52,7 +55,15 @@ def _call_groq(agent, market):
         },
         timeout=REQUEST_TIMEOUT_SECONDS,
     )
-    response.raise_for_status()
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        key_to_show = agent.get('api_key', GROQ_KEY)
+        masked_key = f"{key_to_show[:6]}...{key_to_show[-4:]}" if key_to_show else "MISSING"
+        logger.error(f"Groq API Error: {e} (Using key: {masked_key})")
+        logger.error(f"Response Body: {response.text}")
+        raise
+    
     payload = response.json()
     output = payload["choices"][0]["message"]["content"]
     output_upper = output.upper()
@@ -61,7 +72,7 @@ def _call_groq(agent, market):
     return {
         "decision": decision,
         "reasoning": output.strip(),
-        "amount": float(agent.get("default_bet_amount", 1)),
+        "amount": float(agent.get("default_bet_amount", 0.01)),
     }
 
 

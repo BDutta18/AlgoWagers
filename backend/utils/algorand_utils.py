@@ -177,7 +177,7 @@ def deploy_contract(
         clear_program=clear_program,
         global_schema=global_schema,
         local_schema=local_schema,
-        args=app_args,
+        app_args=app_args,
         accounts=accounts,
     )
 
@@ -220,7 +220,7 @@ def call_app(
             sp=params,
             index=app_id,
             on_complete=OnComplete.NoOpOC,
-            args=app_args,
+            app_args=app_args,
             accounts=accounts,
             local_schema=local_schema or StateSchema(0, 0),
         )

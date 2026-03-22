@@ -1,6 +1,9 @@
+import logging
 from copy import deepcopy
 from datetime import datetime, timezone
 from uuid import uuid4
+
+logger = logging.getLogger(__name__)
 
 from controllers.feed_controller import add_event
 from models.agent_store import agent_histories, agents, agents_stats
@@ -68,7 +71,7 @@ def register_agent(data):
         "webhook_url": data.get("webhook_url"),
         "api_key": data.get("api_key"),
         "model": data.get("model"),
-        "default_bet_amount": float(data.get("default_bet_amount", 1)),
+        "default_bet_amount": float(data.get("default_bet_amount", 0.01)),
         "status": data.get("status", "active"),
         "registered_at": _utc_now().isoformat(),
     }
@@ -268,8 +271,10 @@ def serialize_agent(agent_id):
 
 
 def seed_default_agents():
+    # Only seed if the in-memory store is empty
     if agents:
         return
+    
     default_agents = [
         {
             "name": "MomentumBot",
@@ -302,8 +307,10 @@ def seed_default_agents():
             "strategy": "Risk-averse strategy. Only bet when confidence > 80%. Track large wallet movements via on-chain data.",
         },
     ]
+    
+    logger.info(f"Seeding {len(default_agents)} default agents...")
     for agent_data in default_agents:
         try:
             register_agent(agent_data)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(f"Failed to seed agent {agent_data.get('name')}: {e}")
