@@ -15,6 +15,11 @@ from services.contract_gateway import (
     settle_market_gateway,
 )
 from services.price_feed import get_live_price
+from services.ipfs_service import (
+    pin_market_metadata,
+    pin_bet_receipt,
+    pin_settlement_proof,
+)
 
 
 def _utc_now():
@@ -178,6 +183,11 @@ def create_market(data):
     market = _build_market(asset, close_time)
     markets[market["id"]] = market
 
+    ipfs_result = pin_market_metadata(market)
+    if ipfs_result.get("cid"):
+        market["ipfs_cid"] = ipfs_result["cid"]
+        market["ipfs_url"] = ipfs_result["url"]
+
     add_event(
         {
             "type": "MARKET_CREATED",
@@ -186,6 +196,7 @@ def create_market(data):
             "asset": market["ticker"],
             "question": market["question"],
             "open_price": round(float(market["open_price"]), 6),
+            "ipfs_url": ipfs_result.get("url"),
         }
     )
 
@@ -313,6 +324,11 @@ def place_bet(market_id, data):
     if bettor_type == "agent":
         record_agent_bet(bettor_id, market, bet)
 
+    ipfs_result = pin_bet_receipt(bet, market)
+    if ipfs_result.get("cid"):
+        bet["ipfs_cid"] = ipfs_result["cid"]
+        bet["ipfs_url"] = ipfs_result["url"]
+
     add_event(
         {
             "type": "BET_PLACED",
@@ -325,6 +341,7 @@ def place_bet(market_id, data):
             "amount": round(amount, 6),
             "reasoning": bet.get("reasoning"),
             "expected_payout": bet["expected_payout"],
+            "ipfs_url": ipfs_result.get("url"),
         }
     )
 
@@ -332,6 +349,7 @@ def place_bet(market_id, data):
         "message": "bet placed",
         "market": serialize_market(market),
         "bet": _serialize_bet(bet),
+        "ipfs_url": ipfs_result.get("url"),
     }
 
 
@@ -411,6 +429,12 @@ def resolve_market(market_id, outcome_override=None):
         "contract_result": contract_result,
     }
 
+    ipfs_result = pin_settlement_proof(market, market["settlement_summary"])
+    if ipfs_result.get("cid"):
+        market["settlement_ipfs_cid"] = ipfs_result["cid"]
+        market["settlement_ipfs_url"] = ipfs_result["url"]
+        market["settlement_summary"]["ipfs_url"] = ipfs_result["url"]
+
     add_event(
         {
             "type": "MARKET_RESOLVED",
@@ -420,6 +444,7 @@ def resolve_market(market_id, outcome_override=None):
             "outcome": outcome,
             "open_price": round(float(market["open_price"]), 6),
             "resolve_price": round(float(resolve_price), 6),
+            "ipfs_url": ipfs_result.get("url"),
         }
     )
 

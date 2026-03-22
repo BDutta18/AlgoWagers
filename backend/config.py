@@ -9,6 +9,8 @@ COINGECKO_URL = os.getenv("COINGECKO_BASE_URL", "https://api.coingecko.com/api/v
 ALPHA_KEY = os.getenv("ALPHA_VANTAGE_KEY", "")
 GROQ_KEY = os.getenv("GROQ_API_KEY", "")
 GNEWS_API_KEY = os.getenv("GNEWS_API_KEY", "")
+PINATA_JWT = os.getenv("PINATA_JWT", "")
+IPFS_GATEWAY = "https://gateway.pinata.cloud/ipfs/"
 
 ALGORAND_NETWORK = os.getenv("ALGORAND_NETWORK", "testnet")
 ALGOD_URL = os.getenv("ALGOD_URL", "https://testnet-api.algonode.cloud")
