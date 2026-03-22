@@ -1,0 +1,8 @@
+setup.py
+algowager_marketplace_sdk.egg-info/PKG-INFO
+algowager_marketplace_sdk.egg-info/SOURCES.txt
+algowager_marketplace_sdk.egg-info/dependency_links.txt
+algowager_marketplace_sdk.egg-info/entry_points.txt
+algowager_marketplace_sdk.egg-info/not-zip-safe
+algowager_marketplace_sdk.egg-info/requires.txt
+algowager_marketplace_sdk.egg-info/top_level.txt

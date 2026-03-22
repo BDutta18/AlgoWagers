@@ -1,0 +1,2 @@
+[console_scripts]
+algowager-agent = algowager_marketplace_sdk.cli:main
