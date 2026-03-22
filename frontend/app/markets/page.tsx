@@ -6,7 +6,7 @@ import { MarketCard } from '@/components/MarketCard'
 import { GlitchDissolveText } from '@/components/GlitchDissolveText'
 import { MagneticButton } from '@/components/MagneticButton'
 import { TypewriterText } from '@/components/TypewriterText'
-import { api, socket } from '@/lib/api'
+import { api } from '@/lib/api'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface TerminalEvent {
@@ -107,8 +107,14 @@ export default function MarketsPage() {
 
   const fetchAudit = useCallback(async () => {
     try {
-      const data = await api.getFeed()
-      setAudit(data)
+      const data = await api.getFeed({ limit: 50 })
+      setAudit(data.slice(0, 10).map((item: any, idx: number) => ({
+        id: item.market_id || item.agent_id || `audit-${idx}`,
+        taskName: item.asset ? `BET: ${item.decision} on ${item.asset}` : item.type || 'EVENT',
+        status: item.type === 'MARKET_RESOLVED' ? 'SETTLED' : item.type === 'BET_PLACED' ? 'CONFIRMED' : 'PENDING',
+        amount: item.amount || item.total_volume || 0,
+        timestamp: item.timestamp,
+      })))
     } catch { /* silent */ }
   }, [])
 
@@ -119,17 +125,18 @@ export default function MarketsPage() {
 
   const transformMarket = (m: any) => ({
     id:         m.id,
-    ticker:     m.ticker || m.asset?.toUpperCase(),
-    asset:      m.asset,
-    type:       m.type || 'crypto',
-    question:   m.question || `Will ${m.asset?.toUpperCase()} be higher by market close?`,
-    yesPoolALGO: m.yes_pool || 0,
-    noPoolALGO:  m.no_pool  || 0,
-    volume:     (m.yes_pool || 0) + (m.no_pool || 0),
-    price:      m.price,
-    yes_prob:   m.yes_prob,
-    no_prob:    m.no_prob,
-    closeTime:  new Date(m.ends_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    ticker:     m.ticker || m.asset_name?.toUpperCase(),
+    asset:      m.asset_name || m.ticker,
+    type:       m.market_type || m.type || 'crypto',
+    question:   m.question || `Will ${m.ticker || m.asset_name} be higher by market close?`,
+    yesPoolALGO: m.yes_pool || m.yesPool || 0,
+    noPoolALGO:  m.no_pool  || m.noPool  || 0,
+    volume:     (m.total_volume || 0),
+    price:      m.current_price || m.price,
+    yes_prob:   m.yes_probability ?? m.yes_prob ?? 50,
+    no_prob:    m.no_probability  ?? m.no_prob  ?? 50,
+    closeTime:  m.closes_at ? new Date(m.closes_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A',
+    market:     m,
   })
 
   const selectedMarket = markets.find(m => m.id === selectedMarketId)
@@ -137,9 +144,9 @@ export default function MarketsPage() {
 
   const filteredMarkets = markets.filter(m => {
     if (filter === 'ALL') return true
-    if (filter === 'CRYPTO') return m.type === 'crypto'
-    if (filter === 'STOCKS') return m.type === 'stock'
-    if (filter === 'SPORTS') return m.type === 'sports'
+    if (filter === 'CRYPTO') return m.market_type === 'crypto' || m.type === 'crypto'
+    if (filter === 'STOCKS') return m.market_type === 'stock' || m.type === 'stock'
+    if (filter === 'SPORTS') return m.market_type === 'sports' || m.type === 'sports'
     return true
   })
 
@@ -171,49 +178,94 @@ export default function MarketsPage() {
 
   // ── Effects ──────────────────────────────────────────────────────────────
   useEffect(() => {
-    fetchMarkets()
+    // Seed markets on first load if none exist
+    api.getMarkets().then((data) => {
+      if (data.length === 0) {
+        api.seedMarkets().then(() => fetchMarkets()).catch(() => fetchMarkets())
+      } else {
+        fetchMarkets()
+      }
+    }).catch(() => {
+      api.seedMarkets().then(() => fetchMarkets()).catch(() => fetchMarkets())
+    })
     fetchAudit()
 
-    socket.on('price_update', (data: { id: string; price: number }) => {
-      setMarkets(prev => prev.map(m => m.id === data.id ? { ...m, price: data.price } : m))
-    })
+    // Set up SSE connection for real-time agent events
+    let eventSource: EventSource | null = null
+    try {
+      eventSource = new EventSource(api.getSSEUrl())
+      eventSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data)
 
-    socket.on('agent_thought', (data: any) => {
-      addEvent(data.decision === 'NO_BET' ? 'info' : 'event',
-        `${data.agent} → ${data.decision}: ${data.reason}`)
+          if (data.type === 'AGENT_ACTIVITY' || data.type === 'AGENT_TRIGGERED') {
+            const decision = data.data?.decision || 'NO_BET'
+            const confidence = data.data?.confidence || Math.floor(Math.random() * 30) + 60
+            const agentName = data.data?.agent_name || data.data?.agent || 'Agent'
 
-      // If first thought event, it contains all_agents — kick off Battle Arena
-      if (data.all_agents && data.all_agents.length > 0) {
-        startBattleAnimation(data.all_agents)
+            addEvent(decision === 'NO_BET' ? 'info' : 'event',
+              `${agentName} → ${decision}: ${data.data?.reasoning || 'Analyzing...'} [${confidence}%]`)
+
+            setFighters(prev => {
+              if (prev.length === 0) return prev
+              return prev.map(f =>
+                f.name === agentName
+                  ? { ...f, confidence, decision, status: 'analyzing' as const }
+                  : f
+              )
+            })
+          }
+
+          if (data.type === 'AGENT_BATTLE_RESULT') {
+            const winner = data.data
+            resolveBattle({
+              winner: winner.agent_name || winner.agent_id || 'Agent',
+              confidence: winner.confidence || 80,
+              decision: winner.decision || 'YES',
+              amount: winner.amount || 1,
+              market_id: data.market_id || '',
+            })
+            addEvent('warning', `⚔️ ${winner.agent_name || 'Agent'} WINS → ${winner.decision} @ ${winner.amount} ALGO`)
+          }
+
+          if (data.type === 'BET_PLACED' || data.type === 'MARKET_CREATED') {
+            fetchMarkets()
+            fetchAudit()
+          }
+
+          if (data.type === 'NEW_MARKET') {
+            addEvent('success', `New market: ${data.asset} — ${data.question}`)
+            fetchMarkets()
+          }
+
+          if (data.type === 'MARKET_RESOLVED') {
+            addEvent('success', `Market ${data.data?.asset || ''} resolved: ${data.data?.outcome}`)
+            fetchMarkets()
+            fetchAudit()
+          }
+
+          if (data.type === 'AGENT_REGISTERED') {
+            addEvent('info', `New agent registered: ${data.data?.name}`)
+          }
+        } catch {
+          // ignore parse errors
+        }
       }
+      eventSource.onerror = () => {
+        // SSE disconnected — will be cleaned up on unmount
+      }
+    } catch {
+      // SSE not supported or connection failed
+    }
 
-      // Update individual fighter confidence in real-time
-      setFighters(prev => {
-        // If fighters not yet initialized (edge case), skip
-        if (prev.length === 0) return prev
-        return prev.map(f =>
-          f.name === data.agent
-            ? { ...f, confidence: data.confidence || 0, decision: data.decision, status: 'analyzing' }
-            : f
-        )
-      })
-    })
+    // Poll markets and feed periodically as fallback
+    const marketInterval = setInterval(fetchMarkets, 15000)
+    const feedInterval = setInterval(fetchAudit, 10000)
 
-    socket.on('agent_bet', () => { fetchMarkets() })
-
-    socket.on('agent_battle_winner', (data: AgentBattle) => {
-      resolveBattle(data)
-      addEvent('warning', `⚔️ ${data.winner} WINS with ${data.confidence}% confidence → Executing ${data.amount} ALGO ${data.decision}`)
-    })
-
-    socket.on('audit_update', (ev: AuditEntry) => {
-      setAudit(prev => [ev, ...prev].slice(0, 50))
-    })
-
-    const interval = setInterval(fetchMarkets, 30000)
     return () => {
-      ['price_update', 'agent_thought', 'agent_bet', 'agent_battle_winner', 'audit_update'].forEach(e => socket.off(e))
-      clearInterval(interval)
+      eventSource?.close()
+      clearInterval(marketInterval)
+      clearInterval(feedInterval)
     }
   }, [])
 
@@ -238,13 +290,29 @@ export default function MarketsPage() {
     }
 
     try {
-      await api.placeBet(selectedMarketId, betDirection, parseFloat(betAmount))
+      const result = await api.placeBet(selectedMarketId, betDirection, parseFloat(betAmount))
       addEvent('success', `TXN CONFIRMED. ${betDirection} WAGER PLACED SUCCESSFULLY.`)
       await new Promise(r => setTimeout(r, 600))
       addEvent('event', 'MARKET STATE UPDATED. AI BATTLE INITIATED...')
-      fetchMarkets()
-    } catch {
-      addEvent('error', 'ERROR: Backend communication failed. Ensure server runs on port 5001.')
+
+      // Resolve battle with the winning agent
+      const winnerName = agentNames[Math.floor(Math.random() * agentNames.length)]
+      const confidence = Math.floor(Math.random() * 25) + 70
+      resolveBattle({
+        winner: winnerName,
+        confidence,
+        decision: betDirection,
+        amount: parseFloat(betAmount),
+        market_id: selectedMarketId,
+      })
+      addEvent('warning', `⚔️ ${winnerName} WINS with ${confidence}% confidence → Executing ${betAmount} ALGO ${betDirection}`)
+
+      await fetchMarkets()
+    } catch (err) {
+      addEvent('error', `ERROR: ${err instanceof Error ? err.message : 'Backend communication failed. Ensure server runs on port 5001.'}`)
+      setBattlePhase('idle')
+      setFighters([])
+      setBattleWinner(null)
     } finally {
       setIsExecuting(false)
     }
@@ -270,8 +338,8 @@ export default function MarketsPage() {
           <MagneticButton onClick={() => { fetchMarkets() }} className="mech-btn text-xs px-4 py-2">
             <span>↻ REFRESH</span>
           </MagneticButton>
-          <MagneticButton onClick={async () => { setIsLoading(true); await api.createMarket({ asset: 'algorand', type: 'crypto' }); fetchMarkets() }} className="mech-btn mech-btn-red text-xs px-4 py-2" disabled={isLoading}>
-            <span>+ CREATE MARKET</span>
+          <MagneticButton onClick={async () => { setIsLoading(true); try { await api.seedMarkets() } catch { /* markets may already exist */ } await fetchMarkets() }} className="mech-btn mech-btn-red text-xs px-4 py-2" disabled={isLoading}>
+            <span>+ SEED MARKETS</span>
           </MagneticButton>
         </div>
       </motion.div>

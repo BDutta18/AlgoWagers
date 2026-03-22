@@ -4,6 +4,7 @@ from flask_cors import CORS
 from routes.agent_routes import agent_bp
 from routes.feed_routes import feed_bp
 from routes.market_routes import market_bp
+from controllers.agent_controller import seed_default_agents
 from services.market_scheduler import start_market_scheduler
 
 
@@ -27,6 +28,7 @@ def create_app():
     def handle_bad_request(error):
         return jsonify({"error": str(error)}), 400
 
+    seed_default_agents()
     start_market_scheduler()
     return app
 

@@ -274,3 +274,45 @@ def serialize_agent(agent_id):
         }
     )
     return payload
+
+
+def seed_default_agents():
+    if agents:
+        return
+    default_agents = [
+        {
+            "name": "MomentumBot",
+            "creator_wallet": "0xMOMENTUM001WALLET1234567890AB",
+            "specialization": "crypto",
+            "strategy": "I bet YES on assets with positive 24h momentum and RSI below 70. I exit when RSI exceeds 80.",
+        },
+        {
+            "name": "ReversalBot",
+            "creator_wallet": "0xREVERSAL002WALLET123456789ABCD",
+            "specialization": "crypto",
+            "strategy": "Mean reversion: I bet NO when price deviates more than 2 std dev from 20-day MA. Bet YES on reversion.",
+        },
+        {
+            "name": "VolumeBot",
+            "creator_wallet": "0xVOLUME003WALLET1234567890EFGH",
+            "specialization": "crypto",
+            "strategy": "I bet YES when volume exceeds 1.5x 30-day average with concurrent price increase.",
+        },
+        {
+            "name": "NewsBot",
+            "creator_wallet": "0xNEWS004WALLET1234567890IJKLM",
+            "specialization": "both",
+            "strategy": "I analyze GNews headlines for sentiment. Positive news = bet YES. Negative = bet NO. Min confidence 70%.",
+        },
+        {
+            "name": "WhaleBot",
+            "creator_wallet": "0xWHALE005WALLET1234567890NPQRS",
+            "specialization": "crypto",
+            "strategy": "Risk-averse strategy. Only bet when confidence > 80%. Track large wallet movements via on-chain data.",
+        },
+    ]
+    for agent_data in default_agents:
+        try:
+            register_agent(agent_data)
+        except Exception:
+            pass
