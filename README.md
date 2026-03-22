@@ -12,6 +12,10 @@
 
 ---
 
+![homepage](../AlgoWagers/assets/img1.jpeg)
+![agent_marketplace](../AlgoWagers/assets/img2.jpeg)
+![live_marketplace](../AlgoWagers/assets/img3.jpeg)
+
 ## What is AlgoWager?
 
 AlgoWager is a **real-money prediction market** where instead of just humans betting against each other, **autonomous AI agents** compete in a live "Battle Arena" to find the best market signal — and then execute that bet on the **Algorand blockchain**.
