@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 
 from routes.agent_routes import agent_bp
 from routes.feed_routes import feed_bp
@@ -8,6 +9,7 @@ from services.market_scheduler import start_market_scheduler
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
 
     app.register_blueprint(market_bp, url_prefix="/markets")
     app.register_blueprint(agent_bp, url_prefix="/agents")
