@@ -1,0 +1,638 @@
+@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Jura:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+@import "tailwindcss";
+
+/* ================================================================
+   AGENTPAY — DELOREAN INDUSTRIAL AESTHETIC
+   Exact red/charcoal palette, massive heavy type, film grain,
+   slanted containers, mechanical ui elements
+   ================================================================ */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* ── Premium Color Palette (Enhanced DeLorean) ── */
+  --bg-deep:       #0F1117;
+  --bg-surface:    #1A1D26;
+  --bg-panel:      #252B3B;
+  --bg-glass:      rgba(31, 33, 40, 0.4);
+  --bg-elevated:   #2A3149;
+  --black-pure:    #000000;
+
+  /* ── Borders (Premium glass-morphism) ── */
+  --border-light:  rgba(255,255,255,0.12);
+  --border-dim:    rgba(255,255,255,0.04);
+  --border-red:    rgba(255, 42, 30, 0.35);
+  --border-gold:   rgba(255, 200, 87, 0.15);
+  --border-cyan:   rgba(0, 255, 200, 0.15);
+
+  /* ── Primary Accent — Neon Red ── */
+  --red-neon:      #FF2A1E;
+  --red-dark:      #8B1A13;
+  --red-glow:      rgba(255, 42, 30, 0.4);
+  --red-ultra:     rgba(255, 42, 30, 0.8);
+
+  /* ── Secondary Accents — Cyan & Gold ── */
+  --cyan-neon:     #00FFC8;
+  --cyan-dark:     #008B7A;
+  --cyan-glow:     rgba(0, 255, 200, 0.3);
+  
+  --gold-accent:   #FFC857;
+  --gold-dark:     #AA8C2E;
+  --gold-glow:     rgba(255, 200, 87, 0.25);
+
+  /* ── Neutrals ── */
+  --white:         #FFFFFF;
+  --white-90:      rgba(255,255,255,0.9);
+  --white-70:      rgba(255,255,255,0.7);
+  --white-50:      rgba(255,255,255,0.5);
+  --white-40:      rgba(255,255,255,0.4);
+  --white-20:      rgba(255,255,255,0.2);
+  --gray-600:      #6B7280;
+  --gray-700:      #374151;
+
+  /* ── Typography (Industrial/Mechanical) ── */
+  --font-logo:     'Syncopate', sans-serif;
+  --font-body:     'Jura', sans-serif;
+  --font-mono:     'Share Tech Mono', monospace;
+
+  /* ── Easing Functions ── */
+  --ease-mech:     cubic-bezier(0.86, 0, 0.07, 1); /* Snappy mechanical */
+  --ease-smooth:   cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth */
+  --ease-elastic:  cubic-bezier(0.34, 1.56, 0.64, 1); /* Springy */
+
+  /* ── Shadows (Premium glass effect) ── */
+  --shadow-sm:     0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md:     0 8px 24px rgba(0,0,0,0.4);
+  --shadow-lg:     0 16px 48px rgba(0,0,0,0.5);
+  --shadow-glow:   0 0 20px rgba(255, 42, 30, 0.2), 0 0 40px rgba(255, 42, 30, 0.1);
+}
+
+html, body {
+  background-color: var(--bg-deep);
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(255, 42, 30, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 255, 200, 0.03) 0%, transparent 50%);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Enhanced Film Grain & Vignette ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.6) 100%);
+}
+
+/* Large ambient neon diagonal light streaks behind main UI */
+.ambient-light {
+  position: fixed;
+  top: 50%; left: 50%;
+  width: 150vw; height: 100vh;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  background:
+    linear-gradient(90deg, transparent 40%, rgba(255,42,30,0.03) 45%, rgba(255,255,255,0.02) 50%, rgba(255,42,30,0.03) 55%, transparent 60%),
+    linear-gradient(90deg, transparent 20%, rgba(255,42,30,0.015) 25%, transparent 30%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+#__next { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; }
+
+/* ================================================================
+   TYPOGRAPHY
+   ================================================================ */
+
+/* ================================================================
+   TYPOGRAPHY SCALE (Premium Hierarchy)
+   ================================================================ */
+
+h1 {
+  font-family: var(--font-logo);
+  text-transform: uppercase;
+  font-size: 3.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-balance: true;
+}
+
+h2 {
+  font-family: var(--font-logo);
+  text-transform: uppercase;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+
+h3 {
+  font-family: var(--font-logo);
+  text-transform: uppercase;
+  font-size: 1.75rem;
+  line-height: 1.3;
+  letter-spacing: 0.03em;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+h4 {
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+h5 {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  color: var(--white-90);
+}
+
+.mono { font-family: var(--font-mono); text-transform: uppercase; }
+
+/* Micro-labels like chassis marks */
+.mech-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--white-40);
+  font-weight: 500;
+}
+
+.text-muted { color: var(--white-50); }
+.text-subtle { color: var(--white-40); }
+.text-accent { color: var(--red-neon); }
+.text-accent-cyan { color: var(--cyan-neon); }
+.text-accent-gold { color: var(--gold-accent); }
+
+/* ================================================================
+   GLITCH ANIMATION (Delorean ALPHA 05 style)
+   ================================================================ */
+
+.glitch-text {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-body);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--white);
+  cursor: pointer;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: var(--bg-deep); /* Block out text behind it when offsetting */
+  opacity: 0;
+}
+
+.glitch-text:hover { color: transparent; } /* Hide original, show pseudo-elements */
+
+.glitch-text:hover::before {
+  opacity: 1;
+  color: var(--red-neon);
+  z-index: -1;
+  animation: glitch-anim-1 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+}
+
+.glitch-text:hover::after {
+  opacity: 1;
+  color: var(--white);
+  z-index: -2;
+  animation: glitch-anim-2 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+}
+
+@keyframes glitch-anim-1 {
+  0%   { clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%); transform: translate(-3px, 1px); }
+  20%  { clip-path: polygon(0 33%, 100% 33%, 100% 66%, 0 66%); transform: translate(3px, -1px); }
+  40%  { clip-path: polygon(0 66%, 100% 66%, 100% 100%, 0 100%); transform: translate(1px, 2px); filter: hue-rotate(-20deg); }
+  60%  { clip-path: polygon(0 15%, 100% 15%, 100% 45%, 0 45%); transform: translate(-2px, -2px); }
+  80%  { clip-path: polygon(0 50%, 100% 50%, 100% 80%, 0 80%); transform: translate(2px, 1px); }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: translate(0, 0); }
+}
+
+@keyframes glitch-anim-2 {
+  0%   { clip-path: polygon(0 10%, 100% 10%, 100% 40%, 0 40%); transform: translate(2px, -1px); }
+  20%  { clip-path: polygon(0 40%, 100% 40%, 100% 70%, 0 70%); transform: translate(-1px, 2px); }
+  40%  { clip-path: polygon(0 70%, 100% 70%, 100% 100%, 0 100%); transform: translate(-3px, -1px); }
+  60%  { clip-path: polygon(0 5%, 100% 5%, 100% 30%, 0 30%); transform: translate(2px, 2px); filter: brightness(1.5); }
+  80%  { clip-path: polygon(0 60%, 100% 60%, 100% 90%, 0 90%); transform: translate(-2px, -1px); }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: translate(0, 0); }
+}
+
+/* ================================================================
+   PANELS / CHASSIS
+   ================================================================ */
+
+/* Slanted corners like DeLorean UI */
+.mech-panel {
+  background: var(--bg-surface);
+  position: relative;
+  border-top: 2px solid var(--white-40);
+  padding: 24px;
+}
+
+.mech-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 15px; height: 15px;
+  border-top: 2px solid var(--red-neon);
+  border-right: 2px solid var(--red-neon);
+}
+
+.mech-panel::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 15px; height: 15px;
+  border-bottom: 2px solid var(--white-40);
+  border-left: 2px solid var(--white-40);
+}
+
+/* ================================================================
+   PREMIUM BUTTONS
+   ================================================================ */
+
+.mech-btn {
+  background: transparent;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 12px 28px;
+  border: 1.5px solid var(--white-40);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s var(--ease-smooth);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.02);
+}
+
+.mech-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: var(--white);
+  transition: transform 0.4s var(--ease-mech);
+  z-index: 1;
+}
+
+.mech-btn span { 
+  position: relative; 
+  z-index: 2; 
+  transition: color 0.3s var(--ease-smooth);
+}
+
+.mech-btn:hover { 
+  border-color: var(--white);
+  box-shadow: 
+    inset 0 0 10px rgba(255,255,255,0.05),
+    0 0 20px rgba(255,255,255,0.1);
+  transform: translateY(-2px);
+}
+
+.mech-btn:hover::before { transform: translateX(100%); }
+.mech-btn:hover span { color: var(--bg-deep); }
+
+.mech-btn:active { 
+  transform: translateY(0);
+}
+
+/* Primary Red Button */
+.mech-btn-red {
+  background: linear-gradient(135deg, var(--red-neon) 0%, var(--red-dark) 100%);
+  border-color: var(--red-neon);
+  color: var(--black-pure);
+  box-shadow: 
+    0 0 20px var(--red-glow),
+    inset 0 0 10px rgba(255,255,255,0.1);
+}
+
+.mech-btn-red::before { 
+  background: var(--white);
+}
+
+.mech-btn-red:hover { 
+  border-color: var(--white);
+  box-shadow: 
+    0 0 30px var(--red-glow),
+    inset 0 0 15px rgba(255,255,255,0.15);
+  transform: translateY(-2px);
+}
+
+.mech-btn-red:hover span { color: var(--red-neon); }
+
+.mech-btn-red:active { 
+  transform: scale(0.98);
+}
+
+/* Secondary Cyan Button */
+.mech-btn-cyan {
+  background: rgba(0, 255, 200, 0.1);
+  border-color: var(--cyan-neon);
+  color: var(--cyan-neon);
+  box-shadow: 0 0 15px var(--cyan-glow);
+}
+
+.mech-btn-cyan:hover {
+  background: rgba(0, 255, 200, 0.15);
+  box-shadow: 0 0 25px var(--cyan-glow);
+  transform: translateY(-2px);
+}
+
+/* Disabled State */
+.mech-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: var(--white-20);
+  box-shadow: none;
+}
+
+.mech-btn:disabled:hover {
+  transform: none;
+}
+
+/* ================================================================
+   PREMIUM INPUTS & FORM ELEMENTS
+   ================================================================ */
+
+input, textarea, select {
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--border-light);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 14px 18px;
+  outline: none;
+  transition: all 0.3s var(--ease-smooth);
+  resize: none;
+  border-radius: 4px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--red-neon);
+  background: rgba(0,0,0,0.5);
+  box-shadow: 
+    inset 0 0 10px var(--red-glow),
+    0 0 15px var(--red-glow);
+  transform: translateY(-1px);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--white-40);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ================================================================
+   MICRO-ANIMATIONS & TRANSITIONS
+   ================================================================ */
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 10px var(--red-glow);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--red-glow);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-slide-in {
+  animation: slideInUp 0.6s var(--ease-smooth);
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s var(--ease-smooth);
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ================================================================
+   PREMIUM GLASS-MORPHISM CARDS
+   ================================================================ */
+
+.glass-card {
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 24px;
+  transition: all 0.3s var(--ease-smooth);
+  box-shadow: var(--shadow-sm);
+}
+
+.glass-card:hover {
+  border-color: var(--border-red);
+  box-shadow: var(--shadow-md), var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+/* Slot Cards (Enhanced DeLorean "Build Slots") */
+.slot-card {
+  border: 1px solid var(--border-dim);
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,42,30,0.01) 100%);
+  backdrop-filter: blur(8px);
+  position: relative;
+  padding: 24px;
+  transition: all 0.4s var(--ease-mech);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  border-radius: 6px;
+  box-shadow: inset 0 0 20px rgba(255,255,255,0.02);
+}
+
+.slot-card:hover {
+  border-color: var(--red-neon);
+  box-shadow: 
+    0 0 30px var(--red-glow),
+    inset 0 0 20px rgba(255,42,30,0.08),
+    inset 0 0 40px rgba(255,255,255,0.04);
+  transform: translateY(-4px);
+  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,42,30,0.03) 100%);
+}
+
+.slot-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(400px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,42,30,0.1), transparent 80%);
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.slot-card:hover::before {
+  opacity: 1;
+}
+
+/* Slot Card Header (e.g. "ALPHA DELOREAN") */
+.slot-brand {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.slot-brand svg {
+  height: 12px;
+  fill: var(--white-70);
+  transition: fill 0.3s;
+}
+
+.slot-card:hover .slot-brand svg {
+  fill: var(--red-neon);
+  filter: drop-shadow(0 0 8px var(--red-glow));
+}
+
+/* Massive Number within slot card */
+.slot-num {
+  font-family: var(--font-body);
+  font-size: 4rem;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--white-70);
+  transition: all 0.4s var(--ease-elastic);
+}
+
+.slot-card:hover .slot-num {
+  color: var(--white);
+  transform: scale(1.08) translateX(8px);
+  text-shadow: 0 0 20px var(--red-glow);
+}
+
+/* Bottom status bar in slot card */
+.slot-status {
+  margin-top: auto;
+  padding-top: 30px;
+}
+
+.slot-status-label {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 2px 0;
+  border-bottom: 2px solid var(--white-40);
+  color: var(--white-70);
+  margin-bottom: 6px;
+  transition: all 0.3s;
+}
+
+.slot-card:hover .slot-status-label {
+  border-bottom-color: var(--red-neon);
+  color: var(--red-neon);
+  text-shadow: 0 0 10px var(--red-glow);
+}
+
+/* ================================================================
+   SCROLLBAR
+   ================================================================ */
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--white-40); }
+::-webkit-scrollbar-thumb:hover { background: var(--red-neon); }
