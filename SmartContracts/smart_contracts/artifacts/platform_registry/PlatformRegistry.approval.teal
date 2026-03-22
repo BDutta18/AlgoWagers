@@ -1,0 +1,205 @@
+#pragma version 11
+#pragma typetrack false
+
+// algopy.arc4.ARC4Contract.approval_program() -> uint64:
+main:
+    intcblock 1 0 8 2
+    bytecblock "admin" "protocol_fee_bps" "paused"
+    // smart_contracts/platform_registry/contract.py:15
+    // class PlatformRegistry(ARC4Contract):
+    txn OnCompletion
+    !
+    assert
+    txn ApplicationID
+    bz main_create_NoOp@10
+    pushbytess 0x97a4695b 0xa4297d2a 0xe57c9605 0xec0850fd // method "register_contract(string,uint64)void", method "get_app_id(string)uint64", method "set_fee_bps(uint64)void", method "set_paused(bool)void"
+    txna ApplicationArgs 0
+    match register_contract get_app_id set_fee_bps set_paused
+    err
+
+main_create_NoOp@10:
+    // smart_contracts/platform_registry/contract.py:15
+    // class PlatformRegistry(ARC4Contract):
+    pushbytes 0xc0b64352 // method "create(address,uint64)void"
+    txna ApplicationArgs 0
+    match create
+    err
+
+
+// smart_contracts.platform_registry.contract.PlatformRegistry.create[routing]() -> void:
+create:
+    // smart_contracts/platform_registry/contract.py:21
+    // @arc4.abimethod(create="require")
+    txna ApplicationArgs 1
+    dup
+    len
+    pushint 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    txna ApplicationArgs 2
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/platform_registry/contract.py:27
+    // self.admin.value = admin
+    bytec_0 // "admin"
+    uncover 2
+    app_global_put
+    // smart_contracts/platform_registry/contract.py:28
+    // self.protocol_fee_bps.value = protocol_fee_bps
+    bytec_1 // "protocol_fee_bps"
+    swap
+    app_global_put
+    // smart_contracts/platform_registry/contract.py:29
+    // self.paused.value = arc4.Bool(False)
+    bytec_2 // "paused"
+    pushbytes 0x00
+    app_global_put
+    // smart_contracts/platform_registry/contract.py:21
+    // @arc4.abimethod(create="require")
+    intc_0 // 1
+    return
+
+
+// smart_contracts.platform_registry.contract.PlatformRegistry.register_contract[routing]() -> void:
+register_contract:
+    // smart_contracts/platform_registry/contract.py:31
+    // @arc4.abimethod
+    txna ApplicationArgs 1
+    dup
+    intc_1 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_3 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    txna ApplicationArgs 2
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/platform_registry/contract.py:37
+    // assert Txn.sender == self.admin.value, "admin only"
+    txn Sender
+    intc_1 // 0
+    bytec_0 // "admin"
+    app_global_get_ex
+    assert // check self.admin exists
+    ==
+    assert // admin only
+    // smart_contracts/platform_registry/contract.py:39
+    // box.value = app_id
+    itob
+    box_put
+    // smart_contracts/platform_registry/contract.py:31
+    // @arc4.abimethod
+    intc_0 // 1
+    return
+
+
+// smart_contracts.platform_registry.contract.PlatformRegistry.get_app_id[routing]() -> void:
+get_app_id:
+    // smart_contracts/platform_registry/contract.py:41
+    // @arc4.abimethod(readonly=True)
+    txna ApplicationArgs 1
+    dup
+    intc_1 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_3 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    // smart_contracts/platform_registry/contract.py:44
+    // value, exists = box.maybe()
+    box_get
+    swap
+    btoi
+    // smart_contracts/platform_registry/contract.py:45
+    // assert exists, "role not registered"
+    swap
+    assert // role not registered
+    // smart_contracts/platform_registry/contract.py:41
+    // @arc4.abimethod(readonly=True)
+    itob
+    pushbytes 0x151f7c75
+    swap
+    concat
+    log
+    intc_0 // 1
+    return
+
+
+// smart_contracts.platform_registry.contract.PlatformRegistry.set_fee_bps[routing]() -> void:
+set_fee_bps:
+    // smart_contracts/platform_registry/contract.py:48
+    // @arc4.abimethod
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/platform_registry/contract.py:50
+    // assert Txn.sender == self.admin.value
+    txn Sender
+    intc_1 // 0
+    bytec_0 // "admin"
+    app_global_get_ex
+    assert // check self.admin exists
+    ==
+    assert
+    // smart_contracts/platform_registry/contract.py:51
+    // assert new_bps <= UInt64(1000), "max 10%"
+    dup
+    pushint 1000
+    <=
+    assert // max 10%
+    // smart_contracts/platform_registry/contract.py:52
+    // self.protocol_fee_bps.value = new_bps
+    bytec_1 // "protocol_fee_bps"
+    swap
+    app_global_put
+    // smart_contracts/platform_registry/contract.py:48
+    // @arc4.abimethod
+    intc_0 // 1
+    return
+
+
+// smart_contracts.platform_registry.contract.PlatformRegistry.set_paused[routing]() -> void:
+set_paused:
+    // smart_contracts/platform_registry/contract.py:54
+    // @arc4.abimethod
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_0 // 1
+    ==
+    assert // invalid number of bytes for arc4.bool
+    // smart_contracts/platform_registry/contract.py:56
+    // assert Txn.sender == self.admin.value
+    txn Sender
+    intc_1 // 0
+    bytec_0 // "admin"
+    app_global_get_ex
+    assert // check self.admin exists
+    ==
+    assert
+    // smart_contracts/platform_registry/contract.py:57
+    // self.paused.value = paused
+    bytec_2 // "paused"
+    swap
+    app_global_put
+    // smart_contracts/platform_registry/contract.py:54
+    // @arc4.abimethod
+    intc_0 // 1
+    return

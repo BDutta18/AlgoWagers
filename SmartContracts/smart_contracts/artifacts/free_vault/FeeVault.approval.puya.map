@@ -1,0 +1,1515 @@
+{
+  "version": 3,
+  "sources": [
+    "../../free_vault/contract.py"
+  ],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAYA;;AAAA;AAAA;AAAA;;AAAA;;;AAAA;;;;;;;;;;;;;;;;;;;;;;AAAA;;;AAAA;;;;;;;;;;AAAA;AAAA;;;;;;AAAA;;;AAAA;;;;AAAA;AAQK;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAQG;AAAA;;AAAA;AACA;AAAA;;AAAA;AACA;AAAA;;AAAA;AACA;;AAAA;AAAA;AACA;AAA6B;AAA7B;AAZH;AAAA;AAcA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEG;AAAA;AAAA;AAAA;AAA8B;AAAA;AAA9B;AAAA;AAAA;AAAA;AAFH;AAAA;AAMU;;AAAc;AAAA;AAAA;AAAA;AAAd;AAAP;AAEU;;AAAA;;AAAA;AAA6C;;AAA7C;AACV;AAAA;AAE4B;AAAA;;AAAA;AAAA;AAAV;;AAAA;AAA2C;;;AAA3C;AAAA;AAAA;;AACD;;AAAA;AAAA;AAEzB;;;AACY;AACa;AAAA;AAAA;AAAA;;;;;;;AADb;;;AAAA;;;AAAA;AAKZ;AAAA;;;AACY;AACa;AAAA;AAAA;AAAA;;;;;;;AADb;;;AAAA;;;AAAA;AAjBP;AAAA;AAwBU;;AAAA;;AAAA;AAA6C;;AAA7C;AAFV;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;AAMU;AAAA;AAAA;AAAA;AAFV;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA",
+  "op_pc_offset": 0,
+  "pc_events": {
+    "1": {
+      "subroutine": "algopy.arc4.ARC4Contract.approval_program",
+      "params": {},
+      "block": "main",
+      "stack_in": [],
+      "op": "intcblock 0 1 32 8"
+    },
+    "7": {
+      "op": "bytecblock \"total_collected\" \"admin\" \"treasury_address\" \"rewards_address\" \"treasury_split_bps\" 0x151f7c75"
+    },
+    "88": {
+      "op": "txn OnCompletion",
+      "defined_out": [
+        "tmp%0#1"
+      ],
+      "stack_out": [
+        "tmp%0#1"
+      ]
+    },
+    "90": {
+      "op": "!",
+      "defined_out": [
+        "tmp%1#1"
+      ],
+      "stack_out": [
+        "tmp%1#1"
+      ]
+    },
+    "91": {
+      "op": "assert",
+      "stack_out": []
+    },
+    "92": {
+      "op": "txn ApplicationID",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "94": {
+      "op": "bz main_create_NoOp@10",
+      "stack_out": []
+    },
+    "97": {
+      "op": "pushbytess 0xa469f961 0x7f3a60d1 0xb910c77b 0x12a23aa2 // method \"receive_fee(uint64)void\", method \"distribute()void\", method \"get_balance()uint64\", method \"get_total_collected()uint64\"",
+      "defined_out": [
+        "Method(distribute()void)",
+        "Method(get_balance()uint64)",
+        "Method(get_total_collected()uint64)",
+        "Method(receive_fee(uint64)void)"
+      ],
+      "stack_out": [
+        "Method(receive_fee(uint64)void)",
+        "Method(distribute()void)",
+        "Method(get_balance()uint64)",
+        "Method(get_total_collected()uint64)"
+      ]
+    },
+    "119": {
+      "op": "txna ApplicationArgs 0",
+      "defined_out": [
+        "Method(distribute()void)",
+        "Method(get_balance()uint64)",
+        "Method(get_total_collected()uint64)",
+        "Method(receive_fee(uint64)void)",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "Method(receive_fee(uint64)void)",
+        "Method(distribute()void)",
+        "Method(get_balance()uint64)",
+        "Method(get_total_collected()uint64)",
+        "tmp%4#0"
+      ]
+    },
+    "122": {
+      "op": "match receive_fee distribute get_balance get_total_collected",
+      "stack_out": []
+    },
+    "132": {
+      "op": "err"
+    },
+    "133": {
+      "block": "main_create_NoOp@10",
+      "stack_in": [],
+      "op": "pushbytes 0x47439833 // method \"create(address,address,address,uint64)void\"",
+      "defined_out": [
+        "Method(create(address,address,address,uint64)void)"
+      ],
+      "stack_out": [
+        "Method(create(address,address,address,uint64)void)"
+      ]
+    },
+    "139": {
+      "op": "txna ApplicationArgs 0",
+      "defined_out": [
+        "Method(create(address,address,address,uint64)void)",
+        "tmp%5#0"
+      ],
+      "stack_out": [
+        "Method(create(address,address,address,uint64)void)",
+        "tmp%5#0"
+      ]
+    },
+    "142": {
+      "op": "match create",
+      "stack_out": []
+    },
+    "146": {
+      "op": "err"
+    },
+    "147": {
+      "subroutine": "smart_contracts.free_vault.contract.FeeVault.create[routing]",
+      "params": {},
+      "block": "create",
+      "stack_in": [],
+      "op": "txna ApplicationArgs 1",
+      "defined_out": [
+        "admin#0"
+      ],
+      "stack_out": [
+        "admin#0"
+      ]
+    },
+    "150": {
+      "op": "dup",
+      "defined_out": [
+        "admin#0",
+        "admin#0 (copy)"
+      ],
+      "stack_out": [
+        "admin#0",
+        "admin#0 (copy)"
+      ]
+    },
+    "151": {
+      "op": "len",
+      "defined_out": [
+        "admin#0",
+        "len%0#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "len%0#0"
+      ]
+    },
+    "152": {
+      "op": "intc_2 // 32",
+      "defined_out": [
+        "32",
+        "admin#0",
+        "len%0#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "len%0#0",
+        "32"
+      ]
+    },
+    "153": {
+      "op": "==",
+      "defined_out": [
+        "admin#0",
+        "eq%0#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "eq%0#0"
+      ]
+    },
+    "154": {
+      "error": "invalid number of bytes for arc4.static_array<arc4.uint8, 32>",
+      "op": "assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>",
+      "stack_out": [
+        "admin#0"
+      ]
+    },
+    "155": {
+      "op": "txna ApplicationArgs 2",
+      "defined_out": [
+        "admin#0",
+        "treasury_address#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0"
+      ]
+    },
+    "158": {
+      "op": "dup",
+      "defined_out": [
+        "admin#0",
+        "treasury_address#0",
+        "treasury_address#0 (copy)"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "treasury_address#0 (copy)"
+      ]
+    },
+    "159": {
+      "op": "len",
+      "defined_out": [
+        "admin#0",
+        "len%1#0",
+        "treasury_address#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "len%1#0"
+      ]
+    },
+    "160": {
+      "op": "intc_2 // 32",
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "len%1#0",
+        "32"
+      ]
+    },
+    "161": {
+      "op": "==",
+      "defined_out": [
+        "admin#0",
+        "eq%1#0",
+        "treasury_address#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "eq%1#0"
+      ]
+    },
+    "162": {
+      "error": "invalid number of bytes for arc4.static_array<arc4.uint8, 32>",
+      "op": "assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>",
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0"
+      ]
+    },
+    "163": {
+      "op": "txna ApplicationArgs 3",
+      "defined_out": [
+        "admin#0",
+        "rewards_address#0",
+        "treasury_address#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "rewards_address#0"
+      ]
+    },
+    "166": {
+      "op": "dup",
+      "defined_out": [
+        "admin#0",
+        "rewards_address#0",
+        "rewards_address#0 (copy)",
+        "treasury_address#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "rewards_address#0",
+        "rewards_address#0 (copy)"
+      ]
+    },
+    "167": {
+      "op": "len",
+      "defined_out": [
+        "admin#0",
+        "len%2#0",
+        "rewards_address#0",
+        "treasury_address#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "rewards_address#0",
+        "len%2#0"
+      ]
+    },
+    "168": {
+      "op": "intc_2 // 32",
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "rewards_address#0",
+        "len%2#0",
+        "32"
+      ]
+    },
+    "169": {
+      "op": "==",
+      "defined_out": [
+        "admin#0",
+        "eq%2#0",
+        "rewards_address#0",
+        "treasury_address#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "rewards_address#0",
+        "eq%2#0"
+      ]
+    },
+    "170": {
+      "error": "invalid number of bytes for arc4.static_array<arc4.uint8, 32>",
+      "op": "assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>",
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "rewards_address#0"
+      ]
+    },
+    "171": {
+      "op": "txna ApplicationArgs 4",
+      "defined_out": [
+        "admin#0",
+        "rewards_address#0",
+        "tmp%6#0",
+        "treasury_address#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "rewards_address#0",
+        "tmp%6#0"
+      ]
+    },
+    "174": {
+      "op": "dup",
+      "defined_out": [
+        "admin#0",
+        "rewards_address#0",
+        "tmp%6#0",
+        "tmp%6#0 (copy)",
+        "treasury_address#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "rewards_address#0",
+        "tmp%6#0",
+        "tmp%6#0 (copy)"
+      ]
+    },
+    "175": {
+      "op": "len",
+      "defined_out": [
+        "admin#0",
+        "len%3#0",
+        "rewards_address#0",
+        "tmp%6#0",
+        "treasury_address#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "rewards_address#0",
+        "tmp%6#0",
+        "len%3#0"
+      ]
+    },
+    "176": {
+      "op": "intc_3 // 8",
+      "defined_out": [
+        "8",
+        "admin#0",
+        "len%3#0",
+        "rewards_address#0",
+        "tmp%6#0",
+        "treasury_address#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "rewards_address#0",
+        "tmp%6#0",
+        "len%3#0",
+        "8"
+      ]
+    },
+    "177": {
+      "op": "==",
+      "defined_out": [
+        "admin#0",
+        "eq%3#0",
+        "rewards_address#0",
+        "tmp%6#0",
+        "treasury_address#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "rewards_address#0",
+        "tmp%6#0",
+        "eq%3#0"
+      ]
+    },
+    "178": {
+      "error": "invalid number of bytes for arc4.uint64",
+      "op": "assert // invalid number of bytes for arc4.uint64",
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "rewards_address#0",
+        "tmp%6#0"
+      ]
+    },
+    "179": {
+      "op": "btoi",
+      "defined_out": [
+        "admin#0",
+        "rewards_address#0",
+        "treasury_address#0",
+        "treasury_split_bps#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "rewards_address#0",
+        "treasury_split_bps#0"
+      ]
+    },
+    "180": {
+      "op": "bytec_1 // \"admin\"",
+      "defined_out": [
+        "\"admin\"",
+        "admin#0",
+        "rewards_address#0",
+        "treasury_address#0",
+        "treasury_split_bps#0"
+      ],
+      "stack_out": [
+        "admin#0",
+        "treasury_address#0",
+        "rewards_address#0",
+        "treasury_split_bps#0",
+        "\"admin\""
+      ]
+    },
+    "181": {
+      "op": "uncover 4",
+      "stack_out": [
+        "treasury_address#0",
+        "rewards_address#0",
+        "treasury_split_bps#0",
+        "\"admin\"",
+        "admin#0"
+      ]
+    },
+    "183": {
+      "op": "app_global_put",
+      "stack_out": [
+        "treasury_address#0",
+        "rewards_address#0",
+        "treasury_split_bps#0"
+      ]
+    },
+    "184": {
+      "op": "bytec_2 // \"treasury_address\"",
+      "defined_out": [
+        "\"treasury_address\"",
+        "rewards_address#0",
+        "treasury_address#0",
+        "treasury_split_bps#0"
+      ],
+      "stack_out": [
+        "treasury_address#0",
+        "rewards_address#0",
+        "treasury_split_bps#0",
+        "\"treasury_address\""
+      ]
+    },
+    "185": {
+      "op": "uncover 3",
+      "stack_out": [
+        "rewards_address#0",
+        "treasury_split_bps#0",
+        "\"treasury_address\"",
+        "treasury_address#0"
+      ]
+    },
+    "187": {
+      "op": "app_global_put",
+      "stack_out": [
+        "rewards_address#0",
+        "treasury_split_bps#0"
+      ]
+    },
+    "188": {
+      "op": "bytec_3 // \"rewards_address\"",
+      "defined_out": [
+        "\"rewards_address\"",
+        "rewards_address#0",
+        "treasury_split_bps#0"
+      ],
+      "stack_out": [
+        "rewards_address#0",
+        "treasury_split_bps#0",
+        "\"rewards_address\""
+      ]
+    },
+    "189": {
+      "op": "uncover 2",
+      "stack_out": [
+        "treasury_split_bps#0",
+        "\"rewards_address\"",
+        "rewards_address#0"
+      ]
+    },
+    "191": {
+      "op": "app_global_put",
+      "stack_out": [
+        "treasury_split_bps#0"
+      ]
+    },
+    "192": {
+      "op": "bytec 4 // \"treasury_split_bps\"",
+      "defined_out": [
+        "\"treasury_split_bps\"",
+        "treasury_split_bps#0"
+      ],
+      "stack_out": [
+        "treasury_split_bps#0",
+        "\"treasury_split_bps\""
+      ]
+    },
+    "194": {
+      "op": "swap",
+      "stack_out": [
+        "\"treasury_split_bps\"",
+        "treasury_split_bps#0"
+      ]
+    },
+    "195": {
+      "op": "app_global_put",
+      "stack_out": []
+    },
+    "196": {
+      "op": "bytec_0 // \"total_collected\"",
+      "defined_out": [
+        "\"total_collected\""
+      ],
+      "stack_out": [
+        "\"total_collected\""
+      ]
+    },
+    "197": {
+      "op": "intc_0 // 0",
+      "defined_out": [
+        "\"total_collected\"",
+        "0"
+      ],
+      "stack_out": [
+        "\"total_collected\"",
+        "0"
+      ]
+    },
+    "198": {
+      "op": "app_global_put",
+      "stack_out": []
+    },
+    "199": {
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "1"
+      ],
+      "stack_out": [
+        "1"
+      ]
+    },
+    "200": {
+      "op": "return",
+      "stack_out": []
+    },
+    "201": {
+      "subroutine": "smart_contracts.free_vault.contract.FeeVault.receive_fee[routing]",
+      "params": {},
+      "block": "receive_fee",
+      "stack_in": [],
+      "op": "txna ApplicationArgs 1",
+      "defined_out": [
+        "payment#0"
+      ],
+      "stack_out": [
+        "payment#0"
+      ]
+    },
+    "204": {
+      "op": "dup",
+      "defined_out": [
+        "payment#0",
+        "payment#0 (copy)"
+      ],
+      "stack_out": [
+        "payment#0",
+        "payment#0 (copy)"
+      ]
+    },
+    "205": {
+      "op": "len",
+      "defined_out": [
+        "len%0#0",
+        "payment#0"
+      ],
+      "stack_out": [
+        "payment#0",
+        "len%0#0"
+      ]
+    },
+    "206": {
+      "op": "intc_3 // 8",
+      "defined_out": [
+        "8",
+        "len%0#0",
+        "payment#0"
+      ],
+      "stack_out": [
+        "payment#0",
+        "len%0#0",
+        "8"
+      ]
+    },
+    "207": {
+      "op": "==",
+      "defined_out": [
+        "eq%0#0",
+        "payment#0"
+      ],
+      "stack_out": [
+        "payment#0",
+        "eq%0#0"
+      ]
+    },
+    "208": {
+      "error": "invalid number of bytes for arc4.uint64",
+      "op": "assert // invalid number of bytes for arc4.uint64",
+      "stack_out": [
+        "payment#0"
+      ]
+    },
+    "209": {
+      "op": "intc_0 // 0",
+      "defined_out": [
+        "0",
+        "payment#0"
+      ],
+      "stack_out": [
+        "payment#0",
+        "0"
+      ]
+    },
+    "210": {
+      "op": "bytec_0 // \"total_collected\"",
+      "defined_out": [
+        "\"total_collected\"",
+        "0",
+        "payment#0"
+      ],
+      "stack_out": [
+        "payment#0",
+        "0",
+        "\"total_collected\""
+      ]
+    },
+    "211": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "maybe_exists%0#0",
+        "maybe_value%0#0",
+        "payment#0"
+      ],
+      "stack_out": [
+        "payment#0",
+        "maybe_value%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "212": {
+      "error": "check self.total_collected exists",
+      "op": "assert // check self.total_collected exists",
+      "stack_out": [
+        "payment#0",
+        "maybe_value%0#0"
+      ]
+    },
+    "213": {
+      "op": "swap",
+      "stack_out": [
+        "maybe_value%0#0",
+        "payment#0"
+      ]
+    },
+    "214": {
+      "op": "btoi",
+      "defined_out": [
+        "maybe_value%0#0",
+        "tmp%0#1"
+      ],
+      "stack_out": [
+        "maybe_value%0#0",
+        "tmp%0#1"
+      ]
+    },
+    "215": {
+      "op": "+",
+      "defined_out": [
+        "tmp%1#0"
+      ],
+      "stack_out": [
+        "tmp%1#0"
+      ]
+    },
+    "216": {
+      "op": "bytec_0 // \"total_collected\"",
+      "stack_out": [
+        "tmp%1#0",
+        "\"total_collected\""
+      ]
+    },
+    "217": {
+      "op": "swap",
+      "stack_out": [
+        "\"total_collected\"",
+        "tmp%1#0"
+      ]
+    },
+    "218": {
+      "op": "app_global_put",
+      "stack_out": []
+    },
+    "219": {
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "1"
+      ],
+      "stack_out": [
+        "1"
+      ]
+    },
+    "220": {
+      "op": "return",
+      "stack_out": []
+    },
+    "221": {
+      "subroutine": "smart_contracts.free_vault.contract.FeeVault.distribute[routing]",
+      "params": {},
+      "block": "distribute",
+      "stack_in": [],
+      "op": "txn Sender",
+      "defined_out": [
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0"
+      ]
+    },
+    "223": {
+      "op": "intc_0 // 0",
+      "defined_out": [
+        "0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "0"
+      ]
+    },
+    "224": {
+      "op": "bytec_1 // \"admin\"",
+      "defined_out": [
+        "\"admin\"",
+        "0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "0",
+        "\"admin\""
+      ]
+    },
+    "225": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "maybe_exists%0#0",
+        "maybe_value%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "maybe_value%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "226": {
+      "error": "check self.admin exists",
+      "op": "assert // check self.admin exists",
+      "stack_out": [
+        "tmp%0#0",
+        "maybe_value%0#0"
+      ]
+    },
+    "227": {
+      "op": "==",
+      "defined_out": [
+        "tmp%1#0"
+      ],
+      "stack_out": [
+        "tmp%1#0"
+      ]
+    },
+    "228": {
+      "error": "admin only",
+      "op": "assert // admin only",
+      "stack_out": []
+    },
+    "229": {
+      "op": "global CurrentApplicationAddress",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "231": {
+      "op": "acct_params_get AcctBalance",
+      "defined_out": [
+        "check%0#0",
+        "value%0#0"
+      ],
+      "stack_out": [
+        "value%0#0",
+        "check%0#0"
+      ]
+    },
+    "233": {
+      "error": "account funded",
+      "op": "assert // account funded",
+      "stack_out": [
+        "value%0#0"
+      ]
+    },
+    "234": {
+      "op": "global MinBalance",
+      "defined_out": [
+        "tmp%3#0",
+        "value%0#0"
+      ],
+      "stack_out": [
+        "value%0#0",
+        "tmp%3#0"
+      ]
+    },
+    "236": {
+      "op": "-",
+      "defined_out": [
+        "balance#0"
+      ],
+      "stack_out": [
+        "balance#0"
+      ]
+    },
+    "237": {
+      "op": "dup",
+      "defined_out": [
+        "balance#0",
+        "balance#0 (copy)"
+      ],
+      "stack_out": [
+        "balance#0",
+        "balance#0 (copy)"
+      ]
+    },
+    "238": {
+      "error": "nothing to distribute",
+      "op": "assert // nothing to distribute",
+      "stack_out": [
+        "balance#0"
+      ]
+    },
+    "239": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "balance#0",
+        "0"
+      ]
+    },
+    "240": {
+      "op": "bytec 4 // \"treasury_split_bps\"",
+      "defined_out": [
+        "\"treasury_split_bps\"",
+        "0",
+        "balance#0"
+      ],
+      "stack_out": [
+        "balance#0",
+        "0",
+        "\"treasury_split_bps\""
+      ]
+    },
+    "242": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "balance#0",
+        "maybe_exists%1#0",
+        "maybe_value%1#0"
+      ],
+      "stack_out": [
+        "balance#0",
+        "maybe_value%1#0",
+        "maybe_exists%1#0"
+      ]
+    },
+    "243": {
+      "error": "check self.treasury_split_bps exists",
+      "op": "assert // check self.treasury_split_bps exists",
+      "stack_out": [
+        "balance#0",
+        "maybe_value%1#0"
+      ]
+    },
+    "244": {
+      "op": "dig 1",
+      "stack_out": [
+        "balance#0",
+        "maybe_value%1#0",
+        "balance#0 (copy)"
+      ]
+    },
+    "246": {
+      "op": "*",
+      "defined_out": [
+        "balance#0",
+        "tmp%6#0"
+      ],
+      "stack_out": [
+        "balance#0",
+        "tmp%6#0"
+      ]
+    },
+    "247": {
+      "op": "pushint 10000",
+      "defined_out": [
+        "10000",
+        "balance#0",
+        "tmp%6#0"
+      ],
+      "stack_out": [
+        "balance#0",
+        "tmp%6#0",
+        "10000"
+      ]
+    },
+    "250": {
+      "op": "/",
+      "defined_out": [
+        "balance#0",
+        "treasury_amount#0"
+      ],
+      "stack_out": [
+        "balance#0",
+        "treasury_amount#0"
+      ]
+    },
+    "251": {
+      "op": "dup"
+    },
+    "252": {
+      "op": "uncover 2",
+      "defined_out": [
+        "balance#0",
+        "treasury_amount#0"
+      ],
+      "stack_out": [
+        "treasury_amount#0",
+        "treasury_amount#0",
+        "balance#0"
+      ]
+    },
+    "254": {
+      "op": "dig 1",
+      "defined_out": [
+        "balance#0",
+        "treasury_amount#0",
+        "treasury_amount#0 (copy)"
+      ],
+      "stack_out": [
+        "treasury_amount#0",
+        "treasury_amount#0",
+        "balance#0",
+        "treasury_amount#0 (copy)"
+      ]
+    },
+    "256": {
+      "op": "-",
+      "defined_out": [
+        "rewards_amount#0",
+        "treasury_amount#0"
+      ],
+      "stack_out": [
+        "treasury_amount#0",
+        "treasury_amount#0",
+        "rewards_amount#0"
+      ]
+    },
+    "257": {
+      "op": "swap",
+      "defined_out": [
+        "rewards_amount#0",
+        "treasury_amount#0"
+      ],
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "treasury_amount#0"
+      ]
+    },
+    "258": {
+      "op": "bz distribute_after_if_else@4",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0"
+      ]
+    },
+    "261": {
+      "op": "itxn_begin"
+    },
+    "262": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "0"
+      ]
+    },
+    "263": {
+      "op": "bytec_2 // \"treasury_address\"",
+      "defined_out": [
+        "\"treasury_address\"",
+        "0",
+        "rewards_amount#0",
+        "treasury_amount#0"
+      ],
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "0",
+        "\"treasury_address\""
+      ]
+    },
+    "264": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "maybe_exists%2#0",
+        "maybe_value%2#0",
+        "rewards_amount#0",
+        "treasury_amount#0"
+      ],
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "maybe_value%2#0",
+        "maybe_exists%2#0"
+      ]
+    },
+    "265": {
+      "error": "check self.treasury_address exists",
+      "op": "assert // check self.treasury_address exists",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "maybe_value%2#0"
+      ]
+    },
+    "266": {
+      "op": "dig 2",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "maybe_value%2#0",
+        "treasury_amount#0"
+      ]
+    },
+    "268": {
+      "op": "itxn_field Amount",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "maybe_value%2#0"
+      ]
+    },
+    "270": {
+      "op": "itxn_field Receiver",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0"
+      ]
+    },
+    "272": {
+      "op": "intc_1 // pay",
+      "defined_out": [
+        "pay",
+        "rewards_amount#0",
+        "treasury_amount#0"
+      ],
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "pay"
+      ]
+    },
+    "273": {
+      "op": "itxn_field TypeEnum",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0"
+      ]
+    },
+    "275": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "0"
+      ]
+    },
+    "276": {
+      "op": "itxn_field Fee",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0"
+      ]
+    },
+    "278": {
+      "op": "itxn_submit"
+    },
+    "279": {
+      "block": "distribute_after_if_else@4",
+      "stack_in": [
+        "treasury_amount#0",
+        "rewards_amount#0"
+      ],
+      "op": "dup",
+      "defined_out": [
+        "rewards_amount#0"
+      ],
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "rewards_amount#0"
+      ]
+    },
+    "280": {
+      "op": "bz distribute_after_if_else@7",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0"
+      ]
+    },
+    "283": {
+      "op": "itxn_begin"
+    },
+    "284": {
+      "op": "intc_0 // 0",
+      "defined_out": [
+        "0",
+        "rewards_amount#0"
+      ],
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "0"
+      ]
+    },
+    "285": {
+      "op": "bytec_3 // \"rewards_address\"",
+      "defined_out": [
+        "\"rewards_address\"",
+        "0",
+        "rewards_amount#0"
+      ],
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "0",
+        "\"rewards_address\""
+      ]
+    },
+    "286": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "maybe_exists%3#0",
+        "maybe_value%3#0",
+        "rewards_amount#0"
+      ],
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "maybe_value%3#0",
+        "maybe_exists%3#0"
+      ]
+    },
+    "287": {
+      "error": "check self.rewards_address exists",
+      "op": "assert // check self.rewards_address exists",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "maybe_value%3#0"
+      ]
+    },
+    "288": {
+      "op": "dig 1",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "maybe_value%3#0",
+        "rewards_amount#0"
+      ]
+    },
+    "290": {
+      "op": "itxn_field Amount",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "maybe_value%3#0"
+      ]
+    },
+    "292": {
+      "op": "itxn_field Receiver",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0"
+      ]
+    },
+    "294": {
+      "op": "intc_1 // pay",
+      "defined_out": [
+        "pay",
+        "rewards_amount#0"
+      ],
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "pay"
+      ]
+    },
+    "295": {
+      "op": "itxn_field TypeEnum",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0"
+      ]
+    },
+    "297": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "0"
+      ]
+    },
+    "298": {
+      "op": "itxn_field Fee",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0"
+      ]
+    },
+    "300": {
+      "op": "itxn_submit"
+    },
+    "301": {
+      "block": "distribute_after_if_else@7",
+      "stack_in": [
+        "treasury_amount#0",
+        "rewards_amount#0"
+      ],
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "1"
+      ],
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0",
+        "1"
+      ]
+    },
+    "302": {
+      "op": "return",
+      "stack_out": [
+        "treasury_amount#0",
+        "rewards_amount#0"
+      ]
+    },
+    "303": {
+      "subroutine": "smart_contracts.free_vault.contract.FeeVault.get_balance[routing]",
+      "params": {},
+      "block": "get_balance",
+      "stack_in": [],
+      "op": "global CurrentApplicationAddress",
+      "defined_out": [
+        "tmp%0#1"
+      ],
+      "stack_out": [
+        "tmp%0#1"
+      ]
+    },
+    "305": {
+      "op": "acct_params_get AcctBalance",
+      "defined_out": [
+        "check%0#0",
+        "value%0#0"
+      ],
+      "stack_out": [
+        "value%0#0",
+        "check%0#0"
+      ]
+    },
+    "307": {
+      "error": "account funded",
+      "op": "assert // account funded",
+      "stack_out": [
+        "value%0#0"
+      ]
+    },
+    "308": {
+      "op": "global MinBalance",
+      "defined_out": [
+        "tmp%1#1",
+        "value%0#0"
+      ],
+      "stack_out": [
+        "value%0#0",
+        "tmp%1#1"
+      ]
+    },
+    "310": {
+      "op": "-",
+      "defined_out": [
+        "tmp%2#1"
+      ],
+      "stack_out": [
+        "tmp%2#1"
+      ]
+    },
+    "311": {
+      "op": "itob",
+      "defined_out": [
+        "aggregate%val_as_bytes%0#0"
+      ],
+      "stack_out": [
+        "aggregate%val_as_bytes%0#0"
+      ]
+    },
+    "312": {
+      "op": "bytec 5 // 0x151f7c75",
+      "defined_out": [
+        "0x151f7c75",
+        "aggregate%val_as_bytes%0#0"
+      ],
+      "stack_out": [
+        "aggregate%val_as_bytes%0#0",
+        "0x151f7c75"
+      ]
+    },
+    "314": {
+      "op": "swap",
+      "stack_out": [
+        "0x151f7c75",
+        "aggregate%val_as_bytes%0#0"
+      ]
+    },
+    "315": {
+      "op": "concat",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "316": {
+      "op": "log",
+      "stack_out": []
+    },
+    "317": {
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "1"
+      ],
+      "stack_out": [
+        "1"
+      ]
+    },
+    "318": {
+      "op": "return",
+      "stack_out": []
+    },
+    "319": {
+      "subroutine": "smart_contracts.free_vault.contract.FeeVault.get_total_collected[routing]",
+      "params": {},
+      "block": "get_total_collected",
+      "stack_in": [],
+      "op": "intc_0 // 0",
+      "defined_out": [
+        "0"
+      ],
+      "stack_out": [
+        "0"
+      ]
+    },
+    "320": {
+      "op": "bytec_0 // \"total_collected\"",
+      "defined_out": [
+        "\"total_collected\"",
+        "0"
+      ],
+      "stack_out": [
+        "0",
+        "\"total_collected\""
+      ]
+    },
+    "321": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "maybe_exists%0#0",
+        "maybe_value%0#0"
+      ],
+      "stack_out": [
+        "maybe_value%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "322": {
+      "error": "check self.total_collected exists",
+      "op": "assert // check self.total_collected exists",
+      "stack_out": [
+        "maybe_value%0#0"
+      ]
+    },
+    "323": {
+      "op": "itob",
+      "defined_out": [
+        "aggregate%val_as_bytes%0#0"
+      ],
+      "stack_out": [
+        "aggregate%val_as_bytes%0#0"
+      ]
+    },
+    "324": {
+      "op": "bytec 5 // 0x151f7c75",
+      "defined_out": [
+        "0x151f7c75",
+        "aggregate%val_as_bytes%0#0"
+      ],
+      "stack_out": [
+        "aggregate%val_as_bytes%0#0",
+        "0x151f7c75"
+      ]
+    },
+    "326": {
+      "op": "swap",
+      "stack_out": [
+        "0x151f7c75",
+        "aggregate%val_as_bytes%0#0"
+      ]
+    },
+    "327": {
+      "op": "concat",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "328": {
+      "op": "log",
+      "stack_out": []
+    },
+    "329": {
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "1"
+      ],
+      "stack_out": [
+        "1"
+      ]
+    },
+    "330": {
+      "op": "return",
+      "stack_out": []
+    }
+  }
+}

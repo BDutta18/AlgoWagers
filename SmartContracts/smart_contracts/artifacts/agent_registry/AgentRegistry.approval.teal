@@ -1,0 +1,814 @@
+#pragma version 11
+#pragma typetrack false
+
+// algopy.arc4.ARC4Contract.approval_program() -> uint64:
+main:
+    intcblock 8 1 0 2
+    bytecblock 0x6167656e743a 0x151f7c75 "agent_count" 0x004e 0x0000000000000000 0x616464723a
+    // smart_contracts/agent_registry/contract.py:28
+    // class AgentRegistry(ARC4Contract):
+    txn OnCompletion
+    !
+    assert
+    txn ApplicationID
+    bz main_create_NoOp@13
+    pushbytess 0x46e76004 0x0465e89c 0x5aee37a0 0x4018b545 0xa52c257b 0xc29f1bf3 0xaa4c01f4 // method "register_agent(string,string,pay)uint64", method "record_bet_placed(uint64,uint64,string,uint64,string)void", method "record_bet_result(uint64,bool,uint64,string)void", method "get_agent_id_by_address(address)uint64", method "get_win_rate_bps(uint64)uint64", method "get_agent(uint64)(address,string,string,uint64,uint64,uint64,string,uint64,uint64)", method "get_agent_count()uint64"
+    txna ApplicationArgs 0
+    match register_agent record_bet_placed record_bet_result get_agent_id_by_address get_win_rate_bps get_agent get_agent_count
+    err
+
+main_create_NoOp@13:
+    // smart_contracts/agent_registry/contract.py:28
+    // class AgentRegistry(ARC4Contract):
+    pushbytes 0x240d2f67 // method "create(uint64)void"
+    txna ApplicationArgs 0
+    match create
+    err
+
+
+// smart_contracts.agent_registry.contract.AgentRegistry.create[routing]() -> void:
+create:
+    // smart_contracts/agent_registry/contract.py:33
+    // @arc4.abimethod(create="require")
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_0 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/agent_registry/contract.py:35
+    // self.registry_app_id.value = registry_app_id
+    pushbytes "registry_app_id"
+    swap
+    app_global_put
+    // smart_contracts/agent_registry/contract.py:36
+    // self.agent_count.value = UInt64(0)
+    bytec_2 // "agent_count"
+    intc_2 // 0
+    app_global_put
+    // smart_contracts/agent_registry/contract.py:33
+    // @arc4.abimethod(create="require")
+    intc_1 // 1
+    return
+
+
+// smart_contracts.agent_registry.contract.AgentRegistry.register_agent[routing]() -> void:
+register_agent:
+    // smart_contracts/agent_registry/contract.py:38
+    // @arc4.abimethod
+    txna ApplicationArgs 1
+    dup
+    intc_2 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_3 // 2
+    +
+    dig 1
+    len
+    dup
+    uncover 2
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    txna ApplicationArgs 2
+    dup
+    intc_2 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_3 // 2
+    +
+    dig 1
+    len
+    dup
+    uncover 2
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    txn GroupIndex
+    intc_1 // 1
+    -
+    dup
+    gtxns TypeEnum
+    intc_1 // pay
+    ==
+    assert // transaction type is pay
+    // smart_contracts/agent_registry/contract.py:45
+    // assert registration_fee.amount >= UInt64(1_000_000), "1 ALGO fee required"
+    dup
+    gtxns Amount
+    pushint 1000000
+    >=
+    assert // 1 ALGO fee required
+    // smart_contracts/agent_registry/contract.py:46
+    // assert registration_fee.receiver == Global.current_application_address
+    gtxns Receiver
+    global CurrentApplicationAddress
+    ==
+    assert
+    // smart_contracts/agent_registry/contract.py:48
+    // agent_id = self.agent_count.value
+    intc_2 // 0
+    bytec_2 // "agent_count"
+    app_global_get_ex
+    assert // check self.agent_count exists
+    // smart_contracts/agent_registry/contract.py:49
+    // box_key = Bytes(b"agent:") + op.itob(agent_id)
+    dup
+    itob
+    bytec_0 // 0x6167656e743a
+    dig 1
+    concat
+    // smart_contracts/agent_registry/contract.py:52
+    // owner=arc4.Address(Txn.sender),
+    txn Sender
+    // smart_contracts/agent_registry/contract.py:59
+    // registered_at=arc4.UInt64(Global.latest_timestamp),
+    global LatestTimestamp
+    itob
+    // smart_contracts/agent_registry/contract.py:51-61
+    // box_ref.value = AgentProfile(
+    //     owner=arc4.Address(Txn.sender),
+    //     name=arc4.String(name),
+    //     specialization=arc4.String(specialization),
+    //     total_bets=arc4.UInt64(0),
+    //     winning_bets=arc4.UInt64(0),
+    //     total_profit_microalgo=arc4.UInt64(0),
+    //     last_reasoning_cid=arc4.String(""),
+    //     registered_at=arc4.UInt64(Global.latest_timestamp),
+    //     nonce=arc4.UInt64(0),
+    // )
+    swap
+    bytec_3 // 0x004e
+    concat
+    pushint 78
+    uncover 8
+    +
+    dup
+    itob
+    extract 6 2
+    uncover 2
+    swap
+    concat
+    swap
+    uncover 6
+    +
+    swap
+    pushbytes 0x000000000000000000000000000000000000000000000000
+    concat
+    swap
+    itob
+    extract 6 2
+    concat
+    swap
+    concat
+    // smart_contracts/agent_registry/contract.py:60
+    // nonce=arc4.UInt64(0),
+    bytec 4 // 0x0000000000000000
+    // smart_contracts/agent_registry/contract.py:51-61
+    // box_ref.value = AgentProfile(
+    //     owner=arc4.Address(Txn.sender),
+    //     name=arc4.String(name),
+    //     specialization=arc4.String(specialization),
+    //     total_bets=arc4.UInt64(0),
+    //     winning_bets=arc4.UInt64(0),
+    //     total_profit_microalgo=arc4.UInt64(0),
+    //     last_reasoning_cid=arc4.String(""),
+    //     registered_at=arc4.UInt64(Global.latest_timestamp),
+    //     nonce=arc4.UInt64(0),
+    // )
+    concat
+    uncover 5
+    concat
+    uncover 4
+    concat
+    // smart_contracts/agent_registry/contract.py:58
+    // last_reasoning_cid=arc4.String(""),
+    pushbytes 0x0000
+    // smart_contracts/agent_registry/contract.py:51-61
+    // box_ref.value = AgentProfile(
+    //     owner=arc4.Address(Txn.sender),
+    //     name=arc4.String(name),
+    //     specialization=arc4.String(specialization),
+    //     total_bets=arc4.UInt64(0),
+    //     winning_bets=arc4.UInt64(0),
+    //     total_profit_microalgo=arc4.UInt64(0),
+    //     last_reasoning_cid=arc4.String(""),
+    //     registered_at=arc4.UInt64(Global.latest_timestamp),
+    //     nonce=arc4.UInt64(0),
+    // )
+    concat
+    dig 1
+    box_del
+    pop
+    box_put
+    // smart_contracts/agent_registry/contract.py:63
+    // addr_key = Bytes(b"addr:") + Txn.sender.bytes
+    bytec 5 // 0x616464723a
+    txn Sender
+    concat
+    // smart_contracts/agent_registry/contract.py:65
+    // addr_box.value = arc4.UInt64(agent_id)
+    dig 1
+    box_put
+    // smart_contracts/agent_registry/contract.py:67
+    // self.agent_count.value = agent_id + UInt64(1)
+    swap
+    intc_1 // 1
+    +
+    bytec_2 // "agent_count"
+    swap
+    app_global_put
+    // smart_contracts/agent_registry/contract.py:38
+    // @arc4.abimethod
+    bytec_1 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts.agent_registry.contract.AgentRegistry.record_bet_placed[routing]() -> void:
+record_bet_placed:
+    // smart_contracts/agent_registry/contract.py:70
+    // @arc4.abimethod
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_0 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    txna ApplicationArgs 2
+    len
+    intc_0 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    txna ApplicationArgs 3
+    dup
+    intc_2 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_3 // 2
+    +
+    swap
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    txna ApplicationArgs 4
+    len
+    intc_0 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    txna ApplicationArgs 5
+    dup
+    intc_2 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_3 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    // smart_contracts/agent_registry/contract.py:79
+    // box_key = Bytes(b"agent:") + op.itob(agent_id)
+    swap
+    itob
+    bytec_0 // 0x6167656e743a
+    swap
+    concat
+    // smart_contracts/agent_registry/contract.py:81
+    // assert box_ref, "agent not found"
+    dup
+    box_len
+    bury 1
+    assert // agent not found
+    // smart_contracts/agent_registry/contract.py:82
+    // profile = box_ref.value.copy()
+    dup
+    box_get
+    pop
+    swap
+    // smart_contracts/agent_registry/contract.py:83
+    // assert Txn.sender == profile.owner.native, "not your agent"
+    txn Sender
+    // smart_contracts/agent_registry/contract.py:82-83
+    // profile = box_ref.value.copy()
+    // assert Txn.sender == profile.owner.native, "not your agent"
+    dig 1
+    intc_2 // 0
+    pushint 32
+    box_extract
+    // smart_contracts/agent_registry/contract.py:83
+    // assert Txn.sender == profile.owner.native, "not your agent"
+    swap
+    dig 1
+    ==
+    assert // not your agent
+    // smart_contracts/agent_registry/contract.py:84-87
+    // new_profile = profile._replace(
+    //     last_reasoning_cid=arc4.String(reasoning_cid),
+    //     nonce=arc4.UInt64(profile.nonce.native + 1),
+    // )
+    dig 2
+    pushint 32
+    extract_uint16
+    dig 3
+    pushint 34
+    extract_uint16
+    dig 4
+    uncover 2
+    dig 2
+    substring3
+    dig 4
+    pushint 60
+    extract_uint16
+    uncover 5
+    uncover 3
+    uncover 2
+    substring3
+    dig 3
+    pushint 36
+    intc_0 // 8
+    box_extract
+    dig 4
+    pushint 44
+    intc_0 // 8
+    box_extract
+    dig 5
+    pushint 52
+    intc_0 // 8
+    box_extract
+    dig 6
+    pushint 62
+    intc_0 // 8
+    box_extract
+    // smart_contracts/agent_registry/contract.py:86
+    // nonce=arc4.UInt64(profile.nonce.native + 1),
+    dig 7
+    pushint 70
+    intc_0 // 8
+    box_extract
+    btoi
+    intc_1 // 1
+    +
+    itob
+    // smart_contracts/agent_registry/contract.py:84-87
+    // new_profile = profile._replace(
+    //     last_reasoning_cid=arc4.String(reasoning_cid),
+    //     nonce=arc4.UInt64(profile.nonce.native + 1),
+    // )
+    uncover 7
+    bytec_3 // 0x004e
+    concat
+    dig 7
+    len
+    pushint 78
+    +
+    dup
+    itob
+    extract 6 2
+    uncover 2
+    swap
+    concat
+    dig 7
+    len
+    uncover 2
+    +
+    swap
+    uncover 6
+    concat
+    uncover 5
+    concat
+    uncover 4
+    concat
+    swap
+    itob
+    extract 6 2
+    concat
+    uncover 2
+    concat
+    swap
+    concat
+    uncover 2
+    concat
+    swap
+    concat
+    uncover 2
+    concat
+    // smart_contracts/agent_registry/contract.py:88
+    // box_ref.value = new_profile.copy()
+    dig 1
+    box_del
+    pop
+    box_put
+    // smart_contracts/agent_registry/contract.py:70
+    // @arc4.abimethod
+    intc_1 // 1
+    return
+
+
+// smart_contracts.agent_registry.contract.AgentRegistry.record_bet_result[routing]() -> void:
+record_bet_result:
+    intc_2 // 0
+    // smart_contracts/agent_registry/contract.py:90
+    // @arc4.abimethod
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_0 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    txna ApplicationArgs 2
+    dup
+    len
+    intc_1 // 1
+    ==
+    assert // invalid number of bytes for arc4.bool
+    intc_2 // 0
+    getbit
+    dup
+    uncover 2
+    txna ApplicationArgs 3
+    dup
+    len
+    intc_0 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    cover 2
+    txna ApplicationArgs 4
+    dup
+    cover 3
+    dup
+    intc_2 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_3 // 2
+    +
+    swap
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    // smart_contracts/agent_registry/contract.py:98
+    // box_key = Bytes(b"agent:") + op.itob(agent_id)
+    itob
+    bytec_0 // 0x6167656e743a
+    swap
+    concat
+    dup
+    cover 2
+    // smart_contracts/agent_registry/contract.py:100
+    // assert box_ref, "agent not found"
+    dup
+    box_len
+    bury 1
+    assert // agent not found
+    // smart_contracts/agent_registry/contract.py:101
+    // profile = box_ref.value.copy()
+    dup
+    box_get
+    pop
+    swap
+    // smart_contracts/agent_registry/contract.py:101-102
+    // profile = box_ref.value.copy()
+    // current_total = profile.total_bets.native
+    dup
+    pushint 36
+    intc_0 // 8
+    box_extract
+    // smart_contracts/agent_registry/contract.py:102
+    // current_total = profile.total_bets.native
+    btoi
+    // smart_contracts/agent_registry/contract.py:103
+    // current_winning = profile.winning_bets.native
+    dig 1
+    pushint 44
+    intc_0 // 8
+    box_extract
+    dup
+    cover 5
+    btoi
+    cover 4
+    // smart_contracts/agent_registry/contract.py:104
+    // current_profit = profile.total_profit_microalgo.native
+    dig 1
+    pushint 52
+    intc_0 // 8
+    box_extract
+    dup
+    cover 5
+    btoi
+    cover 4
+    // smart_contracts/agent_registry/contract.py:105-113
+    // new_profile = profile._replace(
+    //     total_bets=arc4.UInt64(current_total + 1),
+    //     last_reasoning_cid=arc4.String(reasoning_cid),
+    //     nonce=arc4.UInt64(profile.nonce.native + 1),
+    //     winning_bets=arc4.UInt64(current_winning + 1) if won else profile.winning_bets,
+    //     total_profit_microalgo=arc4.UInt64(current_profit + profit_microalgo)
+    //     if won
+    //     else profile.total_profit_microalgo,
+    // )
+    swap
+    intc_2 // 0
+    pushint 32
+    box_extract
+    cover 3
+    dig 1
+    pushint 32
+    extract_uint16
+    dig 2
+    pushint 34
+    extract_uint16
+    dig 3
+    uncover 2
+    dig 2
+    substring3
+    cover 4
+    dig 2
+    pushint 60
+    extract_uint16
+    uncover 3
+    cover 2
+    substring3
+    cover 2
+    // smart_contracts/agent_registry/contract.py:106
+    // total_bets=arc4.UInt64(current_total + 1),
+    intc_1 // 1
+    +
+    itob
+    swap
+    // smart_contracts/agent_registry/contract.py:109
+    // winning_bets=arc4.UInt64(current_winning + 1) if won else profile.winning_bets,
+    bz record_bet_result_ternary_false@3
+    dig 6
+    intc_1 // 1
+    +
+    itob
+    bury 13
+
+record_bet_result_ternary_merge@4:
+    // smart_contracts/agent_registry/contract.py:110-112
+    // total_profit_microalgo=arc4.UInt64(current_profit + profit_microalgo)
+    // if won
+    // else profile.total_profit_microalgo,
+    dig 11
+    bz record_bet_result_ternary_false@6
+    // smart_contracts/agent_registry/contract.py:110
+    // total_profit_microalgo=arc4.UInt64(current_profit + profit_microalgo)
+    dig 4
+    dig 11
+    +
+    itob
+
+record_bet_result_ternary_merge@7:
+    // smart_contracts/agent_registry/contract.py:105-113
+    // new_profile = profile._replace(
+    //     total_bets=arc4.UInt64(current_total + 1),
+    //     last_reasoning_cid=arc4.String(reasoning_cid),
+    //     nonce=arc4.UInt64(profile.nonce.native + 1),
+    //     winning_bets=arc4.UInt64(current_winning + 1) if won else profile.winning_bets,
+    //     total_profit_microalgo=arc4.UInt64(current_profit + profit_microalgo)
+    //     if won
+    //     else profile.total_profit_microalgo,
+    // )
+    dig 9
+    dup
+    pushint 62
+    intc_0 // 8
+    box_extract
+    // smart_contracts/agent_registry/contract.py:108
+    // nonce=arc4.UInt64(profile.nonce.native + 1),
+    dig 1
+    pushint 70
+    intc_0 // 8
+    box_extract
+    btoi
+    intc_1 // 1
+    +
+    itob
+    // smart_contracts/agent_registry/contract.py:105-113
+    // new_profile = profile._replace(
+    //     total_bets=arc4.UInt64(current_total + 1),
+    //     last_reasoning_cid=arc4.String(reasoning_cid),
+    //     nonce=arc4.UInt64(profile.nonce.native + 1),
+    //     winning_bets=arc4.UInt64(current_winning + 1) if won else profile.winning_bets,
+    //     total_profit_microalgo=arc4.UInt64(current_profit + profit_microalgo)
+    //     if won
+    //     else profile.total_profit_microalgo,
+    // )
+    dig 7
+    bytec_3 // 0x004e
+    concat
+    dig 7
+    dup
+    cover 2
+    len
+    pushint 78
+    +
+    dup
+    itob
+    extract 6 2
+    uncover 2
+    swap
+    concat
+    dig 8
+    dup
+    cover 3
+    len
+    uncover 2
+    +
+    swap
+    dig 8
+    concat
+    dig 20
+    concat
+    uncover 7
+    concat
+    swap
+    itob
+    extract 6 2
+    concat
+    uncover 4
+    concat
+    uncover 3
+    concat
+    uncover 2
+    concat
+    swap
+    concat
+    dig 11
+    concat
+    // smart_contracts/agent_registry/contract.py:114
+    // box_ref.value = new_profile.copy()
+    dig 1
+    box_del
+    pop
+    box_put
+    // smart_contracts/agent_registry/contract.py:90
+    // @arc4.abimethod
+    intc_1 // 1
+    return
+
+record_bet_result_ternary_false@6:
+    dig 5
+    b record_bet_result_ternary_merge@7
+
+record_bet_result_ternary_false@3:
+    dig 7
+    bury 13
+    b record_bet_result_ternary_merge@4
+
+
+// smart_contracts.agent_registry.contract.AgentRegistry.get_agent_id_by_address[routing]() -> void:
+get_agent_id_by_address:
+    // smart_contracts/agent_registry/contract.py:116
+    // @arc4.abimethod(readonly=True)
+    txna ApplicationArgs 1
+    dup
+    len
+    pushint 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    // smart_contracts/agent_registry/contract.py:118
+    // addr_key = Bytes(b"addr:") + owner.bytes
+    bytec 5 // 0x616464723a
+    swap
+    concat
+    // smart_contracts/agent_registry/contract.py:120
+    // assert addr_box, "address not registered"
+    dup
+    box_len
+    bury 1
+    assert // address not registered
+    // smart_contracts/agent_registry/contract.py:121
+    // return addr_box.value
+    box_get
+    pop
+    // smart_contracts/agent_registry/contract.py:116
+    // @arc4.abimethod(readonly=True)
+    bytec_1 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts.agent_registry.contract.AgentRegistry.get_win_rate_bps[routing]() -> void:
+get_win_rate_bps:
+    // smart_contracts/agent_registry/contract.py:123
+    // @arc4.abimethod(readonly=True)
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_0 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/agent_registry/contract.py:125
+    // box_key = Bytes(b"agent:") + op.itob(agent_id)
+    itob
+    bytec_0 // 0x6167656e743a
+    swap
+    concat
+    dupn 2
+    // smart_contracts/agent_registry/contract.py:127
+    // assert box_ref, "agent not found"
+    box_len
+    bury 1
+    assert // agent not found
+    // smart_contracts/agent_registry/contract.py:128-129
+    // p = box_ref.value.copy()
+    // if p.total_bets.native == 0:
+    pushint 36
+    intc_0 // 8
+    box_extract
+    // smart_contracts/agent_registry/contract.py:129
+    // if p.total_bets.native == 0:
+    btoi
+    dup
+    bnz get_win_rate_bps_after_if_else@3
+    // smart_contracts/agent_registry/contract.py:130
+    // return arc4.UInt64(0)
+    bytec 4 // 0x0000000000000000
+
+get_win_rate_bps_after_inlined_smart_contracts.agent_registry.contract.AgentRegistry.get_win_rate_bps@4:
+    // smart_contracts/agent_registry/contract.py:123
+    // @arc4.abimethod(readonly=True)
+    bytec_1 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+get_win_rate_bps_after_if_else@3:
+    // smart_contracts/agent_registry/contract.py:131
+    // return arc4.UInt64(p.winning_bets.native * 10_000 // p.total_bets.native)
+    dig 1
+    pushint 44
+    intc_0 // 8
+    box_extract
+    btoi
+    pushint 10000
+    *
+    dig 1
+    /
+    itob
+    // smart_contracts/agent_registry/contract.py:123
+    // @arc4.abimethod(readonly=True)
+    b get_win_rate_bps_after_inlined_smart_contracts.agent_registry.contract.AgentRegistry.get_win_rate_bps@4
+
+
+// smart_contracts.agent_registry.contract.AgentRegistry.get_agent[routing]() -> void:
+get_agent:
+    // smart_contracts/agent_registry/contract.py:133
+    // @arc4.abimethod(readonly=True)
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_0 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/agent_registry/contract.py:135
+    // box_key = Bytes(b"agent:") + op.itob(agent_id)
+    itob
+    bytec_0 // 0x6167656e743a
+    swap
+    concat
+    // smart_contracts/agent_registry/contract.py:137
+    // assert box_ref, "agent not found"
+    dup
+    box_len
+    bury 1
+    assert // agent not found
+    // smart_contracts/agent_registry/contract.py:138
+    // return box_ref.value.copy()
+    box_get
+    pop
+    // smart_contracts/agent_registry/contract.py:133
+    // @arc4.abimethod(readonly=True)
+    bytec_1 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts.agent_registry.contract.AgentRegistry.get_agent_count[routing]() -> void:
+get_agent_count:
+    // smart_contracts/agent_registry/contract.py:142
+    // return arc4.UInt64(self.agent_count.value)
+    intc_2 // 0
+    bytec_2 // "agent_count"
+    app_global_get_ex
+    assert // check self.agent_count exists
+    itob
+    // smart_contracts/agent_registry/contract.py:140
+    // @arc4.abimethod(readonly=True)
+    bytec_1 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
