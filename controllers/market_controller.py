@@ -9,7 +9,11 @@ from controllers.agent_controller import (
 )
 from controllers.feed_controller import add_event
 from models.market_store import markets
-from services.contract_gateway import deploy_market_contract, lock_bet, settle_market
+from services.contract_gateway import (
+    deploy_market_contract,
+    lock_bet,
+    settle_market_gateway,
+)
 from services.price_feed import get_live_price
 
 
@@ -110,7 +114,9 @@ def _serialize_bet(bet):
 def serialize_market(market):
     try:
         if market["status"] == "open":
-            market["current_price"] = get_live_price(_build_asset_config_from_market(market))
+            market["current_price"] = get_live_price(
+                _build_asset_config_from_market(market)
+            )
     except Exception:
         pass
 
@@ -195,7 +201,9 @@ def ensure_daily_markets():
         if key in existing:
             continue
         created.append(
-            create_market({"asset": asset["asset_id"], "close_time": close_time.isoformat()})
+            create_market(
+                {"asset": asset["asset_id"], "close_time": close_time.isoformat()}
+            )
         )
 
     return created
@@ -353,7 +361,7 @@ def resolve_market(market_id):
     market["resolved_at"] = _utc_now().isoformat()
 
     settlement = _calculate_payouts(market, outcome)
-    contract_result = settle_market(market, outcome)
+    contract_result = settle_market_gateway(market, outcome)
 
     for bet in settlement:
         if bet["bettor_type"] == "agent":

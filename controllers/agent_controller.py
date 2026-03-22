@@ -6,6 +6,14 @@ from controllers.feed_controller import add_event
 from models.agent_store import agent_histories, agents, agents_stats
 from services.agent_runner import run_agent
 
+try:
+    from utils.contract_client import register_agent as register_agent_onchain
+
+    ONCHAIN_AVAILABLE = True
+except ImportError:
+    ONCHAIN_AVAILABLE = False
+    register_agent_onchain = None
+
 
 def _utc_now():
     return datetime.now(timezone.utc)
@@ -41,7 +49,11 @@ def _refresh_agent_metrics(agent_id):
     stats["win_rate"] = (
         round((stats["wins"] / resolved_bets) * 100, 2) if resolved_bets else 0.0
     )
-    stats["roi"] = round((stats["total_profit_algo"] / total_volume) * 100, 2) if total_volume else 0.0
+    stats["roi"] = (
+        round((stats["total_profit_algo"] / total_volume) * 100, 2)
+        if total_volume
+        else 0.0
+    )
 
 
 def register_agent(data):
@@ -70,6 +82,13 @@ def register_agent(data):
     )
     stats["strategy"] = agent["strategy"]
 
+    onchain_result = None
+    if ONCHAIN_AVAILABLE and register_agent_onchain:
+        try:
+            onchain_result = register_agent_onchain(agent)
+        except Exception as e:
+            pass
+
     add_event(
         {
             "type": "AGENT_REGISTERED",
@@ -80,7 +99,12 @@ def register_agent(data):
             "specialization": agent["specialization"],
         }
     )
-    return {"message": "registered", "agent": serialize_agent(agent_id)}
+
+    result = {"message": "registered", "agent": serialize_agent(agent_id)}
+    if onchain_result:
+        result["onchain"] = onchain_result
+
+    return result
 
 
 def list_agents():
@@ -187,6 +211,16 @@ def record_agent_bet(agent_id, market, bet):
         },
     )
 
+    if ONCHAIN_AVAILABLE:
+        try:
+            from utils.contract_client import record_agent_bet as record_bet_onchain
+
+            record_bet_onchain(
+                agent_id, market["id"], bet["id"], float(bet["amount"]), bet["side"]
+            )
+        except Exception:
+            pass
+
 
 def record_agent_settlement(agent_id, market, bet, payout, outcome):
     if agent_id not in agents:
@@ -194,7 +228,8 @@ def record_agent_settlement(agent_id, market, bet, payout, outcome):
 
     stats = agents_stats[agent_id]
     net = round(float(payout) - float(bet["amount"]), 6)
-    if bet["side"] == outcome:
+    won = bet["side"] == outcome
+    if won:
         stats["wins"] += 1
     else:
         stats["losses"] += 1
@@ -203,12 +238,25 @@ def record_agent_settlement(agent_id, market, bet, payout, outcome):
 
     history = agent_histories.get(agent_id, [])
     for entry in history:
-        if entry["market_id"] == market["id"] and entry["created_at"] == bet["created_at"]:
+        if (
+            entry["market_id"] == market["id"]
+            and entry["created_at"] == bet["created_at"]
+        ):
             entry["status"] = "resolved"
             entry["outcome"] = outcome
             entry["payout"] = round(float(payout), 6)
             entry["net"] = net
             break
+
+    if ONCHAIN_AVAILABLE:
+        try:
+            from utils.contract_client import (
+                record_agent_result as record_result_onchain,
+            )
+
+            record_result_onchain(agent_id, bet["id"], won, net)
+        except Exception:
+            pass
 
 
 def serialize_agent(agent_id):
