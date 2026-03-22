@@ -13,7 +13,7 @@ from algosdk.transaction import (
 )
 from algosdk.account import address_from_private_key
 
-from config import ALGO_COORDINATOR_KEY, ALGORAND_NETWORK, PLATFORM_FEE_BPS
+from config import ALGORAND_NETWORK, PLATFORM_FEE_BPS
 from utils.algorand_utils import (
     get_algod_client,
     get_indexer_client,
@@ -28,11 +28,11 @@ from utils.algorand_utils import (
 
 logger = logging.getLogger(__name__)
 
-PLATFORM_REGISTRY_APP_ID = 1
-MARKET_FACTORY_APP_ID = 2
-ORACLE_AGGREGATOR_APP_ID = 3
-AGENT_REGISTRY_APP_ID = 4
-FEE_VAULT_APP_ID = 5
+PLATFORM_REGISTRY_APP_ID = 757520708
+MARKET_FACTORY_APP_ID = 757520819
+ORACLE_AGGREGATOR_APP_ID = 757520757
+AGENT_REGISTRY_APP_ID = 757520780
+FEE_VAULT_APP_ID = 757520732
 
 PLATFORM_REGISTRY_NAME = "algowager_registry"
 MARKET_FACTORY_NAME = "algowager_factory"

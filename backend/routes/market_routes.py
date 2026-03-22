@@ -52,4 +52,6 @@ def bet(market_id):
 
 @market_bp.route("/<market_id>/resolve", methods=["POST"])
 def resolve(market_id):
-    return jsonify(resolve_market(market_id))
+    data = request.get_json(force=True) or {}
+    outcome_override = data.get("outcome")
+    return jsonify(resolve_market(market_id, outcome_override))

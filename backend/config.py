@@ -9,7 +9,7 @@ COINGECKO_URL = os.getenv("COINGECKO_BASE_URL", "https://api.coingecko.com/api/v
 ALPHA_KEY = os.getenv("ALPHA_VANTAGE_KEY", "")
 GROQ_KEY = os.getenv("GROQ_API_KEY", "")
 GNEWS_API_KEY = os.getenv("GNEWS_API_KEY", "")
-ALGO_COORDINATOR_KEY = os.getenv("ALGO_COORDINATOR_KEY", "")
+
 ALGORAND_NETWORK = os.getenv("ALGORAND_NETWORK", "testnet")
 ALGOD_URL = os.getenv("ALGOD_URL", "https://testnet-api.algonode.cloud")
 INDEXER_URL = os.getenv("INDEXER_URL", "https://testnet-idx.algonode.cloud")
@@ -64,6 +64,78 @@ SUPPORTED_ASSETS = [
         "market_type": "stock",
         "price_source": {"kind": "stock", "symbol": "TSLA"},
         "logo": "https://logo.clearbit.com/tesla.com",
+    },
+    {
+        "asset_id": "india_vs_australia_cricket",
+        "name": "India vs Australia (Cricket)",
+        "ticker": "INDvsAUS",
+        "market_type": "sports",
+        "sports_category": "cricket",
+        "price_source": {"kind": "sports", "source": "manual"},
+        "logo": "https://img.icons8.com/color/96/cricket.png",
+    },
+    {
+        "asset_id": "england_vs_pakistan_cricket",
+        "name": "England vs Pakistan (Cricket)",
+        "ticker": "ENGvsPAK",
+        "market_type": "sports",
+        "sports_category": "cricket",
+        "price_source": {"kind": "sports", "source": "manual"},
+        "logo": "https://img.icons8.com/color/96/cricket.png",
+    },
+    {
+        "asset_id": "mumbai_vs_chennai_super",
+        "name": "Mumbai Indians vs Chennai Super Kings",
+        "ticker": "MIvsCSK",
+        "market_type": "sports",
+        "sports_category": "cricket",
+        "price_source": {"kind": "sports", "source": "manual"},
+        "logo": "https://img.icons8.com/color/96/cricket.png",
+    },
+    {
+        "asset_id": "rcb_vs_mi_ipl",
+        "name": "RCB vs Mumbai Indians (IPL)",
+        "ticker": "RCBvsMI",
+        "market_type": "sports",
+        "sports_category": "cricket",
+        "price_source": {"kind": "sports", "source": "manual"},
+        "logo": "https://img.icons8.com/color/96/cricket.png",
+    },
+    {
+        "asset_id": "manchester_vs_liverpool",
+        "name": "Manchester United vs Liverpool",
+        "ticker": "MUNvsLIV",
+        "market_type": "sports",
+        "sports_category": "football",
+        "price_source": {"kind": "sports", "source": "manual"},
+        "logo": "https://img.icons8.com/color/96/football.png",
+    },
+    {
+        "asset_id": "arsenal_vs_chelsea",
+        "name": "Arsenal vs Chelsea",
+        "ticker": "ARSvsCHE",
+        "market_type": "sports",
+        "sports_category": "football",
+        "price_source": {"kind": "sports", "source": "manual"},
+        "logo": "https://img.icons8.com/color/96/football.png",
+    },
+    {
+        "asset_id": "barcelona_vs_real_madrid",
+        "name": "Barcelona vs Real Madrid (El Clasico)",
+        "ticker": "BARvsRMA",
+        "market_type": "sports",
+        "sports_category": "football",
+        "price_source": {"kind": "sports", "source": "manual"},
+        "logo": "https://img.icons8.com/color/96/football.png",
+    },
+    {
+        "asset_id": "bayern_vs_dortmund",
+        "name": "Bayern Munich vs Dortmund",
+        "ticker": "BAYvsDOR",
+        "market_type": "sports",
+        "sports_category": "football",
+        "price_source": {"kind": "sports", "source": "manual"},
+        "logo": "https://img.icons8.com/color/96/football.png",
     },
 ]
 

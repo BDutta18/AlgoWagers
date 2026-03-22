@@ -1,4 +1,5 @@
 import logging
+import os
 import time
 from typing import Optional
 
@@ -17,11 +18,9 @@ from algosdk.v2client import algod as algosdk_client, indexer as idx_client
 
 get_application_address = logic.get_application_address
 
-from config import (
-    ALGO_COORDINATOR_KEY,
-    ALGOD_URL,
-    INDEXER_URL,
-)
+from config import ALGOD_URL, INDEXER_URL
+
+ALGO_MNEMONIC = os.getenv("ALGO_MNEMONIC", "")
 
 logger = logging.getLogger(__name__)
 
@@ -48,11 +47,9 @@ def get_indexer_client():
 
 
 def get_coordinator_wallet():
-    if not ALGO_COORDINATOR_KEY:
-        raise ValueError("ALGO_COORDINATOR_KEY is not set in environment")
-    if len(ALGO_COORDINATOR_KEY) == 25:
-        return mnemonic.to_private_key(ALGO_COORDINATOR_KEY)
-    return ALGO_COORDINATOR_KEY
+    if not ALGO_MNEMONIC:
+        raise ValueError("ALGO_MNEMONIC is not set in environment")
+    return mnemonic.to_private_key(ALGO_MNEMONIC)
 
 
 def get_coordinator_address():
