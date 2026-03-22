@@ -173,7 +173,7 @@ export default function MarketsPage() {
         ? winner.confidence
         : Math.floor(Math.random() * 40) + 40,
     })))
-    setTimeout(() => { setBattlePhase('idle'); setBattleWinner(null); setFighters([]) }, 12000)
+    setTimeout(() => { setBattlePhase('idle'); setBattleWinner(null); setFighters([]) }, 60000)
   }
 
   // ── Effects ──────────────────────────────────────────────────────────────
