@@ -164,16 +164,7 @@ def trigger_active_agents_for_market(market):
         try:
             result = run_agent(agent, market)
         except Exception as exc:
-            add_event(
-                {
-                    "type": "AGENT_TRIGGER_FAILED",
-                    "actor_type": "agent",
-                    "agent_id": agent_id,
-                    "agent": agent["name"],
-                    "market_id": market["id"],
-                    "error": str(exc),
-                }
-            )
+            print(f"Agent {agent_id} trigger failed: {exc}")
             continue
         decisions.append(
             {
