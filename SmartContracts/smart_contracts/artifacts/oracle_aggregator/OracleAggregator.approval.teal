@@ -1,0 +1,220 @@
+#pragma version 11
+#pragma typetrack false
+
+// algopy.arc4.ARC4Contract.approval_program() -> uint64:
+main:
+    intcblock 8 1 2 0
+    bytecblock 0x70726963653a 0x151f7c75
+    // smart_contracts/oracle_aggregator/contract.py:25
+    // class OracleAggregator(ARC4Contract):
+    txn OnCompletion
+    !
+    assert
+    txn ApplicationID
+    bz main_create_NoOp@9
+    pushbytess 0x7ebe4f3e 0x7eab0f3f 0xd7808e65 // method "push_price(string,uint64,uint64)void", method "get_price(string)uint64", method "get_price_with_timestamp(string)(uint64,uint64)"
+    txna ApplicationArgs 0
+    match push_price get_price get_price_with_timestamp
+    err
+
+main_create_NoOp@9:
+    // smart_contracts/oracle_aggregator/contract.py:25
+    // class OracleAggregator(ARC4Contract):
+    pushbytes 0x240d2f67 // method "create(uint64)void"
+    txna ApplicationArgs 0
+    match create
+    err
+
+
+// smart_contracts.oracle_aggregator.contract.OracleAggregator.create[routing]() -> void:
+create:
+    // smart_contracts/oracle_aggregator/contract.py:29
+    // @arc4.abimethod(create="require")
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_0 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/oracle_aggregator/contract.py:31
+    // self.registry_app_id.value = registry_app_id
+    pushbytes "registry_app_id"
+    swap
+    app_global_put
+    // smart_contracts/oracle_aggregator/contract.py:29
+    // @arc4.abimethod(create="require")
+    intc_1 // 1
+    return
+
+
+// smart_contracts.oracle_aggregator.contract.OracleAggregator.push_price[routing]() -> void:
+push_price:
+    // smart_contracts/oracle_aggregator/contract.py:33
+    // @arc4.abimethod
+    txna ApplicationArgs 1
+    dup
+    intc_3 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    dup
+    extract 2 0
+    txna ApplicationArgs 2
+    dup
+    len
+    intc_0 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    txna ApplicationArgs 3
+    dup
+    len
+    intc_0 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    dup
+    btoi
+    // smart_contracts/oracle_aggregator/contract.py:40
+    // assert source_count >= UInt64(2), "need >= 2 sources"
+    intc_2 // 2
+    >=
+    assert // need >= 2 sources
+    // smart_contracts/oracle_aggregator/contract.py:42
+    // box_key = Bytes(b"price:") + symbol.bytes
+    bytec_0 // 0x70726963653a
+    uncover 3
+    concat
+    // smart_contracts/oracle_aggregator/contract.py:46
+    // timestamp=arc4.UInt64(Global.latest_timestamp),
+    global LatestTimestamp
+    itob
+    // smart_contracts/oracle_aggregator/contract.py:44-49
+    // box.value = PriceFeed(
+    //     price_usd_x1000=arc4.UInt64(price_usd_x1000),
+    //     timestamp=arc4.UInt64(Global.latest_timestamp),
+    //     source_count=arc4.UInt64(source_count),
+    //     symbol=arc4.String(symbol),
+    // )
+    uncover 3
+    swap
+    concat
+    uncover 2
+    concat
+    pushbytes 0x001a
+    concat
+    uncover 2
+    concat
+    dig 1
+    box_del
+    pop
+    box_put
+    // smart_contracts/oracle_aggregator/contract.py:33
+    // @arc4.abimethod
+    intc_1 // 1
+    return
+
+
+// smart_contracts.oracle_aggregator.contract.OracleAggregator.get_price[routing]() -> void:
+get_price:
+    // smart_contracts/oracle_aggregator/contract.py:51
+    // @arc4.abimethod(readonly=True)
+    txna ApplicationArgs 1
+    dup
+    intc_3 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    extract 2 0
+    // smart_contracts/oracle_aggregator/contract.py:53
+    // box_key = Bytes(b"price:") + symbol.bytes
+    bytec_0 // 0x70726963653a
+    swap
+    concat
+    // smart_contracts/oracle_aggregator/contract.py:55
+    // assert box.maybe()[1], "no price for symbol"
+    dup
+    box_len
+    bury 1
+    assert // no price for symbol
+    // smart_contracts/oracle_aggregator/contract.py:56
+    // feed = box.maybe()[0].copy()
+    box_get
+    pop
+    // smart_contracts/oracle_aggregator/contract.py:57
+    // age = Global.latest_timestamp - feed.timestamp.native
+    global LatestTimestamp
+    dig 1
+    intc_0 // 8
+    extract_uint64
+    -
+    // smart_contracts/oracle_aggregator/contract.py:58
+    // assert age <= UInt64(STALENESS_WINDOW), "price stale"
+    pushint 300
+    <=
+    assert // price stale
+    // smart_contracts/oracle_aggregator/contract.py:59
+    // return feed.price_usd_x1000
+    extract 0 8
+    // smart_contracts/oracle_aggregator/contract.py:51
+    // @arc4.abimethod(readonly=True)
+    bytec_1 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts.oracle_aggregator.contract.OracleAggregator.get_price_with_timestamp[routing]() -> void:
+get_price_with_timestamp:
+    // smart_contracts/oracle_aggregator/contract.py:61
+    // @arc4.abimethod(readonly=True)
+    txna ApplicationArgs 1
+    dup
+    intc_3 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    extract 2 0
+    // smart_contracts/oracle_aggregator/contract.py:63
+    // box_key = Bytes(b"price:") + symbol.bytes
+    bytec_0 // 0x70726963653a
+    swap
+    concat
+    // smart_contracts/oracle_aggregator/contract.py:65
+    // assert box.maybe()[1], "no price for symbol"
+    dup
+    box_len
+    bury 1
+    assert // no price for symbol
+    // smart_contracts/oracle_aggregator/contract.py:66
+    // feed = box.maybe()[0].copy()
+    box_get
+    pop
+    // smart_contracts/oracle_aggregator/contract.py:67
+    // return arc4.Tuple((feed.price_usd_x1000, feed.timestamp))
+    dup
+    extract 0 8
+    swap
+    extract 8 8
+    concat
+    // smart_contracts/oracle_aggregator/contract.py:61
+    // @arc4.abimethod(readonly=True)
+    bytec_1 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return

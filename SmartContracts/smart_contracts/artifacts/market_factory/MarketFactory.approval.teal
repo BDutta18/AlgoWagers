@@ -1,0 +1,353 @@
+#pragma version 11
+#pragma typetrack false
+
+// algopy.arc4.ARC4Contract.approval_program() -> uint64:
+main:
+    intcblock 0 1 8 2
+    bytecblock "market_count" 0x151f7c75 "registry_app_id" 0x6d61726b65743a
+    // smart_contracts/market_factory/contract.py:26
+    // class MarketFactory(ARC4Contract):
+    txn OnCompletion
+    !
+    assert
+    txn ApplicationID
+    bz main_create_NoOp@9
+    pushbytess 0xbf96e20a 0xc8e02e7e 0x7250a940 // method "create_market(string,string,uint64,uint64,string,uint64)uint64", method "get_market(uint64)(uint64,string,string,uint64,uint64,string,bool)", method "get_market_count()uint64"
+    txna ApplicationArgs 0
+    match create_market get_market get_market_count
+    err
+
+main_create_NoOp@9:
+    // smart_contracts/market_factory/contract.py:26
+    // class MarketFactory(ARC4Contract):
+    pushbytes 0x240d2f67 // method "create(uint64)void"
+    txna ApplicationArgs 0
+    match create
+    err
+
+
+// smart_contracts.market_factory.contract.MarketFactory.create[routing]() -> void:
+create:
+    // smart_contracts/market_factory/contract.py:32
+    // @arc4.abimethod(create="require")
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/market_factory/contract.py:34
+    // self.registry_app_id.value = registry_app_id
+    bytec_2 // "registry_app_id"
+    swap
+    app_global_put
+    // smart_contracts/market_factory/contract.py:35
+    // self.market_count.value = UInt64(0)
+    bytec_0 // "market_count"
+    intc_0 // 0
+    app_global_put
+    // smart_contracts/market_factory/contract.py:32
+    // @arc4.abimethod(create="require")
+    intc_1 // 1
+    return
+
+
+// smart_contracts.market_factory.contract.MarketFactory.create_market[routing]() -> void:
+create_market:
+    // smart_contracts/market_factory/contract.py:37
+    // @arc4.abimethod
+    txna ApplicationArgs 1
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_3 // 2
+    +
+    dig 1
+    len
+    dup
+    uncover 2
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    txna ApplicationArgs 2
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_3 // 2
+    +
+    dig 1
+    len
+    dup
+    uncover 2
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    txna ApplicationArgs 3
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    txna ApplicationArgs 4
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    txna ApplicationArgs 5
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_3 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    txna ApplicationArgs 6
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/market_factory/contract.py:47-50
+    // is_paused, _txn = arc4.abi_call[arc4.Bool](
+    //     "get_paused()bool",
+    //     app_id=Application(self.registry_app_id.value),
+    // )
+    itxn_begin
+    // smart_contracts/market_factory/contract.py:49
+    // app_id=Application(self.registry_app_id.value),
+    intc_0 // 0
+    bytec_2 // "registry_app_id"
+    app_global_get_ex
+    assert // check self.registry_app_id exists
+    dup
+    itxn_field ApplicationID
+    // smart_contracts/market_factory/contract.py:47-50
+    // is_paused, _txn = arc4.abi_call[arc4.Bool](
+    //     "get_paused()bool",
+    //     app_id=Application(self.registry_app_id.value),
+    // )
+    pushbytes 0x2966f0df // method "get_paused()bool"
+    itxn_field ApplicationArgs
+    pushint 6 // appl
+    itxn_field TypeEnum
+    intc_0 // 0
+    itxn_field Fee
+    itxn_submit
+    itxn LastLog
+    dup
+    extract 0 4
+    bytec_1 // 0x151f7c75
+    ==
+    assert // application log value is not the result of an ABI return
+    extract 4 0
+    dup
+    len
+    intc_1 // 1
+    ==
+    assert // invalid number of bytes for arc4.bool
+    // smart_contracts/market_factory/contract.py:51
+    // assert not is_paused.native, "platform paused"
+    intc_0 // 0
+    getbit
+    !
+    assert // platform paused
+    // smart_contracts/market_factory/contract.py:53-61
+    // deploy_txn = arc4.abi_call(
+    //     "create(string,uint64,uint64,uint64)void",
+    //     asset_symbol,
+    //     resolution_price,
+    //     expiry_ts,
+    //     self.registry_app_id.value,
+    //     fee=Global.min_balance + seed_algo,
+    //     app_id=Application(0),
+    // )
+    itxn_begin
+    // smart_contracts/market_factory/contract.py:59
+    // fee=Global.min_balance + seed_algo,
+    global MinBalance
+    uncover 2
+    +
+    // smart_contracts/market_factory/contract.py:58
+    // self.registry_app_id.value,
+    swap
+    itob
+    // smart_contracts/market_factory/contract.py:60
+    // app_id=Application(0),
+    intc_0 // 0
+    itxn_field ApplicationID
+    // smart_contracts/market_factory/contract.py:53-61
+    // deploy_txn = arc4.abi_call(
+    //     "create(string,uint64,uint64,uint64)void",
+    //     asset_symbol,
+    //     resolution_price,
+    //     expiry_ts,
+    //     self.registry_app_id.value,
+    //     fee=Global.min_balance + seed_algo,
+    //     app_id=Application(0),
+    // )
+    pushbytes 0x813a00b9 // method "create(string,uint64,uint64,uint64)void"
+    itxn_field ApplicationArgs
+    dig 8
+    itxn_field ApplicationArgs
+    dig 4
+    itxn_field ApplicationArgs
+    dig 3
+    itxn_field ApplicationArgs
+    itxn_field ApplicationArgs
+    pushint 6 // appl
+    itxn_field TypeEnum
+    itxn_field Fee
+    itxn_submit
+    itxn CreatedApplicationID
+    // smart_contracts/market_factory/contract.py:64
+    // mid = self.market_count.value
+    intc_0 // 0
+    bytec_0 // "market_count"
+    app_global_get_ex
+    assert // check self.market_count exists
+    // smart_contracts/market_factory/contract.py:65
+    // box_key = Bytes(b"market:") + op.itob(mid)
+    dup
+    itob
+    bytec_3 // 0x6d61726b65743a
+    swap
+    concat
+    // smart_contracts/market_factory/contract.py:68
+    // app_id=arc4.UInt64(market_app_id),
+    uncover 2
+    itob
+    // smart_contracts/market_factory/contract.py:67-75
+    // box.value = MarketMeta(
+    //     app_id=arc4.UInt64(market_app_id),
+    //     asset_symbol=asset_symbol,
+    //     question=question,
+    //     resolution_price=arc4.UInt64(resolution_price),
+    //     expiry_ts=arc4.UInt64(expiry_ts),
+    //     market_type=market_type,
+    //     settled=arc4.Bool(False),
+    // )
+    dup
+    pushbytes 0x001f
+    concat
+    pushint 31
+    uncover 10
+    +
+    dup
+    itob
+    extract 6 2
+    uncover 2
+    swap
+    concat
+    swap
+    uncover 8
+    +
+    swap
+    uncover 7
+    concat
+    uncover 6
+    concat
+    swap
+    itob
+    extract 6 2
+    concat
+    // smart_contracts/market_factory/contract.py:74
+    // settled=arc4.Bool(False),
+    pushbytes 0x00
+    // smart_contracts/market_factory/contract.py:67-75
+    // box.value = MarketMeta(
+    //     app_id=arc4.UInt64(market_app_id),
+    //     asset_symbol=asset_symbol,
+    //     question=question,
+    //     resolution_price=arc4.UInt64(resolution_price),
+    //     expiry_ts=arc4.UInt64(expiry_ts),
+    //     market_type=market_type,
+    //     settled=arc4.Bool(False),
+    // )
+    concat
+    uncover 6
+    concat
+    uncover 5
+    concat
+    uncover 4
+    concat
+    dig 2
+    box_del
+    pop
+    uncover 2
+    swap
+    box_put
+    // smart_contracts/market_factory/contract.py:76
+    // self.market_count.value = mid + UInt64(1)
+    swap
+    intc_1 // 1
+    +
+    bytec_0 // "market_count"
+    swap
+    app_global_put
+    // smart_contracts/market_factory/contract.py:37
+    // @arc4.abimethod
+    bytec_1 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts.market_factory.contract.MarketFactory.get_market[routing]() -> void:
+get_market:
+    // smart_contracts/market_factory/contract.py:79
+    // @arc4.abimethod(readonly=True)
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/market_factory/contract.py:81
+    // box_key = Bytes(b"market:") + op.itob(market_id)
+    itob
+    bytec_3 // 0x6d61726b65743a
+    swap
+    concat
+    // smart_contracts/market_factory/contract.py:83
+    // assert box.maybe()[1], "market not found"
+    dup
+    box_len
+    bury 1
+    assert // market not found
+    // smart_contracts/market_factory/contract.py:84
+    // return box.maybe()[0].copy()
+    box_get
+    pop
+    // smart_contracts/market_factory/contract.py:79
+    // @arc4.abimethod(readonly=True)
+    bytec_1 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts.market_factory.contract.MarketFactory.get_market_count[routing]() -> void:
+get_market_count:
+    // smart_contracts/market_factory/contract.py:88
+    // return self.market_count.value
+    intc_0 // 0
+    bytec_0 // "market_count"
+    app_global_get_ex
+    assert // check self.market_count exists
+    // smart_contracts/market_factory/contract.py:86
+    // @arc4.abimethod(readonly=True)
+    itob
+    bytec_1 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
