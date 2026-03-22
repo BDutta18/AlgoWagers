@@ -1,0 +1,3478 @@
+{
+  "version": 3,
+  "sources": [
+    "../../market_factory/contract.py"
+  ],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAyBA;;AAAA;AAAA;AAAA;;AAAA;;;AAAA;;;;;;;;;;;;;;;;;AAAA;;;AAAA;;;;;;;;AAAA;AAAA;;;;;;AAAA;;;AAAA;;;;AAAA;AAMK;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAEG;AAAA;AAAA;AACA;AAA0B;AAA1B;AAHH;AAAA;AAKA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAUqB;AAEK;AAAA;AAAA;AAAA;;;;AAFL;;;;;;;;AAAA;;;;AAAA;;;AAAA;AAAA;;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAIP;AAAA;AAAJ;AAAP;AAEa;AAML;;AAAA;;AAAA;AADJ;AAAA;AAEO;;;AAPE;;;;;;;;;;;;;;;;;;;;;;AAAA;;;;;;AAAA;;;AAWP;AAAA;AAAA;AAAA;AACwB;AAAA;AAApB;AAAA;AAAA;AAGC;;AAAA;AADC;AAAA;;;;AAAA;AAAA;;AAAA;;AAAA;AAAA;AAAA;AAAA;;;AAAA;;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAOA;;;AAPA;AAAA;;AAAA;AAAA;;AAAA;AAAA;;AAAA;AAAZ;;AAAA;;AAAA;;AAAA;AAAA;AAS0B;AAAM;AAAN;AAA1B;AAAA;AAAA;AAvCH;AAAA;AAAA;AAAA;AAAA;AAAA;AA0CA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAEiC;AAApB;AAAA;AAAA;AAEH;AAAA;AAAA;;AAAP;AACO;AAAA;AALV;AAAA;AAAA;AAAA;AAAA;AAAA;AASU;AAAA;AAAA;AAAA;AAFV;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA",
+  "op_pc_offset": 0,
+  "pc_events": {
+    "1": {
+      "subroutine": "algopy.arc4.ARC4Contract.approval_program",
+      "params": {},
+      "block": "main",
+      "stack_in": [],
+      "op": "intcblock 0 1 8 2"
+    },
+    "7": {
+      "op": "bytecblock \"market_count\" 0x151f7c75 \"registry_app_id\" 0x6d61726b65743a"
+    },
+    "51": {
+      "op": "txn OnCompletion",
+      "defined_out": [
+        "tmp%0#1"
+      ],
+      "stack_out": [
+        "tmp%0#1"
+      ]
+    },
+    "53": {
+      "op": "!",
+      "defined_out": [
+        "tmp%1#1"
+      ],
+      "stack_out": [
+        "tmp%1#1"
+      ]
+    },
+    "54": {
+      "op": "assert",
+      "stack_out": []
+    },
+    "55": {
+      "op": "txn ApplicationID",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "57": {
+      "op": "bz main_create_NoOp@9",
+      "stack_out": []
+    },
+    "60": {
+      "op": "pushbytess 0xbf96e20a 0xc8e02e7e 0x7250a940 // method \"create_market(string,string,uint64,uint64,string,uint64)uint64\", method \"get_market(uint64)(uint64,string,string,uint64,uint64,string,bool)\", method \"get_market_count()uint64\"",
+      "defined_out": [
+        "Method(create_market(string,string,uint64,uint64,string,uint64)uint64)",
+        "Method(get_market(uint64)(uint64,string,string,uint64,uint64,string,bool))",
+        "Method(get_market_count()uint64)"
+      ],
+      "stack_out": [
+        "Method(create_market(string,string,uint64,uint64,string,uint64)uint64)",
+        "Method(get_market(uint64)(uint64,string,string,uint64,uint64,string,bool))",
+        "Method(get_market_count()uint64)"
+      ]
+    },
+    "77": {
+      "op": "txna ApplicationArgs 0",
+      "defined_out": [
+        "Method(create_market(string,string,uint64,uint64,string,uint64)uint64)",
+        "Method(get_market(uint64)(uint64,string,string,uint64,uint64,string,bool))",
+        "Method(get_market_count()uint64)",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "Method(create_market(string,string,uint64,uint64,string,uint64)uint64)",
+        "Method(get_market(uint64)(uint64,string,string,uint64,uint64,string,bool))",
+        "Method(get_market_count()uint64)",
+        "tmp%4#0"
+      ]
+    },
+    "80": {
+      "op": "match create_market get_market get_market_count",
+      "stack_out": []
+    },
+    "88": {
+      "op": "err"
+    },
+    "89": {
+      "block": "main_create_NoOp@9",
+      "stack_in": [],
+      "op": "pushbytes 0x240d2f67 // method \"create(uint64)void\"",
+      "defined_out": [
+        "Method(create(uint64)void)"
+      ],
+      "stack_out": [
+        "Method(create(uint64)void)"
+      ]
+    },
+    "95": {
+      "op": "txna ApplicationArgs 0",
+      "defined_out": [
+        "Method(create(uint64)void)",
+        "tmp%5#0"
+      ],
+      "stack_out": [
+        "Method(create(uint64)void)",
+        "tmp%5#0"
+      ]
+    },
+    "98": {
+      "op": "match create",
+      "stack_out": []
+    },
+    "102": {
+      "op": "err"
+    },
+    "103": {
+      "subroutine": "smart_contracts.market_factory.contract.MarketFactory.create[routing]",
+      "params": {},
+      "block": "create",
+      "stack_in": [],
+      "op": "txna ApplicationArgs 1",
+      "defined_out": [
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0"
+      ]
+    },
+    "106": {
+      "op": "dup",
+      "defined_out": [
+        "tmp%0#0",
+        "tmp%0#0 (copy)"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "tmp%0#0 (copy)"
+      ]
+    },
+    "107": {
+      "op": "len",
+      "defined_out": [
+        "len%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "len%0#0"
+      ]
+    },
+    "108": {
+      "op": "intc_2 // 8",
+      "defined_out": [
+        "8",
+        "len%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "len%0#0",
+        "8"
+      ]
+    },
+    "109": {
+      "op": "==",
+      "defined_out": [
+        "eq%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "eq%0#0"
+      ]
+    },
+    "110": {
+      "error": "invalid number of bytes for arc4.uint64",
+      "op": "assert // invalid number of bytes for arc4.uint64",
+      "stack_out": [
+        "tmp%0#0"
+      ]
+    },
+    "111": {
+      "op": "btoi",
+      "defined_out": [
+        "registry_app_id#0"
+      ],
+      "stack_out": [
+        "registry_app_id#0"
+      ]
+    },
+    "112": {
+      "op": "bytec_2 // \"registry_app_id\"",
+      "defined_out": [
+        "\"registry_app_id\"",
+        "registry_app_id#0"
+      ],
+      "stack_out": [
+        "registry_app_id#0",
+        "\"registry_app_id\""
+      ]
+    },
+    "113": {
+      "op": "swap",
+      "stack_out": [
+        "\"registry_app_id\"",
+        "registry_app_id#0"
+      ]
+    },
+    "114": {
+      "op": "app_global_put",
+      "stack_out": []
+    },
+    "115": {
+      "op": "bytec_0 // \"market_count\"",
+      "defined_out": [
+        "\"market_count\""
+      ],
+      "stack_out": [
+        "\"market_count\""
+      ]
+    },
+    "116": {
+      "op": "intc_0 // 0",
+      "defined_out": [
+        "\"market_count\"",
+        "0"
+      ],
+      "stack_out": [
+        "\"market_count\"",
+        "0"
+      ]
+    },
+    "117": {
+      "op": "app_global_put",
+      "stack_out": []
+    },
+    "118": {
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "1"
+      ],
+      "stack_out": [
+        "1"
+      ]
+    },
+    "119": {
+      "op": "return",
+      "stack_out": []
+    },
+    "120": {
+      "subroutine": "smart_contracts.market_factory.contract.MarketFactory.create_market[routing]",
+      "params": {},
+      "block": "create_market",
+      "stack_in": [],
+      "op": "txna ApplicationArgs 1",
+      "defined_out": [
+        "asset_symbol#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0"
+      ]
+    },
+    "123": {
+      "op": "dup",
+      "defined_out": [
+        "asset_symbol#0",
+        "asset_symbol#0 (copy)"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "asset_symbol#0 (copy)"
+      ]
+    },
+    "124": {
+      "op": "intc_0 // 0",
+      "defined_out": [
+        "0",
+        "asset_symbol#0",
+        "asset_symbol#0 (copy)"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "asset_symbol#0 (copy)",
+        "0"
+      ]
+    },
+    "125": {
+      "error": "invalid array length header",
+      "op": "extract_uint16 // on error: invalid array length header",
+      "defined_out": [
+        "aggregate%array_length%0#0",
+        "asset_symbol#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "aggregate%array_length%0#0"
+      ]
+    },
+    "126": {
+      "op": "intc_3 // 2",
+      "defined_out": [
+        "2",
+        "aggregate%array_length%0#0",
+        "asset_symbol#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "aggregate%array_length%0#0",
+        "2"
+      ]
+    },
+    "127": {
+      "op": "+",
+      "defined_out": [
+        "add%0#0",
+        "asset_symbol#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "add%0#0"
+      ]
+    },
+    "128": {
+      "op": "dig 1",
+      "stack_out": [
+        "asset_symbol#0",
+        "add%0#0",
+        "asset_symbol#0 (copy)"
+      ]
+    },
+    "130": {
+      "op": "len",
+      "defined_out": [
+        "add%0#0",
+        "asset_symbol#0",
+        "len%0#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "add%0#0",
+        "len%0#0"
+      ]
+    },
+    "131": {
+      "op": "dup",
+      "defined_out": [
+        "add%0#0",
+        "asset_symbol#0",
+        "len%0#0",
+        "len%0#0 (copy)"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "add%0#0",
+        "len%0#0",
+        "len%0#0 (copy)"
+      ]
+    },
+    "132": {
+      "op": "uncover 2",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%0#0 (copy)",
+        "add%0#0"
+      ]
+    },
+    "134": {
+      "op": "==",
+      "defined_out": [
+        "asset_symbol#0",
+        "eq%0#0",
+        "len%0#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "eq%0#0"
+      ]
+    },
+    "135": {
+      "error": "invalid number of bytes for arc4.dynamic_array<arc4.uint8>",
+      "op": "assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0"
+      ]
+    },
+    "136": {
+      "op": "txna ApplicationArgs 2",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0"
+      ]
+    },
+    "139": {
+      "op": "dup",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "question#0 (copy)"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "question#0 (copy)"
+      ]
+    },
+    "140": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "question#0 (copy)",
+        "0"
+      ]
+    },
+    "141": {
+      "error": "invalid array length header",
+      "op": "extract_uint16 // on error: invalid array length header",
+      "defined_out": [
+        "aggregate%array_length%1#0",
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "aggregate%array_length%1#0"
+      ]
+    },
+    "142": {
+      "op": "intc_3 // 2",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "aggregate%array_length%1#0",
+        "2"
+      ]
+    },
+    "143": {
+      "op": "+",
+      "defined_out": [
+        "add%1#0",
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "add%1#0"
+      ]
+    },
+    "144": {
+      "op": "dig 1",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "add%1#0",
+        "question#0 (copy)"
+      ]
+    },
+    "146": {
+      "op": "len",
+      "defined_out": [
+        "add%1#0",
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "question#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "add%1#0",
+        "len%1#0"
+      ]
+    },
+    "147": {
+      "op": "dup",
+      "defined_out": [
+        "add%1#0",
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "len%1#0 (copy)",
+        "question#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "add%1#0",
+        "len%1#0",
+        "len%1#0 (copy)"
+      ]
+    },
+    "148": {
+      "op": "uncover 2",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "len%1#0 (copy)",
+        "add%1#0"
+      ]
+    },
+    "150": {
+      "op": "==",
+      "defined_out": [
+        "asset_symbol#0",
+        "eq%1#0",
+        "len%0#0",
+        "len%1#0",
+        "question#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "eq%1#0"
+      ]
+    },
+    "151": {
+      "error": "invalid number of bytes for arc4.dynamic_array<arc4.uint8>",
+      "op": "assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0"
+      ]
+    },
+    "152": {
+      "op": "txna ApplicationArgs 3",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "question#0",
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0"
+      ]
+    },
+    "155": {
+      "op": "dup",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%2#0 (copy)"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%2#0 (copy)"
+      ]
+    },
+    "156": {
+      "op": "len",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "len%2#0",
+        "question#0",
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "len%2#0"
+      ]
+    },
+    "157": {
+      "op": "intc_2 // 8",
+      "defined_out": [
+        "8",
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "len%2#0",
+        "question#0",
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "len%2#0",
+        "8"
+      ]
+    },
+    "158": {
+      "op": "==",
+      "defined_out": [
+        "asset_symbol#0",
+        "eq%2#0",
+        "len%0#0",
+        "len%1#0",
+        "question#0",
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "eq%2#0"
+      ]
+    },
+    "159": {
+      "error": "invalid number of bytes for arc4.uint64",
+      "op": "assert // invalid number of bytes for arc4.uint64",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0"
+      ]
+    },
+    "160": {
+      "op": "txna ApplicationArgs 4",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ]
+    },
+    "163": {
+      "op": "dup",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "tmp%4#0 (copy)"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "tmp%4#0 (copy)"
+      ]
+    },
+    "164": {
+      "op": "len",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "len%3#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "len%3#0"
+      ]
+    },
+    "165": {
+      "op": "intc_2 // 8",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "len%3#0",
+        "8"
+      ]
+    },
+    "166": {
+      "op": "==",
+      "defined_out": [
+        "asset_symbol#0",
+        "eq%3#0",
+        "len%0#0",
+        "len%1#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "eq%3#0"
+      ]
+    },
+    "167": {
+      "error": "invalid number of bytes for arc4.uint64",
+      "op": "assert // invalid number of bytes for arc4.uint64",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ]
+    },
+    "168": {
+      "op": "txna ApplicationArgs 5",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0"
+      ]
+    },
+    "171": {
+      "op": "dup",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "market_type#0 (copy)",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "market_type#0 (copy)"
+      ]
+    },
+    "172": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "market_type#0 (copy)",
+        "0"
+      ]
+    },
+    "173": {
+      "error": "invalid array length header",
+      "op": "extract_uint16 // on error: invalid array length header",
+      "defined_out": [
+        "aggregate%array_length%2#0",
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "aggregate%array_length%2#0"
+      ]
+    },
+    "174": {
+      "op": "intc_3 // 2",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "aggregate%array_length%2#0",
+        "2"
+      ]
+    },
+    "175": {
+      "op": "+",
+      "defined_out": [
+        "add%2#0",
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "add%2#0"
+      ]
+    },
+    "176": {
+      "op": "dig 1",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "add%2#0",
+        "market_type#0 (copy)"
+      ]
+    },
+    "178": {
+      "op": "len",
+      "defined_out": [
+        "add%2#0",
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "len%4#0",
+        "market_type#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "add%2#0",
+        "len%4#0"
+      ]
+    },
+    "179": {
+      "op": "==",
+      "defined_out": [
+        "asset_symbol#0",
+        "eq%4#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "eq%4#0"
+      ]
+    },
+    "180": {
+      "error": "invalid number of bytes for arc4.dynamic_array<arc4.uint8>",
+      "op": "assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0"
+      ]
+    },
+    "181": {
+      "op": "txna ApplicationArgs 6",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "tmp%7#0"
+      ]
+    },
+    "184": {
+      "op": "dup",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "tmp%7#0",
+        "tmp%7#0 (copy)"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "tmp%7#0",
+        "tmp%7#0 (copy)"
+      ]
+    },
+    "185": {
+      "op": "len",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "len%5#0",
+        "market_type#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "tmp%7#0",
+        "len%5#0"
+      ]
+    },
+    "186": {
+      "op": "intc_2 // 8",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "tmp%7#0",
+        "len%5#0",
+        "8"
+      ]
+    },
+    "187": {
+      "op": "==",
+      "defined_out": [
+        "asset_symbol#0",
+        "eq%5#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "tmp%7#0",
+        "eq%5#0"
+      ]
+    },
+    "188": {
+      "error": "invalid number of bytes for arc4.uint64",
+      "op": "assert // invalid number of bytes for arc4.uint64",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "tmp%7#0"
+      ]
+    },
+    "189": {
+      "op": "btoi",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0"
+      ]
+    },
+    "190": {
+      "op": "itxn_begin"
+    },
+    "191": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "0"
+      ]
+    },
+    "192": {
+      "op": "bytec_2 // \"registry_app_id\"",
+      "defined_out": [
+        "\"registry_app_id\"",
+        "0",
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "0",
+        "\"registry_app_id\""
+      ]
+    },
+    "193": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_exists%0#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "194": {
+      "error": "check self.registry_app_id exists",
+      "op": "assert // check self.registry_app_id exists",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0"
+      ]
+    },
+    "195": {
+      "op": "dup",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "maybe_value%0#0 (copy)",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "maybe_value%0#0 (copy)"
+      ]
+    },
+    "196": {
+      "op": "itxn_field ApplicationID",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0"
+      ]
+    },
+    "198": {
+      "op": "pushbytes 0x2966f0df // method \"get_paused()bool\"",
+      "defined_out": [
+        "Method(get_paused()bool)",
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "Method(get_paused()bool)"
+      ]
+    },
+    "204": {
+      "op": "itxn_field ApplicationArgs",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0"
+      ]
+    },
+    "206": {
+      "op": "pushint 6 // appl",
+      "defined_out": [
+        "appl",
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "appl"
+      ]
+    },
+    "208": {
+      "op": "itxn_field TypeEnum",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0"
+      ]
+    },
+    "210": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "0"
+      ]
+    },
+    "211": {
+      "op": "itxn_field Fee",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0"
+      ]
+    },
+    "213": {
+      "op": "itxn_submit"
+    },
+    "214": {
+      "op": "itxn LastLog",
+      "defined_out": [
+        "asset_symbol#0",
+        "awst_tmp%0#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "awst_tmp%0#0"
+      ]
+    },
+    "216": {
+      "op": "dup",
+      "defined_out": [
+        "asset_symbol#0",
+        "awst_tmp%0#0",
+        "awst_tmp%0#0 (copy)",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "awst_tmp%0#0",
+        "awst_tmp%0#0 (copy)"
+      ]
+    },
+    "217": {
+      "op": "extract 0 4",
+      "defined_out": [
+        "asset_symbol#0",
+        "awst_tmp%0#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%0#1",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "awst_tmp%0#0",
+        "tmp%0#1"
+      ]
+    },
+    "220": {
+      "op": "bytec_1 // 0x151f7c75",
+      "defined_out": [
+        "0x151f7c75",
+        "asset_symbol#0",
+        "awst_tmp%0#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%0#1",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "awst_tmp%0#0",
+        "tmp%0#1",
+        "0x151f7c75"
+      ]
+    },
+    "221": {
+      "op": "==",
+      "defined_out": [
+        "asset_symbol#0",
+        "awst_tmp%0#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%1#1",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "awst_tmp%0#0",
+        "tmp%1#1"
+      ]
+    },
+    "222": {
+      "error": "application log value is not the result of an ABI return",
+      "op": "assert // application log value is not the result of an ABI return",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "awst_tmp%0#0"
+      ]
+    },
+    "223": {
+      "op": "extract 4 0",
+      "defined_out": [
+        "asset_symbol#0",
+        "is_paused#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "is_paused#0"
+      ]
+    },
+    "226": {
+      "op": "dup",
+      "defined_out": [
+        "asset_symbol#0",
+        "is_paused#0",
+        "is_paused#0 (copy)",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "is_paused#0",
+        "is_paused#0 (copy)"
+      ]
+    },
+    "227": {
+      "op": "len",
+      "defined_out": [
+        "asset_symbol#0",
+        "is_paused#0",
+        "len%0#0",
+        "len%0#1",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "is_paused#0",
+        "len%0#1"
+      ]
+    },
+    "228": {
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "1",
+        "asset_symbol#0",
+        "is_paused#0",
+        "len%0#0",
+        "len%0#1",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "is_paused#0",
+        "len%0#1",
+        "1"
+      ]
+    },
+    "229": {
+      "op": "==",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "is_paused#0",
+        "eq%0#0"
+      ]
+    },
+    "230": {
+      "error": "invalid number of bytes for arc4.bool",
+      "op": "assert // invalid number of bytes for arc4.bool",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "is_paused#0"
+      ]
+    },
+    "231": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "is_paused#0",
+        "0"
+      ]
+    },
+    "232": {
+      "op": "getbit",
+      "defined_out": [
+        "aggregate%get_bit%0#0",
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "aggregate%get_bit%0#0"
+      ]
+    },
+    "233": {
+      "op": "!",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "tmp%4#1"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "tmp%4#1"
+      ]
+    },
+    "234": {
+      "error": "platform paused",
+      "op": "assert // platform paused",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0"
+      ]
+    },
+    "235": {
+      "op": "itxn_begin"
+    },
+    "236": {
+      "op": "global MinBalance",
+      "defined_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "seed_algo#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "tmp%5#1"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "seed_algo#0",
+        "maybe_value%0#0",
+        "tmp%5#1"
+      ]
+    },
+    "238": {
+      "op": "uncover 2",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "tmp%5#1",
+        "seed_algo#0"
+      ]
+    },
+    "240": {
+      "op": "+",
+      "defined_out": [
+        "asset_symbol#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "maybe_value%0#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0"
+      ]
+    },
+    "241": {
+      "op": "swap",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "maybe_value%0#0"
+      ]
+    },
+    "242": {
+      "op": "itob",
+      "defined_out": [
+        "aggregate%val_as_bytes%0#0",
+        "asset_symbol#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "aggregate%val_as_bytes%0#0"
+      ]
+    },
+    "243": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "aggregate%val_as_bytes%0#0",
+        "0"
+      ]
+    },
+    "244": {
+      "op": "itxn_field ApplicationID",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "aggregate%val_as_bytes%0#0"
+      ]
+    },
+    "246": {
+      "op": "pushbytes 0x813a00b9 // method \"create(string,uint64,uint64,uint64)void\"",
+      "defined_out": [
+        "Method(create(string,uint64,uint64,uint64)void)",
+        "aggregate%val_as_bytes%0#0",
+        "asset_symbol#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "aggregate%val_as_bytes%0#0",
+        "Method(create(string,uint64,uint64,uint64)void)"
+      ]
+    },
+    "252": {
+      "op": "itxn_field ApplicationArgs",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "aggregate%val_as_bytes%0#0"
+      ]
+    },
+    "254": {
+      "op": "dig 8",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "aggregate%val_as_bytes%0#0",
+        "asset_symbol#0 (copy)"
+      ]
+    },
+    "256": {
+      "op": "itxn_field ApplicationArgs",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "aggregate%val_as_bytes%0#0"
+      ]
+    },
+    "258": {
+      "op": "dig 4",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "aggregate%val_as_bytes%0#0",
+        "tmp%2#0 (copy)"
+      ]
+    },
+    "260": {
+      "op": "itxn_field ApplicationArgs",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "aggregate%val_as_bytes%0#0"
+      ]
+    },
+    "262": {
+      "op": "dig 3",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "aggregate%val_as_bytes%0#0",
+        "tmp%4#0 (copy)"
+      ]
+    },
+    "264": {
+      "op": "itxn_field ApplicationArgs",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "aggregate%val_as_bytes%0#0"
+      ]
+    },
+    "266": {
+      "op": "itxn_field ApplicationArgs",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0"
+      ]
+    },
+    "268": {
+      "op": "pushint 6 // appl",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0",
+        "appl"
+      ]
+    },
+    "270": {
+      "op": "itxn_field TypeEnum",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "inner_txn_params%1%%param_Fee_idx_0#0"
+      ]
+    },
+    "272": {
+      "op": "itxn_field Fee",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0"
+      ]
+    },
+    "274": {
+      "op": "itxn_submit"
+    },
+    "275": {
+      "op": "itxn CreatedApplicationID",
+      "defined_out": [
+        "asset_symbol#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "deploy_txn.CreatedApplicationID#0"
+      ]
+    },
+    "277": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "0"
+      ]
+    },
+    "278": {
+      "op": "bytec_0 // \"market_count\"",
+      "defined_out": [
+        "\"market_count\"",
+        "0",
+        "asset_symbol#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "0",
+        "\"market_count\""
+      ]
+    },
+    "279": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "asset_symbol#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "maybe_exists%2#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "mid#0",
+        "maybe_exists%2#0"
+      ]
+    },
+    "280": {
+      "error": "check self.market_count exists",
+      "op": "assert // check self.market_count exists",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "mid#0"
+      ]
+    },
+    "281": {
+      "op": "dup",
+      "defined_out": [
+        "asset_symbol#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "mid#0",
+        "mid#0 (copy)",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "mid#0",
+        "mid#0 (copy)"
+      ]
+    },
+    "282": {
+      "op": "itob",
+      "defined_out": [
+        "asset_symbol#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "tmp%9#1"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "mid#0",
+        "tmp%9#1"
+      ]
+    },
+    "283": {
+      "op": "bytec_3 // 0x6d61726b65743a",
+      "defined_out": [
+        "0x6d61726b65743a",
+        "asset_symbol#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "tmp%9#1"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "mid#0",
+        "tmp%9#1",
+        "0x6d61726b65743a"
+      ]
+    },
+    "284": {
+      "op": "swap",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "mid#0",
+        "0x6d61726b65743a",
+        "tmp%9#1"
+      ]
+    },
+    "285": {
+      "op": "concat",
+      "defined_out": [
+        "asset_symbol#0",
+        "box_key#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "deploy_txn.CreatedApplicationID#0",
+        "mid#0",
+        "box_key#0"
+      ]
+    },
+    "286": {
+      "op": "uncover 2",
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "deploy_txn.CreatedApplicationID#0"
+      ]
+    },
+    "288": {
+      "op": "itob",
+      "defined_out": [
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0"
+      ]
+    },
+    "289": {
+      "op": "dup",
+      "defined_out": [
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%val_as_bytes%1#0 (copy)",
+        "asset_symbol#0",
+        "box_key#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%val_as_bytes%1#0 (copy)"
+      ]
+    },
+    "290": {
+      "op": "pushbytes 0x001f",
+      "defined_out": [
+        "0x001f",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%val_as_bytes%1#0 (copy)",
+        "asset_symbol#0",
+        "box_key#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%val_as_bytes%1#0 (copy)",
+        "0x001f"
+      ]
+    },
+    "294": {
+      "op": "concat",
+      "defined_out": [
+        "aggregate%head%1#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%1#0"
+      ]
+    },
+    "295": {
+      "op": "pushint 31",
+      "defined_out": [
+        "31",
+        "aggregate%head%1#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "len%0#0",
+        "len%1#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "len%0#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%1#0",
+        "31"
+      ]
+    },
+    "297": {
+      "op": "uncover 10",
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%1#0",
+        "31",
+        "len%0#0"
+      ]
+    },
+    "299": {
+      "op": "+",
+      "defined_out": [
+        "aggregate%current_tail_offset%0#0",
+        "aggregate%head%1#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "len%1#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%1#0",
+        "aggregate%current_tail_offset%0#0"
+      ]
+    },
+    "300": {
+      "op": "dup",
+      "defined_out": [
+        "aggregate%current_tail_offset%0#0",
+        "aggregate%current_tail_offset%0#0 (copy)",
+        "aggregate%head%1#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "len%1#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%1#0",
+        "aggregate%current_tail_offset%0#0",
+        "aggregate%current_tail_offset%0#0 (copy)"
+      ]
+    },
+    "301": {
+      "op": "itob",
+      "defined_out": [
+        "aggregate%as_bytes%1#0",
+        "aggregate%current_tail_offset%0#0",
+        "aggregate%head%1#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "len%1#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%1#0",
+        "aggregate%current_tail_offset%0#0",
+        "aggregate%as_bytes%1#0"
+      ]
+    },
+    "302": {
+      "op": "extract 6 2",
+      "defined_out": [
+        "aggregate%current_tail_offset%0#0",
+        "aggregate%head%1#0",
+        "aggregate%offset_as_uint16%1#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "len%1#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%1#0",
+        "aggregate%current_tail_offset%0#0",
+        "aggregate%offset_as_uint16%1#0"
+      ]
+    },
+    "305": {
+      "op": "uncover 2",
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%current_tail_offset%0#0",
+        "aggregate%offset_as_uint16%1#0",
+        "aggregate%head%1#0"
+      ]
+    },
+    "307": {
+      "op": "swap",
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%current_tail_offset%0#0",
+        "aggregate%head%1#0",
+        "aggregate%offset_as_uint16%1#0"
+      ]
+    },
+    "308": {
+      "op": "concat",
+      "defined_out": [
+        "aggregate%current_tail_offset%0#0",
+        "aggregate%head%2#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "len%1#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%current_tail_offset%0#0",
+        "aggregate%head%2#0"
+      ]
+    },
+    "309": {
+      "op": "swap",
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "len%1#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%2#0",
+        "aggregate%current_tail_offset%0#0"
+      ]
+    },
+    "310": {
+      "op": "uncover 8",
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%2#0",
+        "aggregate%current_tail_offset%0#0",
+        "len%1#0"
+      ]
+    },
+    "312": {
+      "op": "+",
+      "defined_out": [
+        "aggregate%current_tail_offset%1#0",
+        "aggregate%head%2#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%2#0",
+        "aggregate%current_tail_offset%1#0"
+      ]
+    },
+    "313": {
+      "op": "swap",
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "tmp%2#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%current_tail_offset%1#0",
+        "aggregate%head%2#0"
+      ]
+    },
+    "314": {
+      "op": "uncover 7",
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%current_tail_offset%1#0",
+        "aggregate%head%2#0",
+        "tmp%2#0"
+      ]
+    },
+    "316": {
+      "op": "concat",
+      "defined_out": [
+        "aggregate%current_tail_offset%1#0",
+        "aggregate%head%3#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "market_type#0",
+        "mid#0",
+        "question#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "tmp%4#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%current_tail_offset%1#0",
+        "aggregate%head%3#0"
+      ]
+    },
+    "317": {
+      "op": "uncover 6",
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%current_tail_offset%1#0",
+        "aggregate%head%3#0",
+        "tmp%4#0"
+      ]
+    },
+    "319": {
+      "op": "concat",
+      "defined_out": [
+        "aggregate%current_tail_offset%1#0",
+        "aggregate%head%4#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "market_type#0",
+        "mid#0",
+        "question#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%current_tail_offset%1#0",
+        "aggregate%head%4#0"
+      ]
+    },
+    "320": {
+      "op": "swap",
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%4#0",
+        "aggregate%current_tail_offset%1#0"
+      ]
+    },
+    "321": {
+      "op": "itob",
+      "defined_out": [
+        "aggregate%as_bytes%2#0",
+        "aggregate%head%4#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "market_type#0",
+        "mid#0",
+        "question#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%4#0",
+        "aggregate%as_bytes%2#0"
+      ]
+    },
+    "322": {
+      "op": "extract 6 2",
+      "defined_out": [
+        "aggregate%head%4#0",
+        "aggregate%offset_as_uint16%2#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "market_type#0",
+        "mid#0",
+        "question#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%4#0",
+        "aggregate%offset_as_uint16%2#0"
+      ]
+    },
+    "325": {
+      "op": "concat",
+      "defined_out": [
+        "aggregate%head%5#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "market_type#0",
+        "mid#0",
+        "question#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%5#0"
+      ]
+    },
+    "326": {
+      "op": "pushbytes 0x00",
+      "defined_out": [
+        "0x00",
+        "aggregate%head%5#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "market_type#0",
+        "mid#0",
+        "question#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%5#0",
+        "0x00"
+      ]
+    },
+    "329": {
+      "op": "concat",
+      "defined_out": [
+        "aggregate%head%6#0",
+        "aggregate%val_as_bytes%1#0",
+        "asset_symbol#0",
+        "box_key#0",
+        "market_type#0",
+        "mid#0",
+        "question#0"
+      ],
+      "stack_out": [
+        "asset_symbol#0",
+        "question#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%6#0"
+      ]
+    },
+    "330": {
+      "op": "uncover 6",
+      "stack_out": [
+        "question#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%head%6#0",
+        "asset_symbol#0"
+      ]
+    },
+    "332": {
+      "op": "concat",
+      "defined_out": [
+        "aggregate%concat%0#0",
+        "aggregate%val_as_bytes%1#0",
+        "box_key#0",
+        "market_type#0",
+        "mid#0",
+        "question#0"
+      ],
+      "stack_out": [
+        "question#0",
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%concat%0#0"
+      ]
+    },
+    "333": {
+      "op": "uncover 5",
+      "stack_out": [
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%concat%0#0",
+        "question#0"
+      ]
+    },
+    "335": {
+      "op": "concat",
+      "defined_out": [
+        "aggregate%concat%1#0",
+        "aggregate%val_as_bytes%1#0",
+        "box_key#0",
+        "market_type#0",
+        "mid#0"
+      ],
+      "stack_out": [
+        "market_type#0",
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%concat%1#0"
+      ]
+    },
+    "336": {
+      "op": "uncover 4",
+      "stack_out": [
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%concat%1#0",
+        "market_type#0"
+      ]
+    },
+    "338": {
+      "op": "concat",
+      "defined_out": [
+        "aggregate%concat%2#0",
+        "aggregate%val_as_bytes%1#0",
+        "box_key#0",
+        "mid#0"
+      ],
+      "stack_out": [
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%concat%2#0"
+      ]
+    },
+    "339": {
+      "op": "dig 2",
+      "defined_out": [
+        "aggregate%concat%2#0",
+        "aggregate%val_as_bytes%1#0",
+        "box_key#0",
+        "box_key#0 (copy)",
+        "mid#0"
+      ],
+      "stack_out": [
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%concat%2#0",
+        "box_key#0 (copy)"
+      ]
+    },
+    "341": {
+      "op": "box_del",
+      "defined_out": [
+        "aggregate%concat%2#0",
+        "aggregate%val_as_bytes%1#0",
+        "box_key#0",
+        "mid#0",
+        "{box_del}"
+      ],
+      "stack_out": [
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%concat%2#0",
+        "{box_del}"
+      ]
+    },
+    "342": {
+      "op": "pop",
+      "stack_out": [
+        "mid#0",
+        "box_key#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%concat%2#0"
+      ]
+    },
+    "343": {
+      "op": "uncover 2",
+      "stack_out": [
+        "mid#0",
+        "aggregate%val_as_bytes%1#0",
+        "aggregate%concat%2#0",
+        "box_key#0"
+      ]
+    },
+    "345": {
+      "op": "swap",
+      "stack_out": [
+        "mid#0",
+        "aggregate%val_as_bytes%1#0",
+        "box_key#0",
+        "aggregate%concat%2#0"
+      ]
+    },
+    "346": {
+      "op": "box_put",
+      "stack_out": [
+        "mid#0",
+        "aggregate%val_as_bytes%1#0"
+      ]
+    },
+    "347": {
+      "op": "swap",
+      "stack_out": [
+        "aggregate%val_as_bytes%1#0",
+        "mid#0"
+      ]
+    },
+    "348": {
+      "op": "intc_1 // 1",
+      "stack_out": [
+        "aggregate%val_as_bytes%1#0",
+        "mid#0",
+        "1"
+      ]
+    },
+    "349": {
+      "op": "+",
+      "defined_out": [
+        "aggregate%val_as_bytes%1#0",
+        "tmp%16#0"
+      ],
+      "stack_out": [
+        "aggregate%val_as_bytes%1#0",
+        "tmp%16#0"
+      ]
+    },
+    "350": {
+      "op": "bytec_0 // \"market_count\"",
+      "stack_out": [
+        "aggregate%val_as_bytes%1#0",
+        "tmp%16#0",
+        "\"market_count\""
+      ]
+    },
+    "351": {
+      "op": "swap",
+      "stack_out": [
+        "aggregate%val_as_bytes%1#0",
+        "\"market_count\"",
+        "tmp%16#0"
+      ]
+    },
+    "352": {
+      "op": "app_global_put",
+      "stack_out": [
+        "aggregate%val_as_bytes%1#0"
+      ]
+    },
+    "353": {
+      "op": "bytec_1 // 0x151f7c75",
+      "stack_out": [
+        "aggregate%val_as_bytes%1#0",
+        "0x151f7c75"
+      ]
+    },
+    "354": {
+      "op": "swap",
+      "stack_out": [
+        "0x151f7c75",
+        "aggregate%val_as_bytes%1#0"
+      ]
+    },
+    "355": {
+      "op": "concat",
+      "defined_out": [
+        "tmp%11#0"
+      ],
+      "stack_out": [
+        "tmp%11#0"
+      ]
+    },
+    "356": {
+      "op": "log",
+      "stack_out": []
+    },
+    "357": {
+      "op": "intc_1 // 1",
+      "stack_out": [
+        "1"
+      ]
+    },
+    "358": {
+      "op": "return",
+      "stack_out": []
+    },
+    "359": {
+      "subroutine": "smart_contracts.market_factory.contract.MarketFactory.get_market[routing]",
+      "params": {},
+      "block": "get_market",
+      "stack_in": [],
+      "op": "txna ApplicationArgs 1",
+      "defined_out": [
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0"
+      ]
+    },
+    "362": {
+      "op": "dup",
+      "defined_out": [
+        "tmp%0#0",
+        "tmp%0#0 (copy)"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "tmp%0#0 (copy)"
+      ]
+    },
+    "363": {
+      "op": "len",
+      "defined_out": [
+        "len%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "len%0#0"
+      ]
+    },
+    "364": {
+      "op": "intc_2 // 8",
+      "defined_out": [
+        "8",
+        "len%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "len%0#0",
+        "8"
+      ]
+    },
+    "365": {
+      "op": "==",
+      "defined_out": [
+        "eq%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "eq%0#0"
+      ]
+    },
+    "366": {
+      "error": "invalid number of bytes for arc4.uint64",
+      "op": "assert // invalid number of bytes for arc4.uint64",
+      "stack_out": [
+        "tmp%0#0"
+      ]
+    },
+    "367": {
+      "op": "btoi",
+      "defined_out": [
+        "market_id#0"
+      ],
+      "stack_out": [
+        "market_id#0"
+      ]
+    },
+    "368": {
+      "op": "itob",
+      "stack_out": [
+        "tmp%0#0"
+      ]
+    },
+    "369": {
+      "op": "bytec_3 // 0x6d61726b65743a",
+      "defined_out": [
+        "0x6d61726b65743a",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "0x6d61726b65743a"
+      ]
+    },
+    "370": {
+      "op": "swap",
+      "stack_out": [
+        "0x6d61726b65743a",
+        "tmp%0#0"
+      ]
+    },
+    "371": {
+      "op": "concat",
+      "defined_out": [
+        "box_key#0"
+      ],
+      "stack_out": [
+        "box_key#0"
+      ]
+    },
+    "372": {
+      "op": "dup",
+      "defined_out": [
+        "box_key#0",
+        "box_key#0 (copy)"
+      ],
+      "stack_out": [
+        "box_key#0",
+        "box_key#0 (copy)"
+      ]
+    },
+    "373": {
+      "op": "box_len",
+      "defined_out": [
+        "box_key#0",
+        "maybe_exists%0#0",
+        "maybe_value%0#0"
+      ],
+      "stack_out": [
+        "box_key#0",
+        "maybe_value%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "374": {
+      "op": "bury 1",
+      "stack_out": [
+        "box_key#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "376": {
+      "error": "market not found",
+      "op": "assert // market not found",
+      "stack_out": [
+        "box_key#0"
+      ]
+    },
+    "377": {
+      "op": "box_get",
+      "defined_out": [
+        "maybe_exists%1#0",
+        "maybe_value%1#0"
+      ],
+      "stack_out": [
+        "maybe_value%1#0",
+        "maybe_exists%1#0"
+      ]
+    },
+    "378": {
+      "op": "pop",
+      "stack_out": [
+        "maybe_value%1#0"
+      ]
+    },
+    "379": {
+      "op": "bytec_1 // 0x151f7c75",
+      "defined_out": [
+        "0x151f7c75",
+        "maybe_value%1#0"
+      ],
+      "stack_out": [
+        "maybe_value%1#0",
+        "0x151f7c75"
+      ]
+    },
+    "380": {
+      "op": "swap",
+      "stack_out": [
+        "0x151f7c75",
+        "maybe_value%1#0"
+      ]
+    },
+    "381": {
+      "op": "concat",
+      "defined_out": [
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "tmp%3#0"
+      ]
+    },
+    "382": {
+      "op": "log",
+      "stack_out": []
+    },
+    "383": {
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "1"
+      ],
+      "stack_out": [
+        "1"
+      ]
+    },
+    "384": {
+      "op": "return",
+      "stack_out": []
+    },
+    "385": {
+      "subroutine": "smart_contracts.market_factory.contract.MarketFactory.get_market_count[routing]",
+      "params": {},
+      "block": "get_market_count",
+      "stack_in": [],
+      "op": "intc_0 // 0",
+      "defined_out": [
+        "0"
+      ],
+      "stack_out": [
+        "0"
+      ]
+    },
+    "386": {
+      "op": "bytec_0 // \"market_count\"",
+      "defined_out": [
+        "\"market_count\"",
+        "0"
+      ],
+      "stack_out": [
+        "0",
+        "\"market_count\""
+      ]
+    },
+    "387": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "maybe_exists%0#0",
+        "maybe_value%0#0"
+      ],
+      "stack_out": [
+        "maybe_value%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "388": {
+      "error": "check self.market_count exists",
+      "op": "assert // check self.market_count exists",
+      "stack_out": [
+        "maybe_value%0#0"
+      ]
+    },
+    "389": {
+      "op": "itob",
+      "defined_out": [
+        "aggregate%val_as_bytes%0#0"
+      ],
+      "stack_out": [
+        "aggregate%val_as_bytes%0#0"
+      ]
+    },
+    "390": {
+      "op": "bytec_1 // 0x151f7c75",
+      "defined_out": [
+        "0x151f7c75",
+        "aggregate%val_as_bytes%0#0"
+      ],
+      "stack_out": [
+        "aggregate%val_as_bytes%0#0",
+        "0x151f7c75"
+      ]
+    },
+    "391": {
+      "op": "swap",
+      "stack_out": [
+        "0x151f7c75",
+        "aggregate%val_as_bytes%0#0"
+      ]
+    },
+    "392": {
+      "op": "concat",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "393": {
+      "op": "log",
+      "stack_out": []
+    },
+    "394": {
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "1"
+      ],
+      "stack_out": [
+        "1"
+      ]
+    },
+    "395": {
+      "op": "return",
+      "stack_out": []
+    }
+  }
+}

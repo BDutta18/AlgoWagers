@@ -62,6 +62,8 @@ const MARKET_TYPE_STYLE: Record<string, { label: string; border: string; glow: s
   crypto: { label: 'CRYPTO', tag: 'C',  border: '#00FFC8', glow: 'rgba(0,255,200,0.15)' },
   stock:  { label: 'STOCKS', tag: 'S',  border: '#6C63FF', glow: 'rgba(108,99,255,0.15)' },
   sports: { label: 'SPORTS', tag: 'X',  border: '#FFC857', glow: 'rgba(255,200,87,0.15)' },
+  cricket: { label: 'CRICKET', tag: 'CR',  border: '#4CAF50', glow: 'rgba(76,175,80,0.15)' },
+  football: { label: 'FOOTBALL', tag: 'FB',  border: '#E91E63', glow: 'rgba(233,30,99,0.15)' },
 }
 
 // Helper: Mechanical corner brackets
@@ -147,6 +149,8 @@ export default function MarketsPage() {
     if (filter === 'CRYPTO') return m.market_type === 'crypto' || m.type === 'crypto'
     if (filter === 'STOCKS') return m.market_type === 'stock' || m.type === 'stock'
     if (filter === 'SPORTS') return m.market_type === 'sports' || m.type === 'sports'
+    if (filter === 'CRICKET') return m.sports_category === 'cricket' || m.market_type === 'sports' && m.asset_id?.includes('cricket') || m.asset_id?.includes('vs')
+    if (filter === 'FOOTBALL') return m.sports_category === 'football' || m.market_type === 'sports' && (m.asset_id?.includes('vs') || m.ticker?.includes('vs'))
     return true
   })
 
@@ -563,7 +567,7 @@ export default function MarketsPage() {
 
       {/* ── Category Filters ──────────────────────────────────────────────── */}
       <div className="flex gap-3 px-6 md:px-10 mb-6 flex-wrap">
-        {['ALL', 'CRYPTO', 'STOCKS', 'SPORTS'].map((cat) => (
+        {['ALL', 'CRYPTO', 'STOCKS', 'SPORTS', 'CRICKET', 'FOOTBALL'].map((cat) => (
           <motion.button
             key={cat}
             whileHover={{ scale: 1.05 }}

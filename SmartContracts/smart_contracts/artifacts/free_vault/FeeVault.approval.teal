@@ -1,0 +1,263 @@
+#pragma version 11
+#pragma typetrack false
+
+// algopy.arc4.ARC4Contract.approval_program() -> uint64:
+main:
+    intcblock 0 1 32 8
+    bytecblock "total_collected" "admin" "treasury_address" "rewards_address" "treasury_split_bps" 0x151f7c75
+    // smart_contracts/free_vault/contract.py:13
+    // class FeeVault(ARC4Contract):
+    txn OnCompletion
+    !
+    assert
+    txn ApplicationID
+    bz main_create_NoOp@10
+    pushbytess 0xa469f961 0x7f3a60d1 0xb910c77b 0x12a23aa2 // method "receive_fee(uint64)void", method "distribute()void", method "get_balance()uint64", method "get_total_collected()uint64"
+    txna ApplicationArgs 0
+    match receive_fee distribute get_balance get_total_collected
+    err
+
+main_create_NoOp@10:
+    // smart_contracts/free_vault/contract.py:13
+    // class FeeVault(ARC4Contract):
+    pushbytes 0x47439833 // method "create(address,address,address,uint64)void"
+    txna ApplicationArgs 0
+    match create
+    err
+
+
+// smart_contracts.free_vault.contract.FeeVault.create[routing]() -> void:
+create:
+    // smart_contracts/free_vault/contract.py:21
+    // @arc4.abimethod(create="require")
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_2 // 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    txna ApplicationArgs 2
+    dup
+    len
+    intc_2 // 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    txna ApplicationArgs 3
+    dup
+    len
+    intc_2 // 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    txna ApplicationArgs 4
+    dup
+    len
+    intc_3 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/free_vault/contract.py:29
+    // self.admin.value = admin
+    bytec_1 // "admin"
+    uncover 4
+    app_global_put
+    // smart_contracts/free_vault/contract.py:30
+    // self.treasury_address.value = treasury_address
+    bytec_2 // "treasury_address"
+    uncover 3
+    app_global_put
+    // smart_contracts/free_vault/contract.py:31
+    // self.rewards_address.value = rewards_address
+    bytec_3 // "rewards_address"
+    uncover 2
+    app_global_put
+    // smart_contracts/free_vault/contract.py:32
+    // self.treasury_split_bps.value = treasury_split_bps
+    bytec 4 // "treasury_split_bps"
+    swap
+    app_global_put
+    // smart_contracts/free_vault/contract.py:33
+    // self.total_collected.value = UInt64(0)
+    bytec_0 // "total_collected"
+    intc_0 // 0
+    app_global_put
+    // smart_contracts/free_vault/contract.py:21
+    // @arc4.abimethod(create="require")
+    intc_1 // 1
+    return
+
+
+// smart_contracts.free_vault.contract.FeeVault.receive_fee[routing]() -> void:
+receive_fee:
+    // smart_contracts/free_vault/contract.py:35
+    // @arc4.abimethod
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_3 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    // smart_contracts/free_vault/contract.py:37
+    // self.total_collected.value += payment.native
+    intc_0 // 0
+    bytec_0 // "total_collected"
+    app_global_get_ex
+    assert // check self.total_collected exists
+    swap
+    btoi
+    +
+    bytec_0 // "total_collected"
+    swap
+    app_global_put
+    // smart_contracts/free_vault/contract.py:35
+    // @arc4.abimethod
+    intc_1 // 1
+    return
+
+
+// smart_contracts.free_vault.contract.FeeVault.distribute[routing]() -> void:
+distribute:
+    // smart_contracts/free_vault/contract.py:41
+    // assert Txn.sender == self.admin.value, "admin only"
+    txn Sender
+    intc_0 // 0
+    bytec_1 // "admin"
+    app_global_get_ex
+    assert // check self.admin exists
+    ==
+    assert // admin only
+    // smart_contracts/free_vault/contract.py:43
+    // balance = Global.current_application_address.balance - Global.min_balance
+    global CurrentApplicationAddress
+    acct_params_get AcctBalance
+    assert // account funded
+    global MinBalance
+    -
+    // smart_contracts/free_vault/contract.py:44
+    // assert balance > UInt64(0), "nothing to distribute"
+    dup
+    assert // nothing to distribute
+    // smart_contracts/free_vault/contract.py:46
+    // treasury_amount = balance * self.treasury_split_bps.value // UInt64(10_000)
+    intc_0 // 0
+    bytec 4 // "treasury_split_bps"
+    app_global_get_ex
+    assert // check self.treasury_split_bps exists
+    dig 1
+    *
+    pushint 10000
+    /
+    dup
+    uncover 2
+    // smart_contracts/free_vault/contract.py:47
+    // rewards_amount = balance - treasury_amount
+    dig 1
+    -
+    swap
+    // smart_contracts/free_vault/contract.py:49
+    // if treasury_amount > UInt64(0):
+    bz distribute_after_if_else@4
+    // smart_contracts/free_vault/contract.py:50-53
+    // itxn.Payment(
+    //     receiver=self.treasury_address.value,
+    //     amount=treasury_amount,
+    // ).submit()
+    itxn_begin
+    // smart_contracts/free_vault/contract.py:51
+    // receiver=self.treasury_address.value,
+    intc_0 // 0
+    bytec_2 // "treasury_address"
+    app_global_get_ex
+    assert // check self.treasury_address exists
+    dig 2
+    itxn_field Amount
+    itxn_field Receiver
+    // smart_contracts/free_vault/contract.py:50
+    // itxn.Payment(
+    intc_1 // pay
+    itxn_field TypeEnum
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/free_vault/contract.py:50-53
+    // itxn.Payment(
+    //     receiver=self.treasury_address.value,
+    //     amount=treasury_amount,
+    // ).submit()
+    itxn_submit
+
+distribute_after_if_else@4:
+    // smart_contracts/free_vault/contract.py:55
+    // if rewards_amount > UInt64(0):
+    dup
+    bz distribute_after_if_else@7
+    // smart_contracts/free_vault/contract.py:56-59
+    // itxn.Payment(
+    //     receiver=self.rewards_address.value,
+    //     amount=rewards_amount,
+    // ).submit()
+    itxn_begin
+    // smart_contracts/free_vault/contract.py:57
+    // receiver=self.rewards_address.value,
+    intc_0 // 0
+    bytec_3 // "rewards_address"
+    app_global_get_ex
+    assert // check self.rewards_address exists
+    dig 1
+    itxn_field Amount
+    itxn_field Receiver
+    // smart_contracts/free_vault/contract.py:56
+    // itxn.Payment(
+    intc_1 // pay
+    itxn_field TypeEnum
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/free_vault/contract.py:56-59
+    // itxn.Payment(
+    //     receiver=self.rewards_address.value,
+    //     amount=rewards_amount,
+    // ).submit()
+    itxn_submit
+
+distribute_after_if_else@7:
+    // smart_contracts/free_vault/contract.py:39
+    // @arc4.abimethod
+    intc_1 // 1
+    return
+
+
+// smart_contracts.free_vault.contract.FeeVault.get_balance[routing]() -> void:
+get_balance:
+    // smart_contracts/free_vault/contract.py:63
+    // return Global.current_application_address.balance - Global.min_balance
+    global CurrentApplicationAddress
+    acct_params_get AcctBalance
+    assert // account funded
+    global MinBalance
+    -
+    // smart_contracts/free_vault/contract.py:61
+    // @arc4.abimethod(readonly=True)
+    itob
+    bytec 5 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts.free_vault.contract.FeeVault.get_total_collected[routing]() -> void:
+get_total_collected:
+    // smart_contracts/free_vault/contract.py:67
+    // return self.total_collected.value
+    intc_0 // 0
+    bytec_0 // "total_collected"
+    app_global_get_ex
+    assert // check self.total_collected exists
+    // smart_contracts/free_vault/contract.py:65
+    // @arc4.abimethod(readonly=True)
+    itob
+    bytec 5 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return

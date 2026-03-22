@@ -70,21 +70,38 @@ def _calculate_probabilities(market):
 def _build_asset_config_from_market(market):
     if market["market_type"] == "crypto":
         source = {"kind": "crypto", "id": market["asset_id"]}
+    elif market["market_type"] == "sports":
+        source = {"kind": "sports", "source": "manual"}
     else:
         source = {"kind": "stock", "symbol": market["ticker"]}
     return {"price_source": source}
 
 
 def _build_market(asset, close_time):
-    open_price = get_live_price(asset)
+    market_type = asset.get("market_type", "crypto")
+    sports_category = asset.get("sports_category")
+
+    if market_type == "sports":
+        open_price = 1.0
+        if sports_category == "cricket":
+            question = f"Will {asset['name']} win the match?"
+        elif sports_category == "football":
+            question = f"Will {asset['name']} win the match?"
+        else:
+            question = f"Will {asset['name']} win?"
+    else:
+        open_price = get_live_price(asset)
+        question = f"Will {asset['ticker']} be higher tomorrow at 12:00 UTC?"
+
     market = {
         "id": str(uuid4()),
         "asset_id": asset["asset_id"],
         "asset_name": asset["name"],
         "ticker": asset["ticker"],
-        "market_type": asset["market_type"],
+        "market_type": market_type,
+        "sports_category": sports_category,
         "logo": asset["logo"],
-        "question": f"Will {asset['ticker']} be higher tomorrow at 12:00 UTC?",
+        "question": question,
         "open_price": open_price,
         "current_price": open_price,
         "resolve_price": None,
@@ -113,7 +130,7 @@ def _serialize_bet(bet):
 
 def serialize_market(market):
     try:
-        if market["status"] == "open":
+        if market["status"] == "open" and market["market_type"] != "sports":
             market["current_price"] = get_live_price(
                 _build_asset_config_from_market(market)
             )
@@ -130,6 +147,7 @@ def serialize_market(market):
         "asset_name": market["asset_name"],
         "ticker": market["ticker"],
         "market_type": market["market_type"],
+        "sports_category": market.get("sports_category"),
         "logo": market["logo"],
         "question": market["question"],
         "open_price": round(float(market["open_price"]), 6),
@@ -342,7 +360,7 @@ def _calculate_payouts(market, outcome):
     return settlement
 
 
-def resolve_market(market_id):
+def resolve_market(market_id, outcome_override=None):
     if market_id not in markets:
         raise KeyError(f"Market {market_id} not found")
 
@@ -350,9 +368,18 @@ def resolve_market(market_id):
     if market["status"] == "resolved":
         return serialize_market(market)
 
-    asset_config = _find_asset(market["asset_id"])
-    resolve_price = get_live_price(asset_config)
-    outcome = "YES" if resolve_price > market["open_price"] else "NO"
+    if market["market_type"] == "sports":
+        if outcome_override:
+            outcome = outcome_override.upper()
+        else:
+            raise ValueError(
+                "Sports markets require manual resolution. Provide outcome_override='YES' or 'NO'"
+            )
+        resolve_price = 1.0
+    else:
+        asset_config = _find_asset(market["asset_id"])
+        resolve_price = get_live_price(asset_config)
+        outcome = "YES" if resolve_price > market["open_price"] else "NO"
 
     market["resolve_price"] = resolve_price
     market["current_price"] = resolve_price
@@ -404,6 +431,8 @@ def resolve_due_markets():
     now = _utc_now()
     for market_id, market in list(markets.items()):
         if market["status"] != "open":
+            continue
+        if market["market_type"] == "sports":
             continue
         if _parse_iso(market["closes_at"]) <= now:
             resolved.append(resolve_market(market_id))
